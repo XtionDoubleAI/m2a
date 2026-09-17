@@ -29,6 +29,42 @@ class LLMClient:
         return resp.choices[0].message.content or ""
 
 
+def _patch_transformers_for_vllm() -> None:
+    """Compatibility shim: vllm 0.6.4 reads tokenizer attributes removed in
+    transformers 5.x. Patch at class level before vllm loads its tokenizer."""
+    try:
+        from transformers.tokenization_utils_base import PreTrainedTokenizerBase
+        if not hasattr(PreTrainedTokenizerBase, "all_special_tokens_extended"):
+            PreTrainedTokenizerBase.all_special_tokens_extended = property(
+                lambda self: self.all_special_tokens)
+    except Exception:
+        pass
+
+
+class OfflineLLM:
+    """In-process vLLM engine (offline mode).
+
+    Preferred on this machine: the OpenAI server entrypoint depends on
+    Linux-only uvloop, while the offline engine runs natively on Windows and
+    gives lower per-request latency for our sequential runner.
+    """
+
+    def __init__(self, model_path: str, temperature: float = 0.0, max_tokens: int = 512,
+                 gpu_memory_utilization: float = 0.92, max_model_len: int = 16384):
+        _patch_transformers_for_vllm()
+        from vllm import LLM, SamplingParams
+        self.llm = LLM(model=model_path, gpu_memory_utilization=gpu_memory_utilization,
+                       max_model_len=max_model_len, enforce_eager=False)
+        self.sp = SamplingParams(temperature=temperature, max_tokens=max_tokens)
+
+    def chat(self, system: str, user: str) -> str:
+        outs = self.llm.chat(
+            [[{"role": "system", "content": system}, {"role": "user", "content": user}]],
+            sampling_params=self.sp, use_tqdm=False,
+        )
+        return outs[0].outputs[0].text
+
+
 def parse_tool_call_json(text: str) -> tuple[str | None, dict]:
     """Best-effort extraction of {"name": ..., "arguments": {...}} from model output.
 

@@ -11,10 +11,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
-BENCH_DIR = Path(r"E:\hx\_DoctorXtion\intern_shxt\Pdev\refs\repos\Mem2ActBench\toolmembench_small")
-MODELS_DIR = Path(r"E:\hx\_models")
+IS_WSL = sys.platform == "linux"
+BENCH_DIR = Path(
+    "/mnt/e/hx/_DoctorXtion/intern_shxt/Pdev/refs/repos/Mem2ActBench/toolmembench_small"
+    if IS_WSL else
+    r"E:\hx\_DoctorXtion\intern_shxt\Pdev\refs\repos\Mem2ActBench\toolmembench_small"
+)
+MODELS_DIR = Path("/mnt/e/hx/_models" if IS_WSL else r"E:\hx\_models")
 OUT_DIR = Path(__file__).resolve().parent.parent / "results"
 
 
@@ -35,7 +41,12 @@ def _latest_snapshot(repo: str) -> Path:
     return direct
 
 
-def make_embedder(device: str = "cuda:1"):
+def make_embedder(device: str = "cuda:0"):
+    """Under CUDA_VISIBLE_DEVICES=<single gpu> the visible device is always cuda:0.
+
+    The embedder encodes the corpus first and is released before the vLLM
+    engine claims the same GPU (7B + BGE-M3 do not fit together in 24 GB).
+    """
     from m2a.act.embedder import BGEM3Dense
     return BGEM3Dense(str(_latest_snapshot("BAAI/bge-m3")), device=device)
 
@@ -49,7 +60,7 @@ def main():
     ap.add_argument("--out", default=str(OUT_DIR / "ltmemory_small.jsonl"))
     args = ap.parse_args()
 
-    from m2a.act.llm import LLMClient
+    from m2a.act.llm import OfflineLLM
     from m2a.eval.dataset import Bench
     from m2a.eval.runner import run_system
     from experiments.baselines.ltmemory import LTMemoryBaseline
@@ -61,11 +72,19 @@ def main():
     if args.retriever in ("hybrid", "dense"):
         embedder = make_embedder()
 
-    llm = LLMClient()
-    system = LTMemoryBaseline.build(llm, bench, embedder=embedder, k=args.k,
+    system = LTMemoryBaseline.build(bench, embedder=embedder, k=args.k,
                                     chunk_window=args.chunk_window)
-    if args.retriever == "bm25":
+    if embedder is not None:
+        system.precompute_query_vecs(bench.tasks)
+        import gc
+        import torch
+        embedder.model.cpu()
+        del embedder
         system.retriever.embedder = None
+        gc.collect()
+        torch.cuda.empty_cache()
+
+    system.llm = OfflineLLM(str(_latest_snapshot("Qwen/Qwen2.5-7B-Instruct")))
     if args.retriever == "none":
         system.retriever.docs = []
         system.retriever._bm25 = None  # noqa: SLF001

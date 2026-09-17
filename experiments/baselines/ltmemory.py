@@ -19,9 +19,11 @@ import json
 from m2a.act.llm import LLMClient, parse_tool_call_json
 
 SYSTEM_PROMPT = (
-    "You are a tool-calling assistant. Given a user request, the target tool's API "
-    "schema, and retrieved memory evidence, output the tool call as a single JSON "
-    "object: {\"name\": <tool name>, \"arguments\": {<param>: <value>, ...}}. "
+    "You are a tool-calling assistant. The target tool's API schema will be provided; "
+    "you MUST call exactly this tool and no other. Given the user request and retrieved "
+    "memory evidence, output the tool call as a single JSON object: "
+    "{\"name\": <tool name>, \"arguments\": {<param>: <value>, ...}}. "
+    "Include only parameters that are needed; do not invent extra parameters. "
     "Ground every argument value in the evidence; use exact original strings for "
     "identifiers, URLs and long values. If a value is not stated in the evidence, "
     "choose the most reasonable value permitted by the schema. Output JSON only."
@@ -72,15 +74,21 @@ class HybridRetriever:
         if self.embedder is not None and self.docs:
             self._vecs = self.embedder.encode(self.docs)
 
-    def search(self, query: str) -> list[tuple[str, float]]:
+    def search(self, query: str, query_vec=None) -> list[tuple[str, float]]:
+        """RRF-fused BM25 + dense search.
+
+        `query_vec` is a pre-encoded dense vector; when omitted and an embedder
+        is attached, the query is encoded on the fly.
+        """
         bm25_scores = self._bm25.get_scores(query.lower().split())
         bm25_rank = sorted(range(len(self.docs)), key=lambda i: -bm25_scores[i])
         rrf = {}
         for rank, idx in enumerate(bm25_rank[:50]):
             rrf[idx] = rrf.get(idx, 0.0) + 1.0 / (self.rrf_k + rank + 1)
-        if self.embedder is not None and self._vecs is not None:
-            qv = self.embedder.encode([query])[0]
-            sims = self._vecs @ qv
+        if self._vecs is not None and (query_vec is not None or self.embedder is not None):
+            if query_vec is None:
+                query_vec = self.embedder.encode([query])[0]
+            sims = self._vecs @ query_vec
             dense_rank = sorted(range(len(self.docs)), key=lambda i: -sims[i])
             for rank, idx in enumerate(dense_rank[:50]):
                 rrf[idx] = rrf.get(idx, 0.0) + 1.0 / (self.rrf_k + rank + 1)
@@ -94,9 +102,17 @@ class LTMemoryBaseline:
     def __init__(self, llm: LLMClient, retriever: HybridRetriever):
         self.llm = llm
         self.retriever = retriever
+        self.query_vecs: dict = {}   # qa_id -> pre-encoded dense query vector
+
+    def precompute_query_vecs(self, tasks) -> None:
+        if self.retriever.embedder is None:
+            return
+        vecs = self.retriever.embedder.encode([t.query for t in tasks])
+        self.query_vecs = {t.qa_id: v for t, v in zip(tasks, vecs)}
 
     @classmethod
-    def build(cls, llm: LLMClient, bench, embedder=None, k: int = 5, chunk_window: int = 6):
+    def build(cls, bench, embedder=None, k: int = 5, chunk_window: int = 6):
+        """Build the retrieval index; the LLM is attached afterwards via `llm`."""
         docs, ids = [], []
         for t in bench.tasks:
             for sid, text in zip(t.session_ids, bench.session_texts(t)):
@@ -106,13 +122,13 @@ class LTMemoryBaseline:
                     ids.append(f"{sid}#{j}")
         retriever = HybridRetriever(embedder=embedder, k=k)
         retriever.fit(docs, ids)
-        return cls(llm, retriever)
+        return cls(None, retriever)
 
     def answer(self, task, session_texts=None) -> tuple[str | None, dict]:
         if not task.session_ids or not self.retriever.docs:
             evidence = "\n".join(session_texts or [])
         else:
-            hits = self.retriever.search(task.query)
+            hits = self.retriever.search(task.query, self.query_vecs.get(task.qa_id))
             evidence = "\n---\n".join(h[0] for h in hits)
         user = (
             f"Tool schema:\n{json.dumps(task.tool_schema, ensure_ascii=False, indent=1)}\n\n"
