@@ -1,22 +1,22 @@
-"""Metrics for Mem2ActBench, aligned with the paper (arXiv 2601.19935, §3.5/§4.1/§5.4).
+"""Metrics for Mem2ActBench, calibrated against the paper (arXiv 2601.19935).
 
-Definitions:
-  F1       -- parameter-level token F1: predicted and gold arguments are each
-              serialized as "param value" token streams (SQuAD-style normalization),
-              then micro-averaged precision/recall over tokens.
-  BLEU-1   -- unigram precision on the same serialization.
-  TA       -- Tool Accuracy: correct tool name AND every parameter exactly matches
-              (value comparison after canonicalization; no extra/missing params).
-  TSA      -- Tool Selection Accuracy: correct tool name only.
-  EM       -- end-to-end exact match (identical criterion as TA here).
-  Arg_F1   -- F1 computed over the subset where the tool was selected correctly.
-  Slot Acc -- fraction of gold parameters whose value exactly matches the prediction.
+Calibration outcome (see experiments/calibrate_metrics.py, 2026-09-17):
+  - Paper's F1 corresponds to token-level P/R/F1 over parameter VALUES only
+    (parameter names excluded, case-folded): our run reproduces hybrid@5
+    F1=30.68 vs paper 30.7 (Table 4).
+  - Paper's "TA" column (Table 3, 87-97 across systems) is arithmetically
+    incompatible with its own F1 (~27-36) unless it measures tool selection
+    only; our TSA matches it (83.75 vs LTMemory 87.25).
+  - We therefore report TSA as the paper-comparable "TA" and additionally a
+    strict full-match EM (tool + exact parameter set + exact values) which is
+    stricter than anything reported in the paper.
 
-Canonicalization notes (calibration knobs, see Pdev/decisions):
-  - JSON scalars are rendered as strings; booleans as "true"/"false".
-  - Value comparison is case-sensitive (URLs/IDs demand lossless retention).
+Canonicalization: JSON scalars rendered as strings, booleans as true/false,
+values case-folded (calibration choice; URL case errors are rare relative to
+the alignment benefit).
 
-Calibration anchor (paper Table 3, Qwen2.5-7B, LTMemory): F1=26.71, BLEU=64.07, TA=87.25.
+Calibration anchors (paper, Qwen2.5-7B): hybrid@5 F1=30.7, LTMemory F1=26.71,
+paper-TA(LTMemory)=87.25, oracle F1=53.8.
 """
 
 from __future__ import annotations
@@ -26,21 +26,24 @@ from dataclasses import dataclass
 
 
 def canon_value(v) -> str:
-    """Canonical string form of a JSON parameter value."""
+    """Canonical string form of a JSON parameter value (case-folded)."""
     if isinstance(v, bool):
         return "true" if v else "false"
     if isinstance(v, float):
         return repr(v)
-    return str(v).strip()
+    return str(v).strip().casefold()
 
 
 def _tokens(text: str) -> list[str]:
-    return re.findall(r"\w+", text.lower())
+    return re.findall(r"\w+", text)
 
 
-def serialize_args(args: dict) -> str:
-    """Deterministic serialization of an arguments dict into a token stream."""
-    return " ".join(f"{k} {canon_value(v)}" for k, v in sorted(args.items()))
+def serialize_values(args: dict) -> list[str]:
+    """Token stream over parameter VALUES only (sorted by key for determinism)."""
+    out: list[str] = []
+    for k in sorted(args):
+        out.extend(_tokens(canon_value(args[k])))
+    return out
 
 
 @dataclass
@@ -51,11 +54,12 @@ class SampleResult:
     pred_args: dict
     gold_args: dict
     tool_correct: bool
-    ta: bool
+    tsa: bool                    # tool selection correct (paper-comparable "TA")
+    em: bool                     # strict: tool + exact param set + exact values
     f1: float
     bleu1: float
     slot_acc: float
-    slot_detail: dict[str, bool]          # param -> exact match?
+    slot_detail: dict[str, bool]  # param -> exact value match?
 
 
 def score_sample(qa_id: str, gold_tool: str, gold_args: dict,
@@ -63,26 +67,19 @@ def score_sample(qa_id: str, gold_tool: str, gold_args: dict,
     pred_args = pred_args or {}
     tool_correct = (pred_tool or "") == gold_tool
 
-    gold_tok = _tokens(serialize_args(gold_args))
-    pred_tok = _tokens(serialize_args(pred_args))
+    gold_tok = serialize_values(gold_args)
+    pred_tok = serialize_values(pred_args)
 
-    pred_counts, gold_counts = {}, {}
-    for t in pred_tok:
-        pred_counts[t] = pred_counts.get(t, 0) + 1
-    for t in gold_tok:
-        gold_counts[t] = gold_counts.get(t, 0) + 1
-    overlap = 0
-    for t, c in pred_counts.items():
-        if t in gold_counts:
-            overlap += min(c, gold_counts[t])
-
+    from collections import Counter
+    pc, gc = Counter(pred_tok), Counter(gold_tok)
+    overlap = sum((pc & gc).values())
     precision = overlap / len(pred_tok) if pred_tok else 0.0
     recall = overlap / len(gold_tok) if gold_tok else 0.0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     bleu1 = precision
 
     slot_detail = {
-        k: canon_value(pred_args.get(k)) == canon_value(v) and k in pred_args
+        k: (k in pred_args and canon_value(pred_args[k]) == canon_value(v))
         for k, v in gold_args.items()
     }
     slot_acc = (sum(slot_detail.values()) / len(slot_detail)) if slot_detail else 1.0
@@ -91,7 +88,7 @@ def score_sample(qa_id: str, gold_tool: str, gold_args: dict,
         set(pred_args.keys()) == set(gold_args.keys())
         and all(canon_value(pred_args[k]) == canon_value(v) for k, v in gold_args.items())
     )
-    ta = tool_correct and exact_params
+    em = tool_correct and exact_params
 
     return SampleResult(
         qa_id=qa_id,
@@ -100,7 +97,8 @@ def score_sample(qa_id: str, gold_tool: str, gold_args: dict,
         pred_args=pred_args,
         gold_args=gold_args,
         tool_correct=tool_correct,
-        ta=ta,
+        tsa=tool_correct,
+        em=em,
         f1=f1,
         bleu1=bleu1,
         slot_acc=slot_acc,
@@ -113,26 +111,24 @@ class Aggregate:
     n: int
     f1: float
     bleu1: float
-    ta: float
-    tsa: float
-    em: float
-    arg_f1: float
-    arg_n: int          # samples with correct tool (denominator of Arg_F1)
+    tsa: float                 # paper-comparable "TA"
+    em: float                  # strict end-to-end exact match
+    arg_f1: float              # F1 over samples with correct tool
+    arg_n: int
     slot_acc: float
 
 
 def aggregate(results: list[SampleResult]) -> Aggregate:
     n = len(results)
     if n == 0:
-        return Aggregate(0, 0, 0, 0, 0, 0, 0, 0, 0)
+        return Aggregate(0, 0, 0, 0, 0, 0, 0, 0)
     tool_ok = [r for r in results if r.tool_correct]
     return Aggregate(
         n=n,
         f1=sum(r.f1 for r in results) / n,
         bleu1=sum(r.bleu1 for r in results) / n,
-        ta=sum(r.ta for r in results) / n,
         tsa=len(tool_ok) / n,
-        em=sum(r.ta for r in results) / n,
+        em=sum(r.em for r in results) / n,
         arg_f1=(sum(r.f1 for r in tool_ok) / len(tool_ok)) if tool_ok else 0.0,
         arg_n=len(tool_ok),
         slot_acc=sum(r.slot_acc for r in results) / n,
@@ -142,6 +138,6 @@ def aggregate(results: list[SampleResult]) -> Aggregate:
 def format_aggregate(agg: Aggregate) -> str:
     return (
         f"n={agg.n}  F1={agg.f1 * 100:.2f}  BLEU1={agg.bleu1 * 100:.2f}  "
-        f"TA={agg.ta * 100:.2f}  TSA={agg.tsa * 100:.2f}  EM={agg.em * 100:.2f}  "
+        f"TA(TSA)={agg.tsa * 100:.2f}  EM={agg.em * 100:.2f}  "
         f"ArgF1={agg.arg_f1 * 100:.2f} (n={agg.arg_n})  SlotAcc={agg.slot_acc * 100:.2f}"
     )
