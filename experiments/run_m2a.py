@@ -91,10 +91,22 @@ def main():
     print(f"write path: {len(done)} sessions cached, {len(todo)} to extract")
     with open(cache, "a", encoding="utf-8") as f:
         for i, s in enumerate(todo):
-            text = "\n".join(
-                f"{t.get('role', '?')}: {t.get('content', '')}" for t in s.turns
-            )
-            cards = extract_session(llm, s.session_id, text)
+            # segment the session by conversation boundary (source_id) and
+            # extract per segment: short inputs resist attention dilution and
+            # keep identifier-bearing tool turns visible (v3 fix)
+            from itertools import groupby
+            cards: list[dict] = []
+            start = 0
+            for _key, grp in groupby(s.turns, key=lambda t: t.get("source_id")):
+                seg = list(grp)
+                text = "\n".join(
+                    f"{t.get('role', '?')}: {t.get('content', '')}" for t in seg
+                )
+                seg_cards = extract_session(llm, s.session_id, text)
+                for c in seg_cards:
+                    c["turn_index"] = start + c.get("turn_index", 0)
+                cards.extend(seg_cards)
+                start += len(seg)
             store.add_session(s.session_id, cards)
             f.write(json.dumps({"session_id": s.session_id, "cards": cards},
                                ensure_ascii=False) + "\n")
