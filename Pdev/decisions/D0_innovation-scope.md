@@ -34,3 +34,26 @@ C3-full has poor cost/benefit (L4 is 11% of samples); the lightweight chain
 covers conflict resolution without LLM-heavy semantics. The compiler framing
 organizes all mechanisms into an ablatable pipeline, which doubles as the
 experiment design.
+
+## Related work note (added 2026-09-17)
+
+STITCH (arXiv 2601.10702, ACL 2026) independently pursues structured retrieval
+signals for memory: it indexes each trajectory step with a "contextual intent"
+(latent goal, action type, entity types) inferred from the agent's own
+trajectory, and filters retrievable snippets by intent compatibility on
+fact-retrieval benchmarks (CAME-Bench, LongMemEval). m2a differs on three axes
+and the implementation must keep them visible:
+
+1. **Signal source**: STITCH's cue is self-inferred from trajectory; m2a's
+   demand is read from the tool schema — an external contract — with one
+   demand per parameter slot, and coverage is deterministically checkable
+   against `required`.
+2. **Endpoint**: STITCH terminates in retrieval-then-generation; m2a's
+   retrieval terminates in a tri-state binding contract (schema-default fill,
+   verbatim copy from evidence, or model inference).
+3. **Task**: fact retrieval vs. parameter grounding on Mem2ActBench, with
+   conflict handling via attribute version chains (absent in STITCH).
+
+The narrative claim is accordingly "schema-contract-driven demands feeding a
+binding pipeline", within the shared direction of structured retrieval signals,
+not "first structured retrieval signal".
