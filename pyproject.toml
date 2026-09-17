@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "m2a"
+version = "0.1.0"
+description = "Memory-to-action harness: compiling long-term memory into grounded tool-call parameters"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.40",
+    "numpy",
+]
+
+[project.optional-dependencies]
+retrieval = ["FlagEmbedding>=1.3", "rank-bm25"]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+include = ["m2a*"]
