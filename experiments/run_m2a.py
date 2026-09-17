@@ -49,6 +49,8 @@ def main():
     ap.add_argument("--attribute-match", action="store_true")
     ap.add_argument("--collapse-versions", action="store_true")
     ap.add_argument("--cards-cache", default=str(OUT_DIR / "fact_cards.jsonl"))
+    ap.add_argument("--embed-device", default="cuda:1")
+    ap.add_argument("--gpu-util", type=float, default=0.92)
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -70,9 +72,9 @@ def main():
     bench = Bench(BENCH_DIR)
     print("bench:", json.dumps(bench.stats(), ensure_ascii=False))
 
-    embedder = BGEM3Dense(str(_snapshot("BAAI/bge-m3")), device="cuda:0")
+    embedder = BGEM3Dense(str(_snapshot("BAAI/bge-m3")), device=args.embed_device)
     llm = OfflineLLM(str(_snapshot("Qwen/Qwen2.5-7B-Instruct")),
-                     gpu_memory_utilization=0.75)  # shares the GPU with the embedder
+                     gpu_memory_utilization=args.gpu_util)  # engine sits on cuda:0
 
     # ---- phase 1: write path (cached) ----
     cache = Path(args.cards_cache)
@@ -97,8 +99,7 @@ def main():
             f.write(json.dumps({"session_id": s.session_id, "cards": cards},
                                ensure_ascii=False) + "\n")
             if (i + 1) % 25 == 0:
-                print(f"  extracted {i + 1}/{len(todo)} sessions "
-                      f"({sum(len(c) for _, c in [(x, store.cards)] ) } cards total)")
+                print(f"  extracted {i + 1}/{len(todo)} sessions ({len(store.cards)} cards total)")
 
     # ---- phase 2: read path per task ----
     def system(task, session_texts=None):
