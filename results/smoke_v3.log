@@ -1,0 +1,43 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+bench: {"n_tasks": 400, "n_sessions": 429, "levels": {"L4": 44, "L1": 230, "L2": 111, "L3": 15}, "grounding_types": {"explicit": 368, "inferred": 181, "default": 317}, "tasks_without_session": 16}
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   1%|          | 3/391 [00:00<00:14, 26.54it/s]Loading weights:   2%|▏         | 6/391 [00:06<07:35,  1.18s/it]Loading weights: 100%|██████████| 391/391 [00:06<00:00, 64.43it/s]
+INFO 09-18 00:01:13 config.py:350] This model supports multiple tasks: {'embedding', 'generate'}. Defaulting to 'generate'.
+INFO 09-18 00:01:13 llm_engine.py:249] Initializing an LLM engine (v0.6.4.post1) with config: model='/mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master', speculative_config=None, tokenizer='/mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=16384, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=/mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master, num_scheduler_steps=1, chunked_prefill_enabled=False multi_step_stream_outputs=True, enable_prefix_caching=False, use_async_output_proc=True, use_cached_outputs=False, chat_template_text_format=string, mm_processor_kwargs=None, pooler_config=None)
+WARNING 09-18 00:01:13 utils.py:720] Using 'pin_memory=False' as WSL is detected. This may slow down the performance.
+INFO 09-18 00:01:13 selector.py:135] Using Flash Attention backend.
+INFO 09-18 00:01:14 model_runner.py:1072] Starting to load model /mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master...
+Loading safetensors checkpoint shards:   0% Completed | 0/4 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  25% Completed | 1/4 [00:14<00:42, 14.09s/it]
+Loading safetensors checkpoint shards:  50% Completed | 2/4 [00:31<00:32, 16.04s/it]
+Loading safetensors checkpoint shards:  75% Completed | 3/4 [00:44<00:14, 14.67s/it]
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:57<00:00, 13.89s/it]
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:57<00:00, 14.31s/it]
+
+INFO 09-18 00:02:11 model_runner.py:1077] Loading model weights took 14.2487 GB
+INFO 09-18 00:02:13 worker.py:232] Memory profiling results: total_gpu_memory=23.99GiB initial_memory_usage=15.90GiB peak_torch_memory=16.43GiB memory_usage_post_profile=15.91GiB non_torch_memory=1.66GiB kv_cache_size=3.98GiB gpu_memory_utilization=0.92
+INFO 09-18 00:02:13 gpu_executor.py:113] # GPU blocks: 4663, # CPU blocks: 4681
+INFO 09-18 00:02:13 gpu_executor.py:117] Maximum concurrency for 16384 tokens per request: 4.55x
+INFO 09-18 00:02:13 model_runner.py:1400] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+INFO 09-18 00:02:13 model_runner.py:1404] If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 09-18 00:02:26 model_runner.py:1518] Graph capturing finished in 10 secs, took 0.20 GiB
+write path: 0 sessions cached, 429 to extract
+  extracted 25/429 sessions (459 cards total)
+  extracted 50/429 sessions (865 cards total)
+  extracted 75/429 sessions (1303 cards total)
+  extracted 100/429 sessions (1762 cards total)
+  extracted 125/429 sessions (2212 cards total)
+  extracted 150/429 sessions (2665 cards total)
+  extracted 175/429 sessions (3132 cards total)
+  extracted 200/429 sessions (3567 cards total)
+  extracted 225/429 sessions (3961 cards total)
+  extracted 250/429 sessions (4441 cards total)
+  extracted 275/429 sessions (4935 cards total)
+  extracted 300/429 sessions (5508 cards total)
+  extracted 325/429 sessions (6043 cards total)
+  extracted 350/429 sessions (6521 cards total)
+  extracted 375/429 sessions (6955 cards total)
+  extracted 400/429 sessions (7457 cards total)
+  extracted 425/429 sessions (7990 cards total)
+final: n=5  F1=20.00  BLEU1=20.00  TA(TSA)=100.00  EM=20.00  ArgF1=20.00 (n=5)  SlotAcc=20.00
+per-sample log: results/m2a_smoke5_v3.jsonl
+[rank0]:[W918 02:53:42.193524569 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())

@@ -128,7 +128,7 @@ def main():
             for d, vec in zip(demands, demand_vecs)
         ]
         evidence = render_evidence(hits_per_demand)
-        return bind(llm, spec, task.query, evidence)
+        return bind(llm, spec, task.query, evidence, demand_evidence=hits_per_demand)
 
     run_system(system, bench, args.out, limit=args.limit)
 

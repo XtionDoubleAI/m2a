@@ -76,3 +76,44 @@ def test_slot_retriever_attribute_match_toggle():
 def test_card_text_includes_verbatim_source():
     t = card_text(CARD)
     assert CARD["source_text"] in t and CARD["value"] in t
+
+
+# ---------- deterministic binding (early C2) ----------
+
+def test_deterministic_override_whitelist():
+    from m2a.act.binder import deterministic_override
+
+    spec = ToolSpec(name="t", params=[
+        ParamSpec(name="address", type="string", required=True),
+        ParamSpec(name="days", type="integer"),
+    ])
+    hits_addr = {"param_name": "address"}, [
+        (dict(CARD, attribute="Wallet", value="0x3f5CE5", source_text="wallet",
+              session_id="session_00059", turn_index=3), 0.9)]
+    hits_days = {"param_name": "days"}, [
+        (dict(CARD, attribute="Horizon", value="upcoming week", source_text="week",
+              session_id="session_00059", turn_index=4), 0.8)]
+    # fabricated answer -> substituted with newest compatible candidate
+    args = deterministic_override(spec, [hits_addr, hits_days],
+                                  {"address": "madeup", "days": 16})
+    assert args["address"] == "0x3f5CE5"
+    # incompatible candidate never blocks the model ('upcoming week' vs integer)
+    assert args["days"] == 16
+    # model's answer already among candidates -> respected
+    args2 = deterministic_override(spec, [hits_addr], {"address": "0x3f5ce5"})
+    assert args2["address"] == "0x3f5ce5"
+
+
+def test_deterministic_override_newest_wins_on_fabrication():
+    from m2a.act.binder import deterministic_override
+
+    spec = ToolSpec(name="t", params=[ParamSpec(name="pm", type="string")])
+    demand = {"param_name": "pm"}
+    old = (dict(CARD, attribute="PM", value="pip", session_id="session_00010", turn_index=2), 0.9)
+    new = (dict(CARD, attribute="PM", value="uv", session_id="session_00290", turn_index=1), 0.5)
+    # model chose a real candidate -> kept even though it is the older one
+    args = deterministic_override(spec, [(demand, [old, new])], {"pm": "pip"})
+    assert args["pm"] == "pip"
+    # model fabricated -> newest candidate substituted
+    args2 = deterministic_override(spec, [(demand, [old, new])], {"pm": "npm"})
+    assert args2["pm"] == "uv"

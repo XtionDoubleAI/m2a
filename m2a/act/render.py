@@ -11,7 +11,13 @@ from m2a.act.retrieve import card_text
 
 
 def render_evidence(demand_evidence: list[tuple[dict, list[tuple[dict, float]]]]) -> str:
-    """demand_evidence: [(demand, [(card, score), ...]), ...] -> prompt text."""
+    """demand_evidence: [(demand, [(card, score), ...]), ...] -> prompt text.
+
+    Format note (learned the hard way): small models do not parse values out of
+    prose-like card lines -- they ignore them and hallucinate. The card's clean
+    `value` field is therefore surfaced FIRST as an explicit candidate the model
+    can confirm or override, with the verbatim evidence sentence after it.
+    """
     parts = []
     for demand, hits in demand_evidence:
         block = [f"### Parameter `{demand['param_name']}`"]
@@ -19,8 +25,10 @@ def render_evidence(demand_evidence: list[tuple[dict, list[tuple[dict, float]]]]
             block.append("(no evidence found in memory)")
         for j, (card, _score) in enumerate(hits, 1):
             block.append(
-                f"{j}. {card_text(card)}  [recorded in {card.get('session_id', '?')} "
-                f"turn {card.get('turn_index', '?')}]"
+                f"{j}. candidate value: \"{card['value']}\""
+                f"\n   supporting dialogue: \"{card['source_text']}\""
+                f"\n   (category: {card['attribute']}; recorded in {card.get('session_id', '?')} "
+                f"turn {card.get('turn_index', '?')})"
             )
         parts.append("\n".join(block))
     return "\n\n".join(parts)
