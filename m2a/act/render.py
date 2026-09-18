@@ -10,13 +10,18 @@ from __future__ import annotations
 from m2a.act.retrieve import card_text
 
 
-def render_evidence(demand_evidence: list[tuple[dict, list[tuple[dict, float]]]]) -> str:
+def render_evidence(demand_evidence: list[tuple[dict, list[tuple[dict, float]]]],
+                    chunk_texts: list[str] | None = None) -> str:
     """demand_evidence: [(demand, [(card, score), ...]), ...] -> prompt text.
 
     Format note (learned the hard way): small models do not parse values out of
     prose-like card lines -- they ignore them and hallucinate. The card's clean
     `value` field is therefore surfaced FIRST as an explicit candidate the model
     can confirm or override, with the verbatim evidence sentence after it.
+
+    chunk_texts: lossless dialogue excerpts (hybrid store). Appended verbatim
+    after the per-parameter blocks so values that never became cards remain
+    reachable by the model.
     """
     parts = []
     for demand, hits in demand_evidence:
@@ -31,4 +36,7 @@ def render_evidence(demand_evidence: list[tuple[dict, list[tuple[dict, float]]]]
                 f"turn {card.get('turn_index', '?')})"
             )
         parts.append("\n".join(block))
-    return "\n\n".join(parts)
+    out = "\n\n".join(parts)
+    if chunk_texts:
+        out += "\n\n### Original dialogue excerpts (verbatim)\n" + "\n---\n".join(chunk_texts)
+    return out

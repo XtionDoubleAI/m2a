@@ -61,15 +61,20 @@ def _coerce(value: str, ptype: str):
     return None  # arrays/objects: keep the model's answer
 
 
-def deterministic_override(spec: ToolSpec, demand_evidence, args: dict) -> dict:
+def deterministic_override(spec: ToolSpec, demand_evidence, args: dict,
+                           trusted_texts: str | None = None) -> dict:
     """Minimal C2 binding (whitelist form), activated early by smoke-run
-    evidence. Type-compatible card values form the trusted set for a
-    parameter: if the model's answer already lies in that set, keep it (the
-    model is good at CHOOSING among candidates); if the answer lies outside
-    (fabrication), substitute the newest candidate. Unconditional top-1
-    override was tried and rejected: it amplifies retrieval-ranking errors by
-    overwriting correct model choices."""
+    evidence. The trusted set for a parameter = type-compatible card values,
+    PLUS (hybrid store) any value substantiated by the verbatim chunk texts.
+    The model's answer is kept if it lies in the trusted set; otherwise it is
+    treated as fabrication and replaced by the newest card candidate.
+
+    History (kept for the paper's ablation story): unconditional top-1 override
+    amplified retrieval-ranking errors; a card-only whitelist then killed
+    correct answers the model had read from the lossless chunks -- the trusted
+    set must span both stores."""
     out = dict(args)
+    trusted_blob = _canon(trusted_texts) if trusted_texts else ""
     for demand, hits in demand_evidence:
         p = spec.param(demand.get("param_name", ""))
         if p is None or not hits:
@@ -84,7 +89,9 @@ def deterministic_override(spec: ToolSpec, demand_evidence, args: dict) -> dict:
         if not candidates:
             continue
         model_v = _canon(out.get(p.name))
-        if model_v not in {_canon(c) for c in candidates}:
+        in_cards = model_v in {_canon(c) for c in candidates}
+        in_chunks = bool(trusted_blob) and model_v in trusted_blob
+        if not in_cards and not in_chunks:
             out[p.name] = candidates[-1]  # newest compatible candidate
     return out
 
@@ -96,7 +103,8 @@ def _canon(v) -> str:
 
 
 def bind(llm, spec: ToolSpec, query: str, evidence_text: str,
-         demand_evidence=None) -> tuple[str | None, dict]:
+         demand_evidence=None, trusted_texts: str | None = None) -> tuple[str | None, dict, dict]:
+    """Returns (tool_name, final_args, model_args_pre_override)."""
     user = (
         f"Tool schema:\n{json.dumps({'name': spec.name, 'description': spec.description, 'parameters': {'properties': {p.name: {'type': p.type, 'description': p.description, **({'enum': p.enum} if p.enum else {})} for p in spec.params}, 'required': [p.name for p in spec.required_params()]}}, ensure_ascii=False, indent=1)}\n\n"
         f"Memory evidence:\n{evidence_text}\n\n"
@@ -106,6 +114,7 @@ def bind(llm, spec: ToolSpec, query: str, evidence_text: str,
     name, args = parse_tool_call_json(out)
     if name is None and args:
         name = spec.name  # model returned arguments without a name; tool is given
+    model_args = dict(args or {})
     if demand_evidence is not None:
-        args = deterministic_override(spec, demand_evidence, args or {})
-    return name, args
+        args = deterministic_override(spec, demand_evidence, args or {}, trusted_texts)
+    return name, args or {}, model_args

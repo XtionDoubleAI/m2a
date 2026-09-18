@@ -20,3 +20,15 @@ INFO 09-18 23:24:43 gpu_executor.py:117] Maximum concurrency for 16384 tokens pe
 INFO 09-18 23:24:43 model_runner.py:1400] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
 INFO 09-18 23:24:43 model_runner.py:1404] If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
 INFO 09-18 23:24:54 model_runner.py:1518] Graph capturing finished in 11 secs, took 0.20 GiB
+write path: 429 sessions cached, 0 to extract
+  50/400  n=50  F1=15.71  BLEU1=14.06  TA(TSA)=96.00  EM=6.00  ArgF1=16.36 (n=48)  SlotAcc=13.72
+  100/400  n=100  F1=14.31  BLEU1=14.26  TA(TSA)=97.00  EM=6.00  ArgF1=14.75 (n=97)  SlotAcc=11.94
+  150/400  n=150  F1=12.94  BLEU1=12.84  TA(TSA)=97.33  EM=6.00  ArgF1=13.30 (n=146)  SlotAcc=11.23
+  200/400  n=200  F1=14.12  BLEU1=13.70  TA(TSA)=96.50  EM=6.00  ArgF1=14.64 (n=193)  SlotAcc=12.01
+  250/400  n=250  F1=15.76  BLEU1=15.23  TA(TSA)=95.60  EM=6.40  ArgF1=16.49 (n=239)  SlotAcc=13.19
+  300/400  n=300  F1=15.47  BLEU1=14.85  TA(TSA)=95.00  EM=6.33  ArgF1=16.29 (n=285)  SlotAcc=13.17
+  350/400  n=350  F1=16.19  BLEU1=15.50  TA(TSA)=95.71  EM=6.86  ArgF1=16.92 (n=335)  SlotAcc=14.05
+  400/400  n=400  F1=16.23  BLEU1=15.53  TA(TSA)=95.75  EM=7.25  ArgF1=16.95 (n=383)  SlotAcc=14.11
+final: n=400  F1=16.23  BLEU1=15.53  TA(TSA)=95.75  EM=7.25  ArgF1=16.95 (n=383)  SlotAcc=14.11
+per-sample log: results/m2a_v6_full.jsonl
+[rank0]:[W918 23:41:50.208762929 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())

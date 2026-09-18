@@ -1,25 +1,24 @@
 """Run the m2a harness over Mem2ActBench.
 
-Two phases:
-  1. WRITE (offline, cached): extract fact cards from every evidence session
-     (one LLM call per session; cache file resumes across runs)
-  2. READ (per task): demand generation -> slot retrieval -> slot-paired
-     rendering -> LLM binding -> scoring
+Store modes (ablation rows for the paper):
+  facts   -- fact-card store only. Kept as the losing ablation: 51% of gold
+             values never enter a distilled store (coverage funnel), which
+             motivated the hybrid design.
+  hybrid  -- fact cards (clean candidate values for binding) PLUS verbatim
+             dialogue chunks (lossless coverage). Default.
 
-Toggles (all default OFF -- MVP first, per the agreed implementation strategy):
-  --attribute-match   D2-B: attribute_guess matching as third RRF path
-  --collapse-versions C3:   restrict retrieval corpus to each attribute's
-                            newest card (version-chain resolution)
-  --k                 retrieval depth per slot (default 3)
+Every run appends a manifest (config + aggregates) to results/runs.jsonl and
+dumps per-task intermediates (demands, hits, pre/post-override args) for
+error analysis and ablation figures. See experiments/funnel.py.
 
-Usage (WSL):
-  CUDA_VISIBLE_DEVICES=1 python -X utf8 -m experiments.run_m2a --limit 20
+Usage (WSL): python -X utf8 -m experiments.run_m2a --limit 20
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -42,95 +41,165 @@ def _snapshot(repo: str) -> Path:
     return snaps[-1] if snaps else direct
 
 
+def build_chunk_index(bench, embedder, cache_stem: str):
+    """One-time lossless chunk index over all sessions (cached to disk)."""
+    import numpy as np
+
+    from experiments.baselines.ltmemory import chunk_session
+
+    meta_path, vec_path = Path(cache_stem + ".jsonl"), Path(cache_stem + ".npy")
+    if meta_path.exists() and vec_path.exists():
+        chunks = [json.loads(l) for l in open(meta_path, encoding="utf-8")]
+        return chunks, np.load(vec_path)
+    chunks = []
+    for s in bench.sessions:
+        for j, text in enumerate(chunk_session(s.turns, window=6)):
+            chunks.append({"session_id": s.session_id,
+                           "chunk_id": f"{s.session_id}#{j}", "text": text})
+    vecs = embedder.encode([c["text"] for c in chunks])
+    with open(meta_path, "w", encoding="utf-8") as f:
+        for c in chunks:
+            f.write(json.dumps(c, ensure_ascii=False) + "\n")
+    np.save(vec_path, vecs)
+    return chunks, vecs
+
+
+class ChunkSearcher:
+    """RRF(BM25, dense) over the chunks visible to a task."""
+
+    def __init__(self, visible: list[dict], vecs, k: int = 3, rrf_k: int = 60):
+        from rank_bm25 import BM25Okapi
+
+        self.chunks = visible
+        self.k, self.rrf_k = k, rrf_k
+        self._vecs = vecs
+        self._bm25 = (BM25Okapi([re.findall(r"\w+", c["text"].lower()) for c in visible])
+                      if visible else None)
+
+    def search(self, query: str, qvec) -> list[tuple[dict, float]]:
+        if not self.chunks:
+            return []
+        rrf: dict[int, float] = {}
+        if self._bm25 is not None:
+            scores = self._bm25.get_scores(re.findall(r"\w+", query.lower()))
+            for rank, idx in enumerate(sorted(range(len(self.chunks)),
+                                              key=lambda i: -scores[i])[:50]):
+                rrf[idx] = rrf.get(idx, 0.0) + 1.0 / (self.rrf_k + rank + 1)
+        if self._vecs is not None and len(self._vecs):
+            sims = self._vecs @ qvec
+            for rank, idx in enumerate(sorted(range(len(self.chunks)),
+                                              key=lambda i: -sims[i])[:50]):
+                rrf[idx] = rrf.get(idx, 0.0) + 1.0 / (self.rrf_k + rank + 1)
+        top = sorted(rrf.items(), key=lambda x: -x[1])[: self.k]
+        return [(self.chunks[i], s) for i, s in top]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
-    ap.add_argument("--k", type=int, default=3)
+    ap.add_argument("--store-mode", choices=["hybrid", "facts"], default="hybrid")
+    ap.add_argument("--k-cards", type=int, default=3)
+    ap.add_argument("--k-chunks", type=int, default=3)
     ap.add_argument("--attribute-match", action="store_true")
     ap.add_argument("--collapse-versions", action="store_true")
-    ap.add_argument("--cards-cache", default=str(OUT_DIR / "fact_cards.jsonl"))
+    ap.add_argument("--cards-cache", default=str(OUT_DIR / "fact_cards_v3.jsonl"))
+    ap.add_argument("--chunks-cache", default=str(OUT_DIR / "chunks"))
     ap.add_argument("--embed-device", default="cuda:1")
     ap.add_argument("--gpu-util", type=float, default=0.92)
-    ap.add_argument("--out", default=None)
+    ap.add_argument("--name", default=None)
     args = ap.parse_args()
+
+    name = args.name or f"m2a-{args.store_mode}-store"
+    out_path = OUT_DIR / f"{name}.jsonl"
+    inter_path = OUT_DIR / f"{name}.intermediates.jsonl"
 
     from m2a.act.binder import bind
     from m2a.act.embedder import BGEM3Dense
     from m2a.act.intent import generate_demands
+    from m2a.act.llm import OfflineLLM
     from m2a.act.render import render_evidence
     from m2a.act.retrieve import SlotRetriever
-    from m2a.act.llm import OfflineLLM
     from m2a.eval.dataset import Bench
+    from m2a.eval.metrics import aggregate
     from m2a.eval.runner import run_system
     from m2a.schema import load_tool_spec
-    from m2a.state.extractor import extract_session
     from m2a.state.store import MemoryStore
-
-    suffix = ("_attr" if args.attribute_match else "") + ("_vc" if args.collapse_versions else "")
-    args.out = args.out or str(OUT_DIR / f"m2a_mvp{suffix}.jsonl")
+    from experiments.runlog import IntermediateDumper, log_run
 
     bench = Bench(BENCH_DIR)
     print("bench:", json.dumps(bench.stats(), ensure_ascii=False))
 
     embedder = BGEM3Dense(str(_snapshot("BAAI/bge-m3")), device=args.embed_device)
     llm = OfflineLLM(str(_snapshot("Qwen/Qwen2.5-7B-Instruct")),
-                     gpu_memory_utilization=args.gpu_util)  # engine sits on cuda:0
+                     gpu_memory_utilization=args.gpu_util)
 
-    # ---- phase 1: write path (cached) ----
-    cache = Path(args.cards_cache)
-    cache.parent.mkdir(parents=True, exist_ok=True)
-    done: set[str] = set()
+    # write path (cached fact cards)
     store = MemoryStore()
-    if cache.exists():
-        with open(cache, encoding="utf-8") as f:
+    if Path(args.cards_cache).exists():
+        with open(args.cards_cache, encoding="utf-8") as f:
             for line in f:
                 d = json.loads(line)
                 store.add_session(d["session_id"], d["cards"])
-                done.add(d["session_id"])
-    todo = [s for s in bench.sessions if s.session_id not in done]
-    print(f"write path: {len(done)} sessions cached, {len(todo)} to extract")
-    with open(cache, "a", encoding="utf-8") as f:
-        for i, s in enumerate(todo):
-            # segment the session by conversation boundary (source_id) and
-            # extract per segment: short inputs resist attention dilution and
-            # keep identifier-bearing tool turns visible (v3 fix)
-            from itertools import groupby
-            cards: list[dict] = []
-            start = 0
-            for _key, grp in groupby(s.turns, key=lambda t: t.get("source_id")):
-                seg = list(grp)
-                text = "\n".join(
-                    f"{t.get('role', '?')}: {t.get('content', '')}" for t in seg
-                )
-                seg_cards = extract_session(llm, s.session_id, text)
-                for c in seg_cards:
-                    c["turn_index"] = start + c.get("turn_index", 0)
-                cards.extend(seg_cards)
-                start += len(seg)
-            store.add_session(s.session_id, cards)
-            f.write(json.dumps({"session_id": s.session_id, "cards": cards},
-                               ensure_ascii=False) + "\n")
-            if (i + 1) % 25 == 0:
-                print(f"  extracted {i + 1}/{len(todo)} sessions ({len(store.cards)} cards total)")
+    print(f"fact cards: {len(store.cards)} cards from {len(set(c['session_id'] for c in store.cards))} sessions")
 
-    # ---- phase 2: read path per task ----
+    # lossless chunk index (hybrid mode)
+    all_chunks = all_vecs = None
+    if args.store_mode == "hybrid":
+        all_chunks, all_vecs = build_chunk_index(bench, embedder, args.chunks_cache)
+        print(f"chunk index: {len(all_chunks)} chunks")
+
+    dumper = IntermediateDumper(inter_path)
+
     def system(task, session_texts=None):
         spec = load_tool_spec(task.tool_schema)
         corpus = store.cards_for_sessions(task.session_ids)
         if args.collapse_versions:
             corpus = list(store.latest_by_attribute(corpus).values())
-        retriever = SlotRetriever(corpus, embedder=embedder, k=args.k,
+        retriever = SlotRetriever(corpus, embedder=embedder, k=args.k_cards,
                                   use_attribute_match=args.attribute_match)
-        demands = generate_demands(llm, task.query, spec)
-        demand_vecs = embedder.encode([d["query"] for d in demands]) if demands else []
-        hits_per_demand = [
-            (d, retriever.search(d, vec))
-            for d, vec in zip(demands, demand_vecs)
-        ]
-        evidence = render_evidence(hits_per_demand)
-        return bind(llm, spec, task.query, evidence, demand_evidence=hits_per_demand)
 
-    run_system(system, bench, args.out, limit=args.limit)
+        searcher = None
+        if args.store_mode == "hybrid":
+            want = set(task.session_ids)
+            visible = [c for c in all_chunks if c["session_id"] in want]
+            keep_idx = [i for i, c in enumerate(all_chunks) if c["session_id"] in want]
+            import numpy as np
+            searcher = ChunkSearcher(visible, all_vecs[keep_idx] if all_vecs is not None else None,
+                                     k=args.k_chunks)
+
+        demands = generate_demands(llm, task.query, spec)
+        dvecs = embedder.encode([d["query"] for d in demands]) if demands else []
+
+        card_hits, chunk_texts = [], []
+        for d, v in zip(demands, dvecs):
+            card_hits.append((d, retriever.search(d, v)))
+            if searcher is not None:
+                for c, _s in searcher.search(d["query"], v):
+                    if c["text"] not in chunk_texts:
+                        chunk_texts.append(c["text"])
+
+        evidence = render_evidence(card_hits, chunk_texts=chunk_texts or None)
+        trusted = "\n".join(chunk_texts) if chunk_texts else None
+        pred_tool, final_args, model_args = bind(llm, spec, task.query, evidence,
+                                                 demand_evidence=card_hits,
+                                                 trusted_texts=trusted)
+        dumper.dump(task.qa_id, demands,
+                    {d["param_name"]: [c["value"] for c, _ in h] for d, h in card_hits},
+                    {"n_chunks": len(chunk_texts)},
+                    model_args, final_args, task.arguments)
+        return pred_tool, final_args
+
+    results = run_system(system, bench, out_path, limit=args.limit)
+    dumper.close()
+
+    aggs = aggregate(results)
+    log_run(name, config={**vars(args), "name": name},
+            aggregates={"f1": round(aggs.f1 * 100, 2), "bleu1": round(aggs.bleu1 * 100, 2),
+                        "tsa": round(aggs.tsa * 100, 2), "em": round(aggs.em * 100, 2),
+                        "arg_f1": round(aggs.arg_f1 * 100, 2),
+                        "slot_acc": round(aggs.slot_acc * 100, 2)},
+            files={"samples": str(out_path), "intermediates": str(inter_path)},
+            runs_path=OUT_DIR / "runs.jsonl")
 
 
 if __name__ == "__main__":
