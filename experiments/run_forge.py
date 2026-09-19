@@ -97,7 +97,7 @@ class ChunkSearcher:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
-    ap.add_argument("--store-mode", choices=["hybrid", "facts"], default="hybrid")
+    ap.add_argument("--store-mode", choices=["hybrid", "facts", "chunks"], default="hybrid")
     ap.add_argument("--k-cards", type=int, default=3)
     ap.add_argument("--k-chunks", type=int, default=3)
     ap.add_argument("--attribute-match", action="store_true")
@@ -146,7 +146,7 @@ def main():
 
     # lossless chunk index (hybrid mode)
     all_chunks = all_vecs = None
-    if args.store_mode == "hybrid":
+    if args.store_mode in ("hybrid", "chunks"):
         all_chunks, all_vecs = build_chunk_index(bench, embedder, args.chunks_cache)
         print(f"chunk index: {len(all_chunks)} chunks")
 
@@ -154,14 +154,14 @@ def main():
 
     def system(task, session_texts=None):
         spec = load_tool_spec(task.tool_schema)
-        corpus = store.cards_for_sessions(task.session_ids)
+        corpus = store.cards_for_sessions(task.session_ids) if args.store_mode != "chunks" else []
         if args.collapse_versions:
             corpus = list(store.latest_by_attribute(corpus).values())
         retriever = SlotRetriever(corpus, embedder=embedder, k=args.k_cards,
                                   use_attribute_match=args.attribute_match)
 
         searcher = None
-        if args.store_mode == "hybrid":
+        if args.store_mode in ("hybrid", "chunks"):
             want = set(task.session_ids)
             visible = [c for c in all_chunks if c["session_id"] in want]
             keep_idx = [i for i, c in enumerate(all_chunks) if c["session_id"] in want]
