@@ -166,7 +166,8 @@ class NoteBank:
         upd = d.get("context_update", {}) or {}
         update = {nbrs[int(k)]: v for k, v in upd.items()
                   if str(k).isdigit() and int(k) < len(nbrs) and isinstance(v, str)}
-        return {"indices": [nbrs[i] for i in dict.fromkeys(idx)], "update": update}
+        return {"indices": [int(nbrs[i]) for i in dict.fromkeys(idx)],
+                "update": {int(i): v for i, v in update.items()}}
 
     def _evolve(self, update: dict) -> None:
         for i, clause in update.items():

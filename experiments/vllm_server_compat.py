@@ -18,7 +18,30 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from forge.act.llm import _patch_transformers_for_vllm  # noqa: E402
 
+
+def _stub_pyairports() -> None:
+    """Runtime shim for the outlines dependency hole: outlines 0.0.46 imports
+    `pyairports.airports.AIRPORT_LIST`, but the PyPI package of that name is an
+    empty placeholder (no modules). Our guided-decoding use never touches the
+    Airport enum, so an empty list satisfies the interface -- injected into
+    sys.modules here (no writes outside this project)."""
+    import sys
+    import types
+    try:
+        import pyairports.airports  # noqa: F401
+        return
+    except Exception:
+        pass
+    pkg = types.ModuleType("pyairports")
+    air = types.ModuleType("pyairports.airports")
+    air.AIRPORT_LIST = []
+    pkg.airports = air
+    sys.modules["pyairports"] = pkg
+    sys.modules["pyairports.airports"] = air
+
+
 _patch_transformers_for_vllm()
+_stub_pyairports()
 
 import vllm.entrypoints.openai.api_server as api_server  # noqa: E402
 
