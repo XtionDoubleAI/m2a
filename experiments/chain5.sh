@@ -13,9 +13,9 @@ else
   MODEL_DIR=$(ls -d "$ROOT"/models/Qwen--Qwen2.5-7B-Instruct/snapshots/*/ | tail -1)
 fi
 
-CUDA_VISIBLE_DEVICES=0 nohup "$PY" -m vllm.entrypoints.openai.api_server \
+CUDA_VISIBLE_DEVICES=0 nohup "$PY" -X utf8 experiments/vllm_server_compat.py \
   --model "$MODEL_DIR" --served-model-name Qwen/Qwen2.5-7B-Instruct \
-  --port 8000 --gpu-memory-utilization 0.90 > results/vllm_server_amem.log 2>&1 &
+  --port 8000 --gpu-memory-utilization 0.90 --max-model-len 16384 > results/vllm_server_amem.log 2>&1 &
 SERVER_PID=$!
 
 "$PY" - <<'EOF'
