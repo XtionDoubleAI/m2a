@@ -1,14 +1,19 @@
 """Paper figures for FORGE, generated directly from experiment archives.
 
+Data sources (all offline, no LLM/GPU):
+  - results/runs.jsonl  : registered aggregates per run (value-only F1)
+  - results/ci_table.py : paired bootstrap diffs vs forge-chunks-full
+  - results/*.jsonl     : per-sample files recomputed via forge.eval.metrics
+
 Design rules (print/CVD-safe, per the dataviz method adapted to academic PDF):
   - Okabe-Ito palette, fixed assignment per SYSTEM IDENTITY (never per rank);
   - identity never color-alone: hatching + direct value labels + legend;
   - one axis; thin marks; recessive grid; text in ink color, not series color;
   - serif font to match the paper, 8.5pt; column width 3.35in, text width 6.5in.
 
-Outputs PDFs to ../Pdev/writing/figures/ for \includegraphics.
+Outputs PDFs to ../Pdev/writing/figures/ for \\includegraphics.
 
-Usage: python -m experiments.plots   (no LLM, no GPU; consumes results/*.jsonl)
+Usage: python -m experiments.plots
 """
 
 from __future__ import annotations
@@ -28,7 +33,7 @@ FIGS = HERE.parent / "Pdev" / "writing" / "figures"
 # Okabe-Ito, fixed by system identity
 C_FORGE = "#0072B2"      # blue -- FORGE (final)
 C_FORGE_ABL = "#56B4E9"  # light blue -- FORGE ablation variants
-C_BASE = "#E69F00"       # orange -- baselines (passive / A-Mem)
+C_BASE = "#E69F00"       # orange -- baselines (passive / Mem0 / A-Mem)
 C_FLOOR = "#999999"      # grey -- floor / context rows
 H_FORGE, H_ABL, H_BASE = "", "//", "xx"
 
@@ -41,6 +46,25 @@ plt.rcParams.update({
 })
 
 
+def runs() -> dict:
+    """name -> aggregates, from the run registry."""
+    out = {}
+    for line in open(RESULTS / "runs.jsonl", encoding="utf-8"):
+        d = json.loads(line)
+        out[d["name"]] = d["aggregates"]
+    return out
+
+
+def mean_f1(path: Path) -> float:
+    from forge.eval.metrics import score_sample
+    xs = []
+    for line in open(path, encoding="utf-8"):
+        d = json.loads(line)
+        xs.append(score_sample(d["qa_id"], d["gold_tool"], d["gold_args"],
+                               d["pred_tool"], d["pred_args"]).f1)
+    return 100 * sum(xs) / len(xs)
+
+
 def _save(fig, name: str):
     FIGS.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIGS / name, bbox_inches="tight")
@@ -48,13 +72,16 @@ def _save(fig, name: str):
     print("wrote", FIGS / name)
 
 
-def fig_ablation():
-    """Gain decomposition from floor to oracle; each bar is one ablation row."""
+def fig_store():
+    """Storage-chain ladder: distillation -> lossless supply (the paper's main
+    ablation story; paper floor and oracle drawn as context rows)."""
+    r = runs()
     rows = [
-        ("No retrieval\n(paper)", 10.0, C_FLOOR, ""),
-        ("fact store\nonly", 16.23, C_FORGE_ABL, H_ABL),
-        ("hybrid store\n+ guard", 27.72, C_FORGE_ABL, H_ABL),
-        ("hybrid store\n(final)", 33.88, C_FORGE, H_FORGE),
+        ("no retrieval\n(paper)", 10.0, C_FLOOR, ""),
+        ("distilled\nfacts only", mean_f1(RESULTS / "m2a_v6_full.jsonl"), C_FORGE_ABL, H_ABL),
+        ("hybrid store\n+ guard", r["m2a-hybrid-store"]["f1"], C_FORGE_ABL, H_ABL),
+        ("hybrid store", r["m2a-hybrid-store-nooverride"]["f1"], C_FORGE_ABL, H_ABL),
+        ("lossless\nchunks (final)", r["forge-chunks-full"]["f1"], C_FORGE, H_FORGE),
         ("oracle evidence\n(paper)", 53.8, C_FLOOR, ""),
     ]
     fig, ax = plt.subplots(figsize=(3.35, 2.1))
@@ -62,29 +89,65 @@ def fig_ablation():
     for x, (label, v, c, h) in zip(xs, rows):
         ax.bar(x, v, width=0.62, color=c, hatch=h, edgecolor="white", linewidth=0.8)
         ax.text(x, v + 1.0, f"{v:.1f}", ha="center", fontsize=7.5)
-    for x, (label, v, c, h) in zip(list(xs)[1:4], rows[1:4]):
-        pass
-    # annotate deltas between consecutive FORGE rows
-    for (x0, r0), (x1, r1) in zip(list(zip(xs, rows))[1:3], list(zip(xs, rows))[2:4]):
+    for (x0, r0), (x1, r1) in zip(list(zip(xs, rows))[1:4], list(zip(xs, rows))[2:5]):
         ax.annotate("", xy=(x1, r1[1] + 4.5), xytext=(x0, r0[1] + 4.5),
                     arrowprops=dict(arrowstyle="->", color="#555555", lw=0.7))
         ax.text((x0 + x1) / 2, (r0[1] + r1[1]) / 2 + 5.5,
                 f"+{r1[1]-r0[1]:.1f}", ha="center", fontsize=7, color="#333333")
-    ax.set_xticks(list(xs), [r[0] for r in rows], fontsize=7)
+    ax.set_xticks(list(xs), [r[0] for r in rows], fontsize=6.6)
     ax.set_ylabel("F1 (400 tasks)")
     ax.set_ylim(0, 60)
     ax.yaxis.grid(True, linewidth=0.4, color="#DDDDDD")
     ax.set_axisbelow(True)
     ax.spines[["top", "right"]].set_visible(False)
-    _save(fig, "ablation.pdf")
+    _save(fig, "store.pdf")
+
+
+def fig_components():
+    """Mechanism splits + component stack vs the full configuration, with 95%
+    paired-bootstrap intervals (all intervals cross zero: the +6.2 total edge
+    is architectural, not attributable to any single add-on). Dot plot -- the
+    differences are small, so bars from a truncated axis would exaggerate."""
+    ci = json.loads((RESULTS / "ci_table.json").read_text(encoding="utf-8"))
+    r = runs()
+    ref = r["forge-chunks-full"]["f1"]
+    rows = [
+        ("full (reference)", r["forge-chunks-full"]["f1"], None),
+        ("no per-param questions", r["forge-chunks-nodemand"]["f1"],
+         ci["forge-chunks-nodemand"]),
+        ("flat render", r["forge-chunks-flat"]["f1"],
+         ci["forge-chunks-flat"]),
+        ("+ rerank", r["forge-chunks-r1"]["f1"], ci["forge-chunks-r1"]),
+        ("+ candidate ordering", r["forge-chunks-r1r2"]["f1"], ci["forge-chunks-r1r2"]),
+        ("+ verbatim anchor", r["forge-chunks-r1r2r3"]["f1"], ci["forge-chunks-r1r2r3"]),
+    ]
+    fig, ax = plt.subplots(figsize=(3.35, 1.9))
+    ys = range(len(rows))
+    for y, (label, v, c) in zip(ys, rows):
+        if c:  # interval of the true mean = reference + bootstrap diff interval
+            ax.plot([ref + c["ci_low_pts"], ref + c["ci_high_pts"]], [y, y],
+                    color="#444444", lw=1.0, solid_capstyle="butt", zorder=2)
+        col = C_FORGE if c is None else C_FORGE_ABL
+        ax.scatter([v], [y], s=22, color=col, edgecolor="white",
+                   linewidth=0.6, zorder=3)
+        ax.text(v + 0.12, y, f"{v:.1f}", ha="left", va="center",
+                fontsize=6.8, color="#333333")
+    ax.axvline(ref, color="#0072B2", lw=0.6, ls="--", alpha=0.6)
+    ax.set_yticks(list(ys), [r[0] for r in rows], fontsize=7)
+    ax.invert_yaxis()
+    ax.set_xlabel("F1 (400 tasks)\nwhiskers: 95% paired bootstrap")
+    ax.set_xlim(33, 39.5)
+    ax.xaxis.grid(True, linewidth=0.4, color="#DDDDDD")
+    ax.set_axisbelow(True)
+    ax.spines[["top", "right"]].set_visible(False)
+    _save(fig, "components.pdf")
 
 
 def fig_funnel():
     """Coverage funnel: where gold values die, fact-only vs hybrid store.
 
-    Three stages (all gold arguments -> present in store -> answered correctly),
-    two systems as grouped horizontal bars. Lossless-by-construction coverage of
-    the hybrid store vs 48.7% for the distilled-only store is the figure's point.
+    Lossless-by-construction coverage of the chunk/hybrid store vs 48.7% for
+    the distilled-only store is the figure's point.
     """
     stages = ["all gold\narguments", "present in\nstore", "answered\ncorrectly"]
     fact_only = [100.0, 100 * 402 / 825, 100 * 83 / 825]
@@ -93,7 +156,7 @@ def fig_funnel():
     ys = range(len(stages))
     h = 0.34
     ax.barh([y + h / 2 + 0.02 for y in ys], fact_only, height=h, color=C_BASE,
-            hatch=H_BASE, edgecolor="white", label="fact store only (16.23 F1)")
+            hatch=H_BASE, edgecolor="white", label="distilled facts only (16.23 F1)")
     ax.barh([y - h / 2 - 0.02 for y in ys], hybrid, height=h, color=C_FORGE,
             hatch=H_FORGE, edgecolor="white", label="hybrid store (33.88 F1)")
     for y, v in zip(ys, fact_only):
@@ -112,27 +175,21 @@ def fig_funnel():
 
 
 def fig_levels():
-    """Per-difficulty-level F1: FORGE vs passive baseline."""
-    def per_level(path, pred_key="pred_args"):
-        rows = [json.loads(l) for l in open(path, encoding="utf-8")]
-        inter = {json.loads(l)["qa_id"]: json.loads(l)
-                 for l in open(str(path).replace(".jsonl", ".intermediates.jsonl"),
-                               encoding="utf-8")}
-        from forge.eval.metrics import score_sample
+    """Per-difficulty-level F1: FORGE (lossless config) vs passive baseline,
+    both recomputed from pred/gold args under the value-only metric."""
+    from forge.eval.metrics import score_sample
+
+    def per_level(path):
         out = {}
-        for r in rows:
-            m = inter.get(r["qa_id"])
-            args = m["model_args"] if m else r[pred_key]
-            res = score_sample(r["qa_id"], r["gold_tool"], r["gold_args"], r["gold_tool"], args)
-            out.setdefault(r["level"], []).append(res.f1)
+        for line in open(path, encoding="utf-8"):
+            d = json.loads(line)
+            res = score_sample(d["qa_id"], d["gold_tool"], d["gold_args"],
+                               d["pred_tool"], d["pred_args"])
+            out.setdefault(d.get("level", "?"), []).append(res.f1)
         return {k: 100 * sum(v) / len(v) for k, v in sorted(out.items())}
 
-    forge = per_level(RESULTS / "m2a-hybrid-store.jsonl")
-    base_rows = [json.loads(l) for l in open(RESULTS / "ltmemory_hybrid5_full.jsonl", encoding="utf-8")]
-    base = {}
-    for r in base_rows:
-        base.setdefault(r.get("level", "?"), []).append(r["f1"])
-    base = {k: 100 * sum(v) / len(v) for k, v in sorted(base.items())}
+    forge = per_level(RESULTS / "forge-chunks-full.jsonl")
+    base = per_level(RESULTS / "ltmemory_hybrid5_full.jsonl")
 
     levels = ["L1", "L2", "L3", "L4"]
     xs = range(len(levels))
@@ -155,6 +212,7 @@ def fig_levels():
 
 
 if __name__ == "__main__":
-    fig_ablation()
+    fig_store()
+    fig_components()
     fig_funnel()
     fig_levels()
