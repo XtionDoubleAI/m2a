@@ -131,25 +131,54 @@ def forge_evidence_view(bench: Bench) -> dict:
     return {t.qa_id: "\n".join(bench.session_texts(t)) for t in bench.tasks}
 
 
+def load_archive(name: str) -> tuple[dict, dict]:
+    """-> (per-task predicted args, per-task evidence blob) from a run's
+    archives. Handles both layouts: FORGE intermediates (final_args) and
+    external-system intermediates (pred_args); evidence from the archived
+    rendered evidence, falling back to the full-session upper bound."""
+    p = RESULTS / f"{name}.intermediates.jsonl"
+    args, ev = {}, {}
+    for line in open(p, encoding="utf-8"):
+        d = json.loads(line)
+        args[d["qa_id"]] = d.get("final_args", d.get("pred_args", {}))
+        ev[d["qa_id"]] = d.get("evidence", "")
+    return args, ev
+
+
 def main():
     bench = Bench(BENCH_DIR)
-    ev = forge_evidence_view(bench)
+    upper_ev = forge_evidence_view(bench)
 
-    # FORGE final: archived pre-override model outputs of the hybrid run
-    per_task = {}
-    for line in open(RESULTS / "m2a-hybrid-store.intermediates.jsonl", encoding="utf-8"):
-        d = json.loads(line)
-        per_task[d["qa_id"]] = d["model_args"]
-    forge = analyse("FORGE (hybrid, final)", per_task, ev, bench)
+    systems = [
+        ("LTMemory baseline", "ltmemory_hybrid5_full"),
+        ("FORGE (final, chunks)", "forge-chunks-full"),
+        ("Mem0", "mem0-full"),
+        ("A-Mem (reimpl)", "amem-full"),
+    ]
+    out = []
+    for label, name in systems:
+        inter = RESULTS / f"{name}.intermediates.jsonl"
+        if inter.exists():
+            args, ev = load_archive(name)
+            ev = {k: (v or upper_ev[k]) for k, v in ev.items()}
+        else:  # legacy runs (LTMemory): predictions only, evidence = upper bound
+            args, ev = {}, upper_ev
+            res = RESULTS / f"{name}.jsonl"
+            if not res.exists():
+                print(f"skip {label}: no archive")
+                continue
+            for line in open(res, encoding="utf-8"):
+                d = json.loads(line)
+                args[d["qa_id"]] = d["pred_args"]
+        # older archives (LTMemory) have no evidence field -> upper bound
+        ev = {k: (v or upper_ev[k]) for k, v in ev.items()}
+        if not args:
+            print(f"skip {label}: no archive")
+            continue
+        row = analyse(label, args, ev, bench)
+        row["run"] = name
+        out.append(row)
 
-    # Baseline: its archived predictions
-    base_args = {}
-    for line in open(RESULTS / "ltmemory_hybrid5_full.jsonl", encoding="utf-8"):
-        d = json.loads(line)
-        base_args[d["qa_id"]] = d["pred_args"]
-    base = analyse("LTMemory baseline", base_args, ev, bench)
-
-    out = [base, forge]
     (RESULTS / "multimetrics.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     for row in out:
