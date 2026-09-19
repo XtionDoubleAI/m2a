@@ -102,6 +102,8 @@ def main():
     ap.add_argument("--k-chunks", type=int, default=3)
     ap.add_argument("--attribute-match", action="store_true")
     ap.add_argument("--collapse-versions", action="store_true")
+    ap.add_argument("--whitelist", action="store_true",
+                    help="fabrication-guard override (ablation; net -24 F1-slots in hybrid mode)")
     ap.add_argument("--cards-cache", default=str(OUT_DIR / "fact_cards_v3.jsonl"))
     ap.add_argument("--chunks-cache", default=str(OUT_DIR / "chunks"))
     ap.add_argument("--embed-device", default="cuda:1")
@@ -180,8 +182,9 @@ def main():
 
         evidence = render_evidence(card_hits, chunk_texts=chunk_texts or None)
         trusted = "\n".join(chunk_texts) if chunk_texts else None
+        de = card_hits if args.whitelist else None
         pred_tool, final_args, model_args = bind(llm, spec, task.query, evidence,
-                                                 demand_evidence=card_hits,
+                                                 demand_evidence=de,
                                                  trusted_texts=trusted)
         dumper.dump(task.qa_id, demands,
                     {d["param_name"]: [c["value"] for c, _ in h] for d, h in card_hits},
