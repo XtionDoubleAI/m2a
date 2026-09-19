@@ -80,7 +80,8 @@ def main():
             "api_key": "dummy", "temperature": 0.0, "max_tokens": 4000}},
         "embedder": {"provider": "huggingface", "config": {"model": bge_path()}},
         "vector_store": {"provider": "faiss", "config": {
-            "path": "/tmp/m2a_mem0_faiss", "collection_name": "m2a"}},
+            "path": "/tmp/m2a_mem0_faiss", "collection_name": "m2a",
+            "embedding_model_dims": 1024}},
         "history_db": {"provider": "sqlite", "config": {
             "path": "/tmp/m2a_mem0_history.db"}},
     }

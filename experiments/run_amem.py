@@ -139,7 +139,7 @@ class NoteBank:
             self.vecs.append(vec)
 
     def _structure(self, chunk: str) -> dict:
-        d = parse_json_loose(self.chat(NOTE_PROMPT, f"Dialogue excerpt:\n{chunk}"))
+        d = parse_json_loose(self.chat.chat(NOTE_PROMPT, f"Dialogue excerpt:\n{chunk}"))
         note = {
             "content": d.get("content", chunk[:400]),
             "context": d.get("context", ""),
@@ -160,7 +160,7 @@ class NoteBank:
             return {"indices": [], "update": {}}
         listing = "\n".join(f"[{i}] {self._render(self.notes[i])}"[:600]
                             for i in nbrs)
-        d = parse_json_loose(self.chat(
+        d = parse_json_loose(self.chat.chat(
             LINK_PROMPT, f"New note:\n{self._render(note)}\n\nExisting notes:\n{listing}"))
         idx = [i for i in d.get("links", []) if isinstance(i, int) and 0 <= i < len(nbrs)]
         upd = d.get("context_update", {}) or {}
