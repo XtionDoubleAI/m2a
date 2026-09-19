@@ -111,21 +111,21 @@ def main():
     ap.add_argument("--name", default=None)
     args = ap.parse_args()
 
-    name = args.name or f"m2a-{args.store_mode}-store"
+    name = args.name or f"forge-{args.store_mode}-store"
     out_path = OUT_DIR / f"{name}.jsonl"
     inter_path = OUT_DIR / f"{name}.intermediates.jsonl"
 
-    from m2a.act.binder import bind
-    from m2a.act.embedder import BGEM3Dense
-    from m2a.act.intent import generate_demands
-    from m2a.act.llm import OfflineLLM
-    from m2a.act.render import render_evidence
-    from m2a.act.retrieve import SlotRetriever
-    from m2a.eval.dataset import Bench
-    from m2a.eval.metrics import aggregate
-    from m2a.eval.runner import run_system
-    from m2a.schema import load_tool_spec
-    from m2a.state.store import MemoryStore
+    from forge.act.binder import bind
+    from forge.act.embedder import BGEM3Dense
+    from forge.act.intent import generate_demands
+    from forge.act.llm import OfflineLLM
+    from forge.act.render import render_evidence
+    from forge.act.retrieve import SlotRetriever
+    from forge.eval.dataset import Bench
+    from forge.eval.metrics import aggregate
+    from forge.eval.runner import run_system
+    from forge.schema import load_tool_spec
+    from forge.state.store import MemoryStore
     from experiments.runlog import IntermediateDumper, log_run
 
     bench = Bench(BENCH_DIR)

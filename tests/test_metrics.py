@@ -5,7 +5,7 @@ parameter VALUES only, case-folded; TSA is the paper-comparable "TA"; EM is
 our strict tool+params+values exact match.
 """
 
-from m2a.eval.metrics import score_sample, aggregate
+from forge.eval.metrics import score_sample, aggregate
 
 
 def test_perfect_prediction():

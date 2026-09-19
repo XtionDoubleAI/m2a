@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import json
 
-from m2a.act.llm import LLMClient, parse_tool_call_json
+from forge.act.llm import LLMClient, parse_tool_call_json
 
 SYSTEM_PROMPT = (
     "You are a tool-calling assistant. The target tool's API schema will be provided; "

@@ -9,8 +9,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from m2a.eval.dataset import Bench, QATask
-from m2a.eval.metrics import SampleResult, aggregate, format_aggregate, score_sample
+from forge.eval.dataset import Bench, QATask
+from forge.eval.metrics import SampleResult, aggregate, format_aggregate, score_sample
 
 
 def run_system(system, bench: Bench, out_path: str | Path,

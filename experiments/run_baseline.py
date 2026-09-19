@@ -47,7 +47,7 @@ def make_embedder(device: str = "cuda:0"):
     The embedder encodes the corpus first and is released before the vLLM
     engine claims the same GPU (7B + BGE-M3 do not fit together in 24 GB).
     """
-    from m2a.act.embedder import BGEM3Dense
+    from forge.act.embedder import BGEM3Dense
     return BGEM3Dense(str(_latest_snapshot("BAAI/bge-m3")), device=device)
 
 
@@ -60,9 +60,9 @@ def main():
     ap.add_argument("--out", default=str(OUT_DIR / "ltmemory_small.jsonl"))
     args = ap.parse_args()
 
-    from m2a.act.llm import OfflineLLM
-    from m2a.eval.dataset import Bench
-    from m2a.eval.runner import run_system
+    from forge.act.llm import OfflineLLM
+    from forge.eval.dataset import Bench
+    from forge.eval.runner import run_system
     from experiments.baselines.ltmemory import LTMemoryBaseline
 
     bench = Bench(BENCH_DIR)

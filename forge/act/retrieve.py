@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import re
 
-from m2a.state.store import normalize_attribute
+from forge.state.store import normalize_attribute
 
 
 def card_text(card: dict) -> str:

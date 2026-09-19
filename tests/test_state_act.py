@@ -1,9 +1,9 @@
 """Unit tests for the deterministic parts of state/ and act/ (no LLM)."""
 
-from m2a.act.intent import _covered
-from m2a.act.retrieve import SlotRetriever, card_text
-from m2a.schema import ParamSpec, ToolSpec
-from m2a.state.store import MemoryStore, normalize_attribute
+from forge.act.intent import _covered
+from forge.act.retrieve import SlotRetriever, card_text
+from forge.schema import ParamSpec, ToolSpec
+from forge.state.store import MemoryStore, normalize_attribute
 
 CARD = {
     "attribute": "Platform Preference (finance)",
@@ -81,7 +81,7 @@ def test_card_text_includes_verbatim_source():
 # ---------- deterministic binding (early C2) ----------
 
 def test_deterministic_override_whitelist():
-    from m2a.act.binder import deterministic_override
+    from forge.act.binder import deterministic_override
 
     spec = ToolSpec(name="t", params=[
         ParamSpec(name="address", type="string", required=True),
@@ -105,7 +105,7 @@ def test_deterministic_override_whitelist():
 
 
 def test_deterministic_override_newest_wins_on_fabrication():
-    from m2a.act.binder import deterministic_override
+    from forge.act.binder import deterministic_override
 
     spec = ToolSpec(name="t", params=[ParamSpec(name="pm", type="string")])
     demand = {"param_name": "pm"}

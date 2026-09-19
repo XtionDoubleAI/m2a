@@ -15,8 +15,8 @@ from __future__ import annotations
 
 import json
 
-from m2a.act.llm import parse_tool_call_json
-from m2a.schema import ToolSpec
+from forge.act.llm import parse_tool_call_json
+from forge.schema import ToolSpec
 
 SYSTEM_PROMPT = (
     "You are a tool-calling assistant. The target tool's schema and slot-by-slot "

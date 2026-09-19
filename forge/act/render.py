@@ -7,7 +7,7 @@ pile. Original source_text is always included verbatim (never compressed).
 
 from __future__ import annotations
 
-from m2a.act.retrieve import card_text
+from forge.act.retrieve import card_text
 
 
 def render_evidence(demand_evidence: list[tuple[dict, list[tuple[dict, float]]]],

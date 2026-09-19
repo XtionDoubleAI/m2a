@@ -1,6 +1,6 @@
 """Unit tests for tool schema parsing (uses real corpus shapes)."""
 
-from m2a.schema import load_tool_spec
+from forge.schema import load_tool_spec
 
 SCHEMA = {
     "description": "Retrieve trending tickers by impressions.",

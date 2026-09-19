@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from m2a.eval.dataset import Bench  # noqa: E402
+from forge.eval.dataset import Bench  # noqa: E402
 
 IS_WSL = sys.platform == "linux"
 BENCH_DIR = Path(

@@ -14,8 +14,8 @@ from __future__ import annotations
 import json
 import re
 
-from m2a.schema import ToolSpec
-from m2a.state.store import normalize_attribute
+from forge.schema import ToolSpec
+from forge.state.store import normalize_attribute
 
 SYSTEM_PROMPT = (
     "You prepare retrieval requests for a memory system. Given a user request "
