@@ -289,7 +289,8 @@ def main():
                     {d["param_name"]: [c["value"] for c, _ in h] for d, h in card_hits},
                     {"n_chunks": len(chunk_texts)},
                     model_args, final_args, task.arguments,
-                    extra={"evidence": evidence[:8000], "anchors": anchors_by_param})
+                    extra={"evidence": evidence[:24000], "anchors": anchors_by_param,
+                           "rerank_top1": chunk_best_score})
         return pred_tool, final_args
 
     results = run_system(system, bench, out_path, limit=args.limit)

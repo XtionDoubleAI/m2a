@@ -8,9 +8,11 @@ Six questions F1 cannot answer (see Pdev/teaching/04):
   complex-fidelity -- character-exact retention for long values (>30 chars)
   schema-validity  -- param names/types/required conform to the tool contract
 
-Error types are mutually exclusive by check order: fabrication -> corruption ->
-miss. Computes both systems (FORGE hybrid-final via archived model_args; the
-LTMemory baseline via its result file + a reconstructed evidence view).
+Error types are mutually exclusive by check order: miss -> fabrication ->
+corruption (if the gold value never entered the evidence, the failure is
+retrieval's regardless of what the model output; "each class points to its
+fix"). Computes any pair of archived runs via compare_ablation, or the
+baseline/FORGE pair via main().
 
 Usage: python -X utf8 -m experiments.multimetrics
 """
@@ -89,17 +91,22 @@ def analyse(name: str, per_task_args: dict, evidence_texts: dict,
             out = args.get(p)
             ok = canon(out) == canon(g)
             n_ok += ok
-            if ok:
-                trace_ok += 1
-                continue
-            in_ev = canon(g) in blob
             out_ev = (canon(out) in blob) if out is not None else False
-            if out is not None and not out_ev and canon(out) not in enums_defaults:
-                fab += 1
-            elif in_ev:
-                corr += 1
-            else:
+            # traceability is judged independently of correctness: did the
+            # system's value literally come from the evidence it showed?
+            if out is not None and (out_ev or canon(out) in enums_defaults):
+                trace_ok += 1
+            if ok:
+                continue
+            # error taxonomy, miss first: if retrieval never surfaced the gold
+            # value the failure is upstream of binding whatever the model did.
+            in_ev = canon(g) in blob
+            if not in_ev:
                 miss += 1
+            elif out is not None and not out_ev and canon(out) not in enums_defaults:
+                fab += 1
+            else:
+                corr += 1
             if len(str(g)) > 30:
                 cx_n += 1
                 cx_ok += ok
