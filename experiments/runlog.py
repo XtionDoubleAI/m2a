@@ -56,8 +56,9 @@ class IntermediateDumper:
         self._fh = open(self.path, "w", encoding="utf-8")
 
     def dump(self, qa_id: str, demands: list, card_hits: dict, chunk_hits: dict,
-             model_args: dict, final_args: dict, gold_args: dict) -> None:
-        self._fh.write(json.dumps({
+             model_args: dict, final_args: dict, gold_args: dict,
+             extra: dict | None = None) -> None:
+        rec = {
             "qa_id": qa_id,
             "demands": demands,
             "card_hits": card_hits,
@@ -65,7 +66,10 @@ class IntermediateDumper:
             "model_args": model_args,
             "final_args": final_args,
             "gold_args": gold_args,
-        }, ensure_ascii=False) + "\n")
+        }
+        if extra:
+            rec.update(extra)
+        self._fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
     def close(self):
         self._fh.close()
