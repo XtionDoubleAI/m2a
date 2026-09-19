@@ -202,6 +202,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--name", default="amem-full")
+    ap.add_argument("--bank-cache", default=str(OUT_DIR / "amem_bank.jsonl"))
     args = ap.parse_args()
 
     chat = ServerChat()
@@ -211,11 +212,25 @@ def main():
     bench = Bench(BENCH_DIR)
     print("bench:", json.dumps(bench.stats(), ensure_ascii=False))
 
-    for s in bench.sessions:
-        chunks = chunk_session(s.turns, window=6)
-        if chunks:
-            bank.insert_batch(s.session_id, chunks)
-    print(f"bank: {len(bank.notes)} notes")
+    from pathlib import Path as _P
+    cache = _P(args.bank_cache)
+    if cache.exists():
+        for line in open(cache, encoding="utf-8"):
+            d = json.loads(line)
+            d["links"] = d.get("links", [])
+            bank.notes.append(d)
+        bank.vecs = embedder.encode(
+            [bank._render(n) for n in bank.notes])
+        print(f"bank loaded from cache: {len(bank.notes)} notes")
+    else:
+        for s in bench.sessions:
+            chunks = chunk_session(s.turns, window=6)
+            if chunks:
+                bank.insert_batch(s.session_id, chunks)
+        with open(cache, "w", encoding="utf-8") as f:
+            for n in bank.notes:
+                f.write(json.dumps(n, ensure_ascii=False) + "\n")
+        print(f"bank: {len(bank.notes)} notes (cached to {cache})")
 
     answer_llm = ServerChat()
     out_path = OUT_DIR / f"{args.name}.jsonl"
