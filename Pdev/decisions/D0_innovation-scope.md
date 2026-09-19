@@ -35,7 +35,7 @@ covers conflict resolution without LLM-heavy semantics. The compiler framing
 organizes all mechanisms into an ablatable pipeline, which doubles as the
 experiment design.
 
-## Related work note (added 2026-09-17)
+## Related work
 
 STITCH (arXiv 2601.10702, ACL 2026) independently pursues structured retrieval
 signals for memory: it indexes each trajectory step with a "contextual intent"
