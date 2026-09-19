@@ -1,0 +1,22 @@
+[
+ {
+  "system": "LTMemory baseline",
+  "slot_accuracy": 23.52,
+  "traceability_pct": 23.52,
+  "fabrication_pct_of_errors": 44.37,
+  "corruption_pct_of_errors": 35.97,
+  "miss_pct_of_errors": 19.65,
+  "complex_fidelity_pct": 0.0,
+  "schema_validity_pct": 85.0
+ },
+ {
+  "system": "FORGE (hybrid, final)",
+  "slot_accuracy": 29.09,
+  "traceability_pct": 29.09,
+  "fabrication_pct_of_errors": 27.18,
+  "corruption_pct_of_errors": 45.64,
+  "miss_pct_of_errors": 27.18,
+  "complex_fidelity_pct": 0.0,
+  "schema_validity_pct": 93.0
+ }
+]

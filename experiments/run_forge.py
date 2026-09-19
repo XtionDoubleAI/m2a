@@ -104,6 +104,11 @@ def main():
     ap.add_argument("--collapse-versions", action="store_true")
     ap.add_argument("--whitelist", action="store_true",
                     help="fabrication-guard override (ablation; net -24 F1-slots in hybrid mode)")
+    ap.add_argument("--no-demands", action="store_true",
+                    help="D5a: retrieve chunks with the raw query instead of per-slot demands "
+                         "(rendering structure unchanged)")
+    ap.add_argument("--flat-render", action="store_true",
+                    help="D5b: render evidence as one flat block list, no per-parameter sections")
     ap.add_argument("--cards-cache", default=str(OUT_DIR / "fact_cards_v3.jsonl"))
     ap.add_argument("--chunks-cache", default=str(OUT_DIR / "chunks"))
     ap.add_argument("--embed-device", default="cuda:1")
@@ -173,14 +178,29 @@ def main():
         dvecs = embedder.encode([d["query"] for d in demands]) if demands else []
 
         card_hits, chunk_texts = [], []
-        for d, v in zip(demands, dvecs):
-            card_hits.append((d, retriever.search(d, v)))
-            if searcher is not None:
-                for c, _s in searcher.search(d["query"], v):
-                    if c["text"] not in chunk_texts:
-                        chunk_texts.append(c["text"])
+        if args.no_demands:
+            # D5a: retrieval signal degraded to the raw query; structure unchanged
+            qv = embedder.encode([task.query])[0] if searcher is not None else None
+            for d in demands:
+                card_hits.append((d, []))
+                if searcher is not None:
+                    for c, _s in searcher.search(task.query, qv):
+                        if c["text"] not in chunk_texts:
+                            chunk_texts.append(c["text"])
+        else:
+            for d, v in zip(demands, dvecs):
+                card_hits.append((d, retriever.search(d, v)))
+                if searcher is not None:
+                    for c, _s in searcher.search(d["query"], v):
+                        if c["text"] not in chunk_texts:
+                            chunk_texts.append(c["text"])
 
-        evidence = render_evidence(card_hits, chunk_texts=chunk_texts or None)
+        if args.flat_render:
+            # D5b: flat evidence list, no per-parameter sections
+            evidence = ("Memory evidence (verbatim dialogue excerpts):\n"
+                        + "\n---\n".join(chunk_texts)) if chunk_texts else "Memory evidence: (none found)"
+        else:
+            evidence = render_evidence(card_hits, chunk_texts=chunk_texts or None)
         trusted = "\n".join(chunk_texts) if chunk_texts else None
         de = card_hits if args.whitelist else None
         pred_tool, final_args, model_args = bind(llm, spec, task.query, evidence,
