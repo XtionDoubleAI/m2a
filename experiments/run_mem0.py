@@ -66,6 +66,27 @@ def bench_messages(session) -> list[dict]:
     return msgs
 
 
+MAX_CHARS_PER_ADD = 20000  # stays under the server's 16k-token context
+
+
+def add_session(mem, session) -> int:
+    """Add one session in char-budgeted batches (mem0 concatenates the
+    message list into a single prompt; long sessions exceed the context)."""
+    msgs = bench_messages(session)
+    batches, cur, size = [], [], 0
+    for m in msgs:
+        if size + len(m["content"]) > MAX_CHARS_PER_ADD and cur:
+            batches.append(cur)
+            cur, size = [], 0
+        cur.append(m)
+        size += len(m["content"])
+    if cur:
+        batches.append(cur)
+    for b in batches:
+        mem.add(b, user_id=session.session_id)
+    return len(batches)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
@@ -91,13 +112,12 @@ def main():
     print("bench:", json.dumps(bench.stats(), ensure_ascii=False))
 
     # ---- write side: ingest every evidence session once ----
-    n_mem = 0
+    n_mem = n_batches = 0
     for s in bench.sessions:
-        msgs = bench_messages(s)
-        if msgs:
-            mem.add(msgs, user_id=s.session_id)
+        if bench_messages(s):
+            n_batches += add_session(mem, s)
             n_mem += 1
-    print(f"ingested {n_mem} sessions")
+    print(f"ingested {n_mem} sessions in {n_batches} batches")
 
     answer_llm = _OpenAIChat()
 
