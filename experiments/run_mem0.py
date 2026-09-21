@@ -66,7 +66,8 @@ def bench_messages(session) -> list[dict]:
     return msgs
 
 
-MAX_CHARS_PER_ADD = 20000  # stays under the server's 16k-token context
+MAX_CHARS_PER_ADD = 7000  # char budget assumes CJK-dense text plus mem0's long
+                        # internal system prompt, all under the 16k-token context
 
 
 def add_session(mem, session) -> int:
@@ -98,7 +99,7 @@ def main():
     config = {
         "llm": {"provider": "openai", "config": {
             "model": MODEL_NAME, "openai_base_url": VLLM_BASE,
-            "api_key": "dummy", "temperature": 0.0, "max_tokens": 4000}},
+            "api_key": "dummy", "temperature": 0.0, "max_tokens": 2000}},
         "embedder": {"provider": "huggingface", "config": {"model": bge_path()}},
         "vector_store": {"provider": "faiss", "config": {
             "path": "/tmp/m2a_mem0_faiss", "collection_name": "m2a",
