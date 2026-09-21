@@ -1,17 +1,29 @@
-"""OpenAI-compatible client wrapper for the local vLLM server."""
+"""OpenAI-compatible chat client: local vLLM server or any hosted API.
+
+The same wire format serves both regimes:
+  - local vLLM:  base_url=http://127.0.0.1:8000/v1, api_key left as "EMPTY"
+  - hosted closed models (scale experiments, see D8): base_url and api_key
+    read from FORGE_API_BASE / FORGE_API_KEY environment variables when
+    the arguments are not given explicitly. Keys are never hard-coded;
+    ask the user for credentials when a run needs them.
+"""
 
 from __future__ import annotations
 
 import json
+import os
 import re
 
 
 class LLMClient:
-    def __init__(self, base_url: str = "http://127.0.0.1:8000/v1",
+    def __init__(self, base_url: str | None = None,
                  model: str = "Qwen/Qwen2.5-7B-Instruct", temperature: float = 0.0,
-                 max_tokens: int = 512):
+                 max_tokens: int = 512, api_key: str | None = None):
         from openai import OpenAI
-        self.client = OpenAI(base_url=base_url, api_key="EMPTY")
+        self.client = OpenAI(
+            base_url=base_url or os.environ.get("FORGE_API_BASE",
+                                                "http://127.0.0.1:8000/v1"),
+            api_key=api_key or os.environ.get("FORGE_API_KEY", "EMPTY"))
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
