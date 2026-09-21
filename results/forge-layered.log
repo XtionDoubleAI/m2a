@@ -19,3 +19,16 @@ INFO 09-21 19:12:55 gpu_executor.py:113] # GPU blocks: 4663, # CPU blocks: 4681
 INFO 09-21 19:12:55 gpu_executor.py:117] Maximum concurrency for 16384 tokens per request: 4.55x
 INFO 09-21 19:12:55 model_runner.py:1400] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
 INFO 09-21 19:12:55 model_runner.py:1404] If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 09-21 19:13:06 model_runner.py:1518] Graph capturing finished in 12 secs, took 0.21 GiB
+layered index: 3003 chunks (note-anchored)
+  50/400  n=50  F1=36.07  BLEU1=41.74  TA(TSA)=86.00  EM=18.00  ArgF1=38.71 (n=43)  SlotAcc=30.07
+  100/400  n=100  F1=32.24  BLEU1=35.97  TA(TSA)=87.00  EM=13.00  ArgF1=34.28 (n=87)  SlotAcc=27.12
+  150/400  n=150  F1=33.55  BLEU1=36.30  TA(TSA)=90.00  EM=17.33  ArgF1=34.99 (n=135)  SlotAcc=29.05
+  200/400  n=200  F1=32.50  BLEU1=34.84  TA(TSA)=89.00  EM=15.00  ArgF1=33.42 (n=178)  SlotAcc=27.90
+  250/400  n=250  F1=34.02  BLEU1=36.26  TA(TSA)=89.20  EM=16.80  ArgF1=35.67 (n=223)  SlotAcc=28.53
+  300/400  n=300  F1=33.81  BLEU1=36.16  TA(TSA)=89.33  EM=16.33  ArgF1=35.66 (n=268)  SlotAcc=28.72
+  350/400  n=350  F1=34.77  BLEU1=37.06  TA(TSA)=90.29  EM=16.86  ArgF1=36.50 (n=316)  SlotAcc=30.47
+  400/400  n=400  F1=34.46  BLEU1=36.48  TA(TSA)=90.25  EM=17.25  ArgF1=36.39 (n=361)  SlotAcc=30.43
+final: n=400  F1=34.46  BLEU1=36.48  TA(TSA)=90.25  EM=17.25  ArgF1=36.39 (n=361)  SlotAcc=30.43
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/forge-layered.jsonl
+[rank0]:[W921 19:30:59.349603922 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())

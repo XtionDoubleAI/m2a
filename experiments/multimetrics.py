@@ -139,18 +139,22 @@ def forge_evidence_view(bench: Bench) -> dict:
     return {t.qa_id: "\n".join(bench.session_texts(t)) for t in bench.tasks}
 
 
-def load_archive(name: str) -> tuple[dict, dict]:
-    """-> (per-task predicted args, per-task evidence blob) from a run's
-    archives. Handles both layouts: FORGE intermediates (final_args) and
-    external-system intermediates (pred_args); evidence from the archived
-    rendered evidence, falling back to the full-session upper bound."""
+def load_archive(name: str) -> tuple[dict, dict, bool]:
+    """-> (per-task predicted args, per-task evidence blob, has_evidence_field).
+    An empty evidence string is a legitimate zero-retrieval result (miss), so
+    the legacy upper-bound fallback must be decided by whether the archive
+    carries the evidence field at all, never by emptiness."""
     p = RESULTS / f"{name}.intermediates.jsonl"
-    args, ev = {}, {}
+    args, ev, has_field = {}, {}, True
     for line in open(p, encoding="utf-8"):
         d = json.loads(line)
         args[d["qa_id"]] = d.get("final_args", d.get("pred_args", {}))
-        ev[d["qa_id"]] = d.get("evidence", "")
-    return args, ev
+        if "evidence" in d:
+            ev[d["qa_id"]] = d["evidence"]
+        else:
+            has_field = False
+            ev[d["qa_id"]] = ""
+    return args, ev, has_field
 
 
 def main():
@@ -167,8 +171,9 @@ def main():
     for label, name in systems:
         inter = RESULTS / f"{name}.intermediates.jsonl"
         if inter.exists():
-            args, ev = load_archive(name)
-            ev = {k: (v or upper_ev[k]) for k, v in ev.items()}
+            args, ev, has_field = load_archive(name)
+            if not has_field:   # legacy archive: per-task upper bound
+                ev = {k: upper_ev[k] for k in ev}
         else:  # legacy runs (LTMemory): predictions only, evidence = upper bound
             args, ev = {}, upper_ev
             res = RESULTS / f"{name}.jsonl"
@@ -178,8 +183,6 @@ def main():
             for line in open(res, encoding="utf-8"):
                 d = json.loads(line)
                 args[d["qa_id"]] = d["pred_args"]
-        # older archives (LTMemory) have no evidence field -> upper bound
-        ev = {k: (v or upper_ev[k]) for k, v in ev.items()}
         if not args:
             print(f"skip {label}: no archive")
             continue
