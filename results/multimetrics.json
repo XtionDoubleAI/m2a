@@ -22,6 +22,17 @@
   "run": "forge-chunks-full"
  },
  {
+  "system": "Mem0",
+  "slot_accuracy": 31.64,
+  "traceability_pct": 37.58,
+  "fabrication_pct_of_errors": 4.26,
+  "corruption_pct_of_errors": 20.21,
+  "miss_pct_of_errors": 75.53,
+  "complex_fidelity_pct": 0.0,
+  "schema_validity_pct": 96.0,
+  "run": "mem0-full"
+ },
+ {
   "system": "A-Mem (reimpl)",
   "slot_accuracy": 33.82,
   "traceability_pct": 42.42,

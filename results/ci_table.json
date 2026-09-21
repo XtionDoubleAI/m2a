@@ -40,5 +40,19 @@
   "ci_low_pts": -2.12,
   "ci_high_pts": 1.64,
   "p_positive": 0.4112
+ },
+ "mem0-full": {
+  "n": 400,
+  "mean_diff_pts": 2.32,
+  "ci_low_pts": -2.89,
+  "ci_high_pts": 7.51,
+  "p_positive": 0.818
+ },
+ "amem-full": {
+  "n": 400,
+  "mean_diff_pts": 4.23,
+  "ci_low_pts": -0.5,
+  "ci_high_pts": 8.9,
+  "p_positive": 0.9619
  }
 }

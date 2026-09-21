@@ -33,9 +33,12 @@ FIGS = HERE.parent / "Pdev" / "writing" / "figures"
 # Okabe-Ito, fixed by system identity
 C_FORGE = "#0072B2"      # blue -- FORGE (final)
 C_FORGE_ABL = "#56B4E9"  # light blue -- FORGE ablation variants
-C_BASE = "#E69F00"       # orange -- baselines (passive / Mem0 / A-Mem)
+C_BASE = "#E69F00"       # orange -- passive baseline
 C_FLOOR = "#999999"      # grey -- floor / context rows
+C_MEM0 = "#E69F00"       # orange -- Mem0
+C_AMEM = "#009E73"       # green -- A-Mem
 H_FORGE, H_ABL, H_BASE = "", "//", "xx"
+H_MEM0, H_AMEM = "\\\\", ".."
 
 plt.rcParams.update({
     "font.family": "serif", "font.size": 8.5,
@@ -211,8 +214,51 @@ def fig_levels():
     _save(fig, "levels.pdf")
 
 
+def fig_multidim():
+    """Four-system multi-dimensional profile: error taxonomy (share of
+    errors), schema validity, traceability. Complex-value fidelity is 0 for
+    every system and omitted (stated in the caption): a shared failure."""
+    rows = json.loads((RESULTS / "multimetrics.json").read_text(encoding="utf-8"))
+    metrics = [
+        ("fabrication\n(% of errors)", "fabrication_pct_of_errors"),
+        ("corruption\n(% of errors)", "corruption_pct_of_errors"),
+        ("miss\n(% of errors)", "miss_pct_of_errors"),
+        ("schema\nvalidity (%)", "schema_validity_pct"),
+        ("traceability\n(%)", "traceability_pct"),
+    ]
+    systems = [  # (label, color, hatch) in fixed identity order
+        ("LTMemory", C_FLOOR, ""),
+        ("FORGE", C_FORGE, H_FORGE),
+        ("Mem0", C_MEM0, H_MEM0),
+        ("A-Mem", C_AMEM, H_AMEM),
+    ]
+    by_run = {r["run"]: r for r in rows}
+    runs = {"LTMemory": "ltmemory_hybrid5_full", "FORGE": "forge-chunks-full",
+            "Mem0": "mem0-full", "A-Mem": "amem-full"}
+    fig, ax = plt.subplots(figsize=(3.35, 2.6))
+    ys = range(len(metrics))
+    w = 0.19
+    for si, (label, col, h) in enumerate(systems):
+        vals = [by_run[runs[label]][key] for _, key in metrics]
+        offs = [y + (si - 1.5) * (w + 0.015) for y in ys]
+        ax.barh(offs, vals, height=w, color=col, hatch=h,
+                edgecolor="white", linewidth=0.6, label=label)
+    ax.set_yticks(list(ys), [m[0] for m in metrics], fontsize=7)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 104)
+    ax.set_xticks([0, 25, 50, 75, 100])
+    ax.xaxis.grid(True, linewidth=0.4, color="#DDDDDD")
+    ax.set_axisbelow(True)
+    ax.set_xlabel("share (%)")
+    ax.legend(frameon=False, fontsize=6.8, ncol=4, loc="upper center",
+              bbox_to_anchor=(0.5, 1.14))
+    ax.spines[["top", "right"]].set_visible(False)
+    _save(fig, "multidim.pdf")
+
+
 if __name__ == "__main__":
     fig_store()
     fig_components()
     fig_funnel()
     fig_levels()
+    fig_multidim()
