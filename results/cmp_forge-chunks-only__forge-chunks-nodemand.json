@@ -1,0 +1,24 @@
+[
+ {
+  "system": "forge-chunks-only",
+  "slot_accuracy": 30.06,
+  "traceability_pct": 3.88,
+  "fabrication_pct_of_errors": 0.52,
+  "corruption_pct_of_errors": 5.37,
+  "miss_pct_of_errors": 94.11,
+  "complex_fidelity_pct": 0.0,
+  "schema_validity_pct": 92.0,
+  "f1": 36.88
+ },
+ {
+  "system": "forge-chunks-nodemand",
+  "slot_accuracy": 28.85,
+  "traceability_pct": 36.73,
+  "fabrication_pct_of_errors": 4.6,
+  "corruption_pct_of_errors": 35.26,
+  "miss_pct_of_errors": 60.14,
+  "complex_fidelity_pct": 0.0,
+  "schema_validity_pct": 92.5,
+  "f1": 35.18
+ }
+]

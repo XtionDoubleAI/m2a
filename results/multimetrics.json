@@ -2,21 +2,34 @@
  {
   "system": "LTMemory baseline",
   "slot_accuracy": 23.52,
-  "traceability_pct": 23.52,
-  "fabrication_pct_of_errors": 44.37,
+  "traceability_pct": 31.64,
+  "fabrication_pct_of_errors": 30.43,
   "corruption_pct_of_errors": 35.97,
-  "miss_pct_of_errors": 19.65,
+  "miss_pct_of_errors": 33.6,
   "complex_fidelity_pct": 0.0,
-  "schema_validity_pct": 85.0
+  "schema_validity_pct": 85.0,
+  "run": "ltmemory_hybrid5_full"
  },
  {
-  "system": "FORGE (hybrid, final)",
-  "slot_accuracy": 29.09,
-  "traceability_pct": 29.09,
-  "fabrication_pct_of_errors": 27.18,
-  "corruption_pct_of_errors": 45.64,
-  "miss_pct_of_errors": 27.18,
+  "system": "FORGE (final, chunks)",
+  "slot_accuracy": 30.06,
+  "traceability_pct": 41.45,
+  "fabrication_pct_of_errors": 19.93,
+  "corruption_pct_of_errors": 42.63,
+  "miss_pct_of_errors": 37.44,
   "complex_fidelity_pct": 0.0,
-  "schema_validity_pct": 93.0
+  "schema_validity_pct": 92.0,
+  "run": "forge-chunks-full"
+ },
+ {
+  "system": "A-Mem (reimpl)",
+  "slot_accuracy": 33.82,
+  "traceability_pct": 42.42,
+  "fabrication_pct_of_errors": 5.49,
+  "corruption_pct_of_errors": 27.47,
+  "miss_pct_of_errors": 67.03,
+  "complex_fidelity_pct": 0.0,
+  "schema_validity_pct": 98.0,
+  "run": "amem-full"
  }
 ]

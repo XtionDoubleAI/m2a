@@ -203,12 +203,22 @@ def main():
     results = run_system(system, bench, out_path, limit=args.limit)
     inter_fh.close()
     aggs = aggregate(results)
-    log_run(args.name, config={**vars(args), "lib": "thin-reimpl-of-mem0",
-                               "llm": "vllm-server-Qwen2.5-7B",
-                               "deviations": ["no write-time LLM update/merge pass",
-                                              "concurrent extraction (16 threads)",
-                                              f"batch_chars={MAX_CHARS_PER_BATCH}",
-                                              f"k={TOTAL_K}"]},
+    log_run(args.name, config={
+        **vars(args), "lib": "thin-reimpl-of-mem0",
+        "llm": {"server": VLLM_BASE, "model": MODEL_NAME,
+                "temperature": 0.0, "max_tokens": 2000},
+        "embedder": {"model": "BAAI/bge-m3", "device": "cuda:1"},
+        "retrieval": {"k": TOTAL_K},
+        "write_side": {"batch_chars": MAX_CHARS_PER_BATCH,
+                       "extraction_prompt": "EXTRACT_PROMPT (this file)",
+                       "concurrency": CONCURRENCY},
+        "answer_side": "shared SYSTEM_PROMPT (baselines/ltmemory.py) + parse_tool_call_json",
+        "deviations_from_official": ["no write-time LLM update/merge pass",
+                                     "concurrent extraction (wall-clock only)",
+                                     "unified embedder and answer prompt"],
+        "official_lib_cost_note": "mem0ai 2.1.0 terminated after 33h ingesting "
+                                  "<half of 429 sessions (~4 min/batch, 2 sequential "
+                                  "LLM calls); cost reported in the paper"},
             aggregates={"f1": round(aggs.f1 * 100, 2), "bleu1": round(aggs.bleu1 * 100, 2),
                         "tsa": round(aggs.tsa * 100, 2), "em": round(aggs.em * 100, 2),
                         "arg_f1": round(aggs.arg_f1 * 100, 2),

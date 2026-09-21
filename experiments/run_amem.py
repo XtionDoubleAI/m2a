@@ -253,11 +253,21 @@ def main():
     results = run_system(system, bench, out_path, limit=args.limit)
     inter_fh.close()
     aggs = aggregate(results)
-    log_run(args.name, config={**vars(args), "lib": "thin-reimpl-of-arXiv:2502.12110",
-                               "llm": "vllm-server-Qwen2.5-7B",
-                               "deviations": ["no time-decay", "evolution top-1 cap",
-                                              "chunk window 6", f"k={TOTAL_K}",
-                                              f"link_neighbours={NEIGHBOURS}"]},
+    log_run(args.name, config={
+        **vars(args), "lib": "thin-reimpl-of-arXiv:2502.12110",
+        "llm": {"server": VLLM_BASE, "model": MODEL_NAME,
+                "temperature": 0.0, "max_tokens": 2000},
+        "embedder": {"model": "BAAI/bge-m3", "device": "cuda:1"},
+        "retrieval": {"k": TOTAL_K, "expansion": "one-hop links, visible sessions only"},
+        "write_side": {"chunk_window": 6, "note_fields": ["content", "context",
+                                                          "keywords", "tags"],
+                       "link_neighbours": NEIGHBOURS, "concurrency": CONCURRENCY,
+                       "prompts": ["NOTE_PROMPT", "LINK_PROMPT (this file)"]},
+        "answer_side": "shared SYSTEM_PROMPT (baselines/ltmemory.py) + parse_tool_call_json",
+        "deviations_from_paper": ["no time-decay", "evolution top-1 cap",
+                                  "no write-time note update/delete management",
+                                  "unified embedder (BGE-M3) and answer prompt",
+                                  "LLM = Qwen2.5-7B-Instruct via local vLLM"]},
             aggregates={"f1": round(aggs.f1 * 100, 2), "bleu1": round(aggs.bleu1 * 100, 2),
                         "tsa": round(aggs.tsa * 100, 2), "em": round(aggs.em * 100, 2),
                         "arg_f1": round(aggs.arg_f1 * 100, 2),

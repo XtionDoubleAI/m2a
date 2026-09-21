@@ -1,0 +1,14 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   1%|          | 3/391 [00:00<00:34, 11.31it/s]Loading weights:   1%|▏         | 5/391 [00:02<04:29,  1.43it/s]Loading weights: 100%|██████████| 391/391 [00:02<00:00, 132.53it/s]
+bench: {"n_tasks": 400, "n_sessions": 429, "levels": {"L4": 44, "L1": 230, "L2": 111, "L3": 15}, "grounding_types": {"explicit": 368, "inferred": 181, "default": 317}, "tasks_without_session": 16}
+bank: 3003 notes (cached to /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/amem_bank.jsonl)
+  50/400  n=50  F1=35.20  BLEU1=39.56  TA(TSA)=98.00  EM=14.00  ArgF1=35.92 (n=49)  SlotAcc=29.36
+  100/400  n=100  F1=37.86  BLEU1=41.99  TA(TSA)=99.00  EM=17.00  ArgF1=38.24 (n=99)  SlotAcc=31.41
+  150/400  n=150  F1=37.14  BLEU1=40.51  TA(TSA)=98.67  EM=18.67  ArgF1=37.64 (n=148)  SlotAcc=32.13
+  200/400  n=200  F1=40.29  BLEU1=42.91  TA(TSA)=98.50  EM=22.00  ArgF1=40.90 (n=197)  SlotAcc=35.87
+  250/400  n=250  F1=41.98  BLEU1=44.76  TA(TSA)=98.80  EM=22.80  ArgF1=42.49 (n=247)  SlotAcc=37.83
+  300/400  n=300  F1=41.55  BLEU1=44.29  TA(TSA)=98.33  EM=23.00  ArgF1=42.09 (n=295)  SlotAcc=37.76
+  350/400  n=350  F1=41.42  BLEU1=44.18  TA(TSA)=98.57  EM=22.57  ArgF1=41.87 (n=345)  SlotAcc=37.68
+  400/400  n=400  F1=41.11  BLEU1=43.61  TA(TSA)=98.50  EM=23.00  ArgF1=41.61 (n=394)  SlotAcc=37.16
+final: n=400  F1=41.11  BLEU1=43.61  TA(TSA)=98.50  EM=23.00  ArgF1=41.61 (n=394)  SlotAcc=37.16
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/amem-full.jsonl
