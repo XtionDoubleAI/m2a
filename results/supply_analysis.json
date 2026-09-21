@@ -1,0 +1,384 @@
+{
+ "C1_supply_funnel": {
+  "FORGE": {
+   "overall": {
+    "L1": {
+     "n": 825,
+     "rate": 69.0
+    },
+    "L2": {
+     "n": 825,
+     "rate": 54.2
+    },
+    "L3": {
+     "n": 825,
+     "rate": 29.9
+    },
+    "L2_given_L1": 78.6,
+    "L3_given_L2": 44.5
+   },
+   "by_gtype": {
+    "default": {
+     "L1": {
+      "n": 286,
+      "rate": 55.6
+     },
+     "L2": {
+      "n": 286,
+      "rate": 50.3
+     },
+     "L3": {
+      "n": 286,
+      "rate": 19.2
+     }
+    },
+    "inferred": {
+     "L1": {
+      "n": 176,
+      "rate": 49.4
+     },
+     "L2": {
+      "n": 176,
+      "rate": 40.9
+     },
+     "L3": {
+      "n": 176,
+      "rate": 27.3
+     }
+    },
+    "?": {
+     "L1": {
+      "n": 9,
+      "rate": 0.0
+     },
+     "L2": {
+      "n": 9,
+      "rate": 0.0
+     },
+     "L3": {
+      "n": 9,
+      "rate": 22.2
+     }
+    },
+    "explicit": {
+     "L1": {
+      "n": 354,
+      "rate": 91.2
+     },
+     "L2": {
+      "n": 354,
+      "rate": 65.3
+     },
+     "L3": {
+      "n": 354,
+      "rate": 40.1
+     }
+    }
+   },
+   "long_values": {
+    "L1": {
+     "n": 41,
+     "rate": 24.4
+    },
+    "L2": {
+     "n": 41,
+     "rate": 9.8
+    },
+    "L3": {
+     "n": 41,
+     "rate": 9.8
+    },
+    "L2_given_L1": 40.0,
+    "L3_given_L2": 50.0
+   },
+   "enum_params": {
+    "L2": {
+     "n": 23,
+     "rate": 52.2
+    }
+   },
+   "free_text_params": {
+    "L2": {
+     "n": 802,
+     "rate": 54.2
+    }
+   }
+  },
+  "Mem0": {
+   "overall": {
+    "L1": {
+     "n": 825,
+     "rate": 69.0
+    },
+    "L2": {
+     "n": 825,
+     "rate": 34.4
+    },
+    "L3": {
+     "n": 825,
+     "rate": 31.6
+    },
+    "L2_given_L1": 49.9,
+    "L3_given_L2": 52.5
+   },
+   "by_gtype": {
+    "default": {
+     "L1": {
+      "n": 286,
+      "rate": 55.6
+     },
+     "L2": {
+      "n": 286,
+      "rate": 29.0
+     },
+     "L3": {
+      "n": 286,
+      "rate": 28.0
+     }
+    },
+    "inferred": {
+     "L1": {
+      "n": 176,
+      "rate": 49.4
+     },
+     "L2": {
+      "n": 176,
+      "rate": 25.0
+     },
+     "L3": {
+      "n": 176,
+      "rate": 32.4
+     }
+    },
+    "?": {
+     "L1": {
+      "n": 9,
+      "rate": 0.0
+     },
+     "L2": {
+      "n": 9,
+      "rate": 0.0
+     },
+     "L3": {
+      "n": 9,
+      "rate": 22.2
+     }
+    },
+    "explicit": {
+     "L1": {
+      "n": 354,
+      "rate": 91.2
+     },
+     "L2": {
+      "n": 354,
+      "rate": 44.4
+     },
+     "L3": {
+      "n": 354,
+      "rate": 34.5
+     }
+    }
+   },
+   "long_values": {
+    "L1": {
+     "n": 41,
+     "rate": 24.4
+    },
+    "L2": {
+     "n": 41,
+     "rate": 4.9
+    },
+    "L3": {
+     "n": 41,
+     "rate": 9.8
+    },
+    "L2_given_L1": 20.0,
+    "L3_given_L2": 50.0
+   },
+   "enum_params": {
+    "L2": {
+     "n": 23,
+     "rate": 39.1
+    }
+   },
+   "free_text_params": {
+    "L2": {
+     "n": 802,
+     "rate": 34.3
+    }
+   }
+  },
+  "A-Mem": {
+   "overall": {
+    "L1": {
+     "n": 825,
+     "rate": 69.0
+    },
+    "L2": {
+     "n": 825,
+     "rate": 44.0
+    },
+    "L3": {
+     "n": 825,
+     "rate": 33.8
+    },
+    "L2_given_L1": 63.8,
+    "L3_given_L2": 50.4
+   },
+   "by_gtype": {
+    "default": {
+     "L1": {
+      "n": 286,
+      "rate": 55.6
+     },
+     "L2": {
+      "n": 286,
+      "rate": 41.6
+     },
+     "L3": {
+      "n": 286,
+      "rate": 28.3
+     }
+    },
+    "inferred": {
+     "L1": {
+      "n": 176,
+      "rate": 49.4
+     },
+     "L2": {
+      "n": 176,
+      "rate": 31.8
+     },
+     "L3": {
+      "n": 176,
+      "rate": 34.7
+     }
+    },
+    "?": {
+     "L1": {
+      "n": 9,
+      "rate": 0.0
+     },
+     "L2": {
+      "n": 9,
+      "rate": 0.0
+     },
+     "L3": {
+      "n": 9,
+      "rate": 33.3
+     }
+    },
+    "explicit": {
+     "L1": {
+      "n": 354,
+      "rate": 91.2
+     },
+     "L2": {
+      "n": 354,
+      "rate": 53.1
+     },
+     "L3": {
+      "n": 354,
+      "rate": 37.9
+     }
+    }
+   },
+   "long_values": {
+    "L1": {
+     "n": 41,
+     "rate": 24.4
+    },
+    "L2": {
+     "n": 41,
+     "rate": 7.3
+    },
+    "L3": {
+     "n": 41,
+     "rate": 19.5
+    },
+    "L2_given_L1": 30.0,
+    "L3_given_L2": 66.7
+   },
+   "enum_params": {
+    "L2": {
+     "n": 23,
+     "rate": 47.8
+    }
+   },
+   "free_text_params": {
+    "L2": {
+     "n": 802,
+     "rate": 43.9
+    }
+   }
+  }
+ },
+ "C1_amem_bank_supply": {
+  "n": 825,
+  "bank_supply_rate": 45.5,
+  "long_values": {
+   "n": 41,
+   "bank_supply_rate": 7.3
+  }
+ },
+ "C2_overlap": {
+  "n_params": 825,
+  "per_system_correct": {
+   "FORGE": 247,
+   "Mem0": 261,
+   "A-Mem": 279,
+   "LTMemory": 193
+  },
+  "all_four_correct": 75,
+  "all_four_wrong": 381,
+  "forge_only_correct": 60,
+  "amem_only_correct": 35,
+  "forge_wrong_amem_correct_feats": {
+   "n": 130,
+   "gtype": {
+    "explicit": 62,
+    "default": 40,
+    "inferred": 26,
+    "?": 2
+   },
+   "long": 7,
+   "long_pct": 5.4
+  },
+  "forge_correct_amem_wrong_feats": {
+   "n": 98,
+   "gtype": {
+    "explicit": 70,
+    "default": 14,
+    "inferred": 13,
+    "?": 1
+   },
+   "long": 3,
+   "long_pct": 3.1
+  },
+  "pairwise_jaccard": {
+   "FORGE~Mem0": 0.369,
+   "FORGE~A-Mem": 0.395,
+   "FORGE~LTMemory": 0.358,
+   "Mem0~A-Mem": 0.574,
+   "Mem0~LTMemory": 0.38,
+   "A-Mem~LTMemory": 0.396
+  }
+ },
+ "D6_rank_check": {
+  "miss_no_demand": {
+   "required": 104,
+   "optional": 14
+  },
+  "miss_no_demand_gtype": {
+   "explicit": 90,
+   "inferred": 15,
+   "default": 13
+  },
+  "miss_with_demand": 4,
+  "note": "BM25 half of RRF only; dense half not recomputed",
+  "median_rank": 570,
+  "p75_rank": 1791,
+  "pct_within_top5": 0.0,
+  "pct_within_top50": 0.0
+ }
+}

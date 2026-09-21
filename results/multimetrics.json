@@ -10,7 +10,7 @@
   "fabrication_pct_of_errors": 30.43,
   "corruption_pct_of_errors": 35.97,
   "miss_pct_of_errors": 33.6,
-  "complex_fidelity_pct": 0.0,
+  "complex_fidelity_pct": 12.2,
   "schema_validity_pct": 85.0,
   "run": "ltmemory_hybrid5_full"
  },
@@ -25,7 +25,7 @@
   "fabrication_pct_of_errors": 6.59,
   "corruption_pct_of_errors": 36.4,
   "miss_pct_of_errors": 57.02,
-  "complex_fidelity_pct": 0.0,
+  "complex_fidelity_pct": 9.76,
   "schema_validity_pct": 92.0,
   "run": "forge-chunks-full"
  },
@@ -40,7 +40,7 @@
   "fabrication_pct_of_errors": 3.72,
   "corruption_pct_of_errors": 20.21,
   "miss_pct_of_errors": 76.06,
-  "complex_fidelity_pct": 0.0,
+  "complex_fidelity_pct": 9.76,
   "schema_validity_pct": 96.0,
   "run": "mem0-full"
  },
@@ -55,7 +55,7 @@
   "fabrication_pct_of_errors": 5.49,
   "corruption_pct_of_errors": 27.47,
   "miss_pct_of_errors": 67.03,
-  "complex_fidelity_pct": 0.0,
+  "complex_fidelity_pct": 19.51,
   "schema_validity_pct": 98.0,
   "run": "amem-full"
  }

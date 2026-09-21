@@ -91,6 +91,11 @@ def analyse(name: str, per_task_args: dict, evidence_texts: dict,
             out = args.get(p)
             ok = canon(out) == canon(g)
             n_ok += ok
+            # long-value fidelity counts ALL long gold values (a version that
+            # only counted wrong ones was structurally zero -- fixed 2026-09-21)
+            if len(str(g)) > 30:
+                cx_n += 1
+                cx_ok += ok
             out_ev = (canon(out) in blob) if out is not None else False
             # traceability is judged independently of correctness: did the
             # system's value literally come from the evidence it showed?
@@ -107,9 +112,6 @@ def analyse(name: str, per_task_args: dict, evidence_texts: dict,
                 fab += 1
             else:
                 corr += 1
-            if len(str(g)) > 30:
-                cx_n += 1
-                cx_ok += ok
     wrong = max(fab + corr + miss, 1)
     return {
         "system": name,

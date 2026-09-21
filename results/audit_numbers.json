@@ -266,9 +266,9 @@
    "pass": true
   },
   {
-   "claim": "complex_fidelity_pct forge-chunks-full [D6 signal table]",
-   "claimed": 0.0,
-   "recomputed": 0.0,
+   "claim": "complex_fidelity_pct forge-chunks-full [teaching-04 (post 2026-09-21 metric fix)]",
+   "claimed": 9.76,
+   "recomputed": 9.76,
    "pass": true
   },
   {

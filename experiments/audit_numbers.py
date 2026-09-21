@@ -84,7 +84,8 @@ CLAIMED_MULTIDIM = [
     ("ltmemory_hybrid5_full", "fabrication_rate", 23.3, "D7 table (upper bound)"),
     ("forge-chunks-full", "traceability_pct", 39.3, "D6 R5 verdict"),
     ("forge-chunks-flat", "traceability_pct", 36.5, "D6 R5 verdict"),
-    ("forge-chunks-full", "complex_fidelity_pct", 0.0, "D6 signal table"),
+    ("forge-chunks-full", "complex_fidelity_pct", 9.76,
+     "teaching-04 (post 2026-09-21 metric fix)"),
 ]
 
 # README headline: FORGE over baseline, paired bootstrap 95% CI.
