@@ -44,10 +44,14 @@ comparable: the reading harness itself is a ~10-point variable.
 
 Headline findings: the +6.2 total edge is architectural — no single
 mechanism or component reaches significance on its own; distillation
-*systems* beat lossless supply on F1 but through a complementary failure
-profile (miss 67–76% of errors vs FORGE's 37%; near-zero fabrication vs
-20%) — full multi-dimensional analysis in `experiments/multimetrics.py`
-and `results/multimetrics.json`.
+*systems* beat lossless supply on F1 (individually short of significance)
+with a measurably different absolute error profile (miss 44–52% of all
+gold arguments vs 40% for FORGE; corruption 14–18% vs 25%; fabrication
+3–4% vs 5%). A layered hybrid routing evidence through note anchors was
+tested: 34.46 F1 — the profile difference did not convert into gain.
+Full multi-dimensional analysis in `experiments/multimetrics.py` and
+`results/multimetrics.json` (absolute per-argument rates, plus internal
+error-structure shares).
 
 ## Repo layout
 
