@@ -26,7 +26,11 @@ compared variable is the memory layer only. Full experiment settings:
 | oracle evidence supply (paper) | 53.8 | — | |
 
 Paper-protocol numbers (Mem0 14.21, A-Mem 30.99) are not directly
-comparable: the reading harness itself is a ~10-point variable.
+comparable: the reading harness itself is a ~10-point variable. Paper
+figures come from the benchmark paper's Table 3/4 (local copy in
+`../Pdev/refs/papers/`, excerpts in `../Pdev/refs/INDEX.md`); every project
+number is independently recomputable from the sample archives via
+`experiments/audit_numbers.py`.
 
 ### Ablation chain (every row is a full run, CIs in `results/ci_table.json`)
 

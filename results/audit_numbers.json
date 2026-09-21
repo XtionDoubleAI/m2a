@@ -1,0 +1,339 @@
+{
+ "recomputed": {
+  "amem-full": {
+   "n": 400,
+   "f1": 41.11
+  },
+  "amem-smoke": {
+   "n": 20,
+   "f1": 29.82
+  },
+  "forge-chunks-flat": {
+   "n": 400,
+   "f1": 37.74
+  },
+  "forge-chunks-full": {
+   "n": 400,
+   "f1": 36.88
+  },
+  "forge-chunks-nodemand": {
+   "n": 400,
+   "f1": 35.18
+  },
+  "forge-chunks-only": {
+   "n": 400,
+   "f1": 36.88
+  },
+  "forge-chunks-r1": {
+   "n": 400,
+   "f1": 37.08
+  },
+  "forge-chunks-r1r2": {
+   "n": 400,
+   "f1": 36.65
+  },
+  "forge-chunks-r1r2r3-low": {
+   "n": 400,
+   "f1": 36.65
+  },
+  "forge-chunks-r1r2r3": {
+   "n": 400,
+   "f1": 36.65
+  },
+  "forge-layered": {
+   "n": 400,
+   "f1": 34.46
+  },
+  "layered-smoke": {
+   "n": 20,
+   "f1": 33.88
+  },
+  "ltmemory_hybrid5_full": {
+   "n": 400,
+   "f1": 30.68
+  },
+  "m2a-hybrid-smoke": {
+   "n": 5,
+   "f1": 6.67
+  },
+  "m2a-hybrid-smoke2": {
+   "n": 5,
+   "f1": 23.64
+  },
+  "m2a-hybrid-store": {
+   "n": 400,
+   "f1": 27.72
+  },
+  "m2a_smoke5": {
+   "n": 5,
+   "f1": 0.0
+  },
+  "m2a_smoke5_v2": {
+   "n": 5,
+   "f1": 13.33
+  },
+  "m2a_smoke5_v3": {
+   "n": 5,
+   "f1": 20.0
+  },
+  "m2a_smoke5_v4": {
+   "n": 5,
+   "f1": 13.33
+  },
+  "m2a_smoke5_v5": {
+   "n": 5,
+   "f1": 0.0
+  },
+  "m2a_smoke5_v6": {
+   "n": 5,
+   "f1": 0.0
+  },
+  "m2a_v6_full": {
+   "n": 400,
+   "f1": 16.23
+  },
+  "mem0-full": {
+   "n": 400,
+   "f1": 39.19
+  },
+  "smoke5": {
+   "n": 5,
+   "f1": 33.33
+  }
+ },
+ "registry_mismatch": [],
+ "assertions": [
+  {
+   "claim": "F1 ltmemory_hybrid5_full [README/teaching-03/EXPERIMENT_SETUP]",
+   "claimed": 30.68,
+   "recomputed": 30.68,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-chunks-only [README/teaching-03/D6]",
+   "claimed": 36.88,
+   "recomputed": 36.88,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-chunks-full [README ablation/D6]",
+   "claimed": 36.88,
+   "recomputed": 36.88,
+   "pass": true
+  },
+  {
+   "claim": "F1 mem0-full [README/teaching-03]",
+   "claimed": 39.19,
+   "recomputed": 39.19,
+   "pass": true
+  },
+  {
+   "claim": "F1 amem-full [README/teaching-03]",
+   "claimed": 41.11,
+   "recomputed": 41.11,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-layered [D7]",
+   "claimed": 34.46,
+   "recomputed": 34.46,
+   "pass": true
+  },
+  {
+   "claim": "F1 m2a-hybrid-store [README ablation/teaching-03]",
+   "claimed": 27.72,
+   "recomputed": 27.72,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-chunks-nodemand [README ablation/teaching-03]",
+   "claimed": 35.18,
+   "recomputed": 35.18,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-chunks-flat [README ablation/teaching-03]",
+   "claimed": 37.74,
+   "recomputed": 37.74,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-chunks-r1 [D6]",
+   "claimed": 37.08,
+   "recomputed": 37.08,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-chunks-r1r2 [D6]",
+   "claimed": 36.65,
+   "recomputed": 36.65,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-chunks-r1r2r3 [D6 (threshold 0.5)]",
+   "claimed": 36.65,
+   "recomputed": 36.65,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-chunks-r1r2r3-low [D6 (threshold 0.1)]",
+   "claimed": 36.65,
+   "recomputed": 36.65,
+   "pass": true
+  },
+  {
+   "claim": "miss_rate forge-chunks-full [D7 table]",
+   "claimed": 39.9,
+   "recomputed": 39.88,
+   "pass": true
+  },
+  {
+   "claim": "corruption_rate forge-chunks-full [D7 table]",
+   "claimed": 25.5,
+   "recomputed": 25.45,
+   "pass": true
+  },
+  {
+   "claim": "fabrication_rate forge-chunks-full [D7 table]",
+   "claimed": 4.6,
+   "recomputed": 4.61,
+   "pass": true
+  },
+  {
+   "claim": "miss_rate mem0-full [D7 table]",
+   "claimed": 52.0,
+   "recomputed": 52.0,
+   "pass": true
+  },
+  {
+   "claim": "corruption_rate mem0-full [D7 table]",
+   "claimed": 13.8,
+   "recomputed": 13.82,
+   "pass": true
+  },
+  {
+   "claim": "fabrication_rate mem0-full [D7 table]",
+   "claimed": 2.6,
+   "recomputed": 2.55,
+   "pass": true
+  },
+  {
+   "claim": "miss_rate amem-full [D7 table]",
+   "claimed": 44.4,
+   "recomputed": 44.36,
+   "pass": true
+  },
+  {
+   "claim": "corruption_rate amem-full [D7 table]",
+   "claimed": 18.2,
+   "recomputed": 18.18,
+   "pass": true
+  },
+  {
+   "claim": "fabrication_rate amem-full [D7 table]",
+   "claimed": 3.6,
+   "recomputed": 3.64,
+   "pass": true
+  },
+  {
+   "claim": "miss_rate ltmemory_hybrid5_full [D7 table (upper bound)]",
+   "claimed": 25.7,
+   "recomputed": 25.7,
+   "pass": true
+  },
+  {
+   "claim": "corruption_rate ltmemory_hybrid5_full [D7 table (upper bound)]",
+   "claimed": 27.5,
+   "recomputed": 27.52,
+   "pass": true
+  },
+  {
+   "claim": "fabrication_rate ltmemory_hybrid5_full [D7 table (upper bound)]",
+   "claimed": 23.3,
+   "recomputed": 23.27,
+   "pass": true
+  },
+  {
+   "claim": "traceability_pct forge-chunks-full [D6 R5 verdict]",
+   "claimed": 39.3,
+   "recomputed": 39.27,
+   "pass": true
+  },
+  {
+   "claim": "traceability_pct forge-chunks-flat [D6 R5 verdict]",
+   "claimed": 36.5,
+   "recomputed": 36.48,
+   "pass": true
+  },
+  {
+   "claim": "complex_fidelity_pct forge-chunks-full [D6 signal table]",
+   "claimed": 0.0,
+   "recomputed": 0.0,
+   "pass": true
+  },
+  {
+   "claim": "headline CI mean_diff_pts [README]",
+   "claimed": 6.19,
+   "recomputed": 6.19,
+   "pass": true
+  },
+  {
+   "claim": "headline CI ci_low_pts [README]",
+   "claimed": 1.72,
+   "recomputed": 1.73,
+   "pass": true
+  },
+  {
+   "claim": "headline CI ci_high_pts [README]",
+   "claimed": 10.82,
+   "recomputed": 10.82,
+   "pass": true
+  }
+ ],
+ "unverifiable": [
+  "m2a-hybrid-store-nooverride: registered F1=33.88, no own sample archive",
+  "forge-hybrid-base: registered F1=33.88, no own sample archive",
+  "forge-hybrid-unique-direct: registered F1=33.88, no own sample archive",
+  "forge-hybrid-schema-default: registered F1=33.88, no own sample archive",
+  "forge-hybrid-enum-snap: registered F1=33.89, no own sample archive"
+ ],
+ "f1_16_23_carrier": "m2a_v6_full",
+ "sourced_offline": [
+  {
+   "run": "m2a-hybrid-store-nooverride",
+   "claimed_f1": 33.88,
+   "source_archive": "results/m2a-hybrid-store.intermediates.jsonl"
+  },
+  {
+   "run": "forge-hybrid-base",
+   "claimed_f1": 33.88,
+   "source_archive": "results/m2a-hybrid-store.intermediates.jsonl"
+  },
+  {
+   "run": "forge-hybrid-unique-direct",
+   "claimed_f1": 33.88,
+   "source_archive": "results/m2a-hybrid-store.intermediates.jsonl"
+  },
+  {
+   "run": "forge-hybrid-schema-default",
+   "claimed_f1": 33.88,
+   "source_archive": "results/m2a-hybrid-store.intermediates.jsonl"
+  },
+  {
+   "run": "forge-hybrid-enum-snap",
+   "claimed_f1": 33.89,
+   "source_archive": "results/m2a-hybrid-store.intermediates.jsonl"
+  }
+ ],
+ "headline_ci_recomputed": {
+  "n": 400,
+  "mean_diff_pts": 6.19,
+  "ci_low_pts": 1.73,
+  "ci_high_pts": 10.82
+ },
+ "summary": {
+  "assertions": 31,
+  "passed": 31,
+  "failed": 0
+ }
+}

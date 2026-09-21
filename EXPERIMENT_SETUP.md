@@ -12,7 +12,7 @@
 | 答题提示词 | 所有系统同一份（`experiments/baselines/ltmemory.py` 的 SYSTEM_PROMPT）：给定 schema + 记忆证据 + 用户请求，输出单一 JSON 调用 |
 | 输出解析 | 所有系统同一函数（`forge/act/llm.py` 的 parse_tool_call_json） |
 | 嵌入器 | BGE-M3 稠密向量（1024 维），GPU1，所有需要嵌入的系统统一 |
-| 评分 | 值 token F1（不含参数名、casefold）、BLEU1、工具选择率、精确匹配、槽位正确率；实现 `forge/eval/metrics.py`；校准锚点：本管线复现论文 hybrid@5 为 30.68（论文 30.7） |
+| 评分 | 值 token F1（不含参数名、casefold）、BLEU1、工具选择率、精确匹配、槽位正确率；实现 `forge/eval/metrics.py`；校准锚点：本管线复现论文 hybrid@5 为 30.68（论文 30.7，Table 4；本地全文 `../Pdev/refs/papers/mem2actbench_2601.19935.md`） |
 | 显著性 | 配对自助法（bootstrap）1 万次重采样，95% 百分位区间（`experiments/ci_table.py`） |
 | 硬件 | 2×RTX 4090：推理服务占 GPU0，嵌入器/重排器占 GPU1 |
 
@@ -44,6 +44,7 @@
 ## 三、可复现性
 
 - 每次运行登记进 `results/runs.jsonl`：时间戳、git 提交号、完整配置、聚合指标、样本与中间产物路径
+- 数字对账（`experiments/audit_numbers.py`）：从样本档案独立重算全部指标并核对文档声称值——2026-09-21 首轮 31/31 断言通过、25 个档案与登记零偏差；`m2a_v6_full.jsonl` 为消融链首行 16.23 的样本档案（早于 run 登记机制）；5 个 D3/无覆盖离线消融行的源档案为 `m2a-hybrid-store.intermediates.jsonl`
 - 中间产物（`*.intermediates.jsonl`）：每题的检索问句、证据命中、渲染证据全文、绑定前后参数——多维指标（幻觉/抄坏/没找到/长值保真/合法率/可追溯）全部离线可重算
 - 绘图从上述档案数据驱动生成（`experiments/plots.py`），无手填数字
 
