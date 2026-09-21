@@ -24,6 +24,7 @@ compared variable is the memory layer only. Full experiment settings:
 | Mem0 (thin reimpl, same harness) | 39.19 | 1,271 | official library terminated on write cost (O(N²) merge loop) |
 | A-Mem (thin reimpl, same harness) | 41.11 | 6,025 | |
 | oracle evidence supply (paper) | 53.8 | — | |
+| oracle chain supply (same harness, C3 diagnostic) | 67.31 | 0 | gold-chain source text as evidence; chain carries only 48.6% of gold values verbatim |
 
 Paper-protocol numbers (Mem0 14.21, A-Mem 30.99) are not directly
 comparable: the reading harness itself is a ~10-point variable. Paper
