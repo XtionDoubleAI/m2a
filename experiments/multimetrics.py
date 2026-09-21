@@ -115,6 +115,14 @@ def analyse(name: str, per_task_args: dict, evidence_texts: dict,
         "system": name,
         "slot_accuracy": round(100 * n_ok / max(n, 1), 2),
         "traceability_pct": round(100 * trace_ok / max(n, 1), 2),
+        # absolute rates: errors of each class over ALL gold arguments --
+        # comparable across systems (the pct-of-errors shares below only
+        # describe a system's internal error structure)
+        "fabrication_rate": round(100 * fab / max(n, 1), 2),
+        "corruption_rate": round(100 * corr / max(n, 1), 2),
+        "miss_rate": round(100 * miss / max(n, 1), 2),
+        "n_errors": fab + corr + miss,
+        # internal structure (shares of errors, sum to 100%)
         "fabrication_pct_of_errors": round(100 * fab / wrong, 2),
         "corruption_pct_of_errors": round(100 * corr / wrong, 2),
         "miss_pct_of_errors": round(100 * miss / wrong, 2),

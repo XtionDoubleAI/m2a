@@ -220,9 +220,9 @@ def fig_multidim():
     every system and omitted (stated in the caption): a shared failure."""
     rows = json.loads((RESULTS / "multimetrics.json").read_text(encoding="utf-8"))
     metrics = [
-        ("fabrication\n(% of errors)", "fabrication_pct_of_errors"),
-        ("corruption\n(% of errors)", "corruption_pct_of_errors"),
-        ("miss\n(% of errors)", "miss_pct_of_errors"),
+        ("miss rate\n(% of all args)", "miss_rate"),
+        ("corruption rate\n(% of all args)", "corruption_rate"),
+        ("fabrication rate\n(% of all args)", "fabrication_rate"),
         ("schema\nvalidity (%)", "schema_validity_pct"),
         ("traceability\n(%)", "traceability_pct"),
     ]
