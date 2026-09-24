@@ -1,0 +1,8 @@
+# intermediates: reproducible from the held-out sources via build_all.sh
+01_conversations.jsonl
+processed_data/
+Mem2ACTBench/
+Mem2ACTBench_small/
+build.log
+build_failures.txt
+__pycache__/

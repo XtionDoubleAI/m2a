@@ -1,0 +1,621 @@
+{
+ "n_drawn": 25,
+ "seed": 20260925,
+ "mechanical_pass": 25,
+ "mechanical_fail": 0,
+ "results": [
+  {
+   "qa_id": "qa_001",
+   "index": 0,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_002",
+   "index": 1,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_011",
+   "index": 10,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_015",
+   "index": 14,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_016",
+   "index": 15,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_017",
+   "index": 16,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_025",
+   "index": 24,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_029",
+   "index": 28,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_031",
+   "index": 30,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_034",
+   "index": 33,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_038",
+   "index": 37,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_043",
+   "index": 42,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_044",
+   "index": 43,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_051",
+   "index": 50,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_056",
+   "index": 55,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_059",
+   "index": 58,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_063",
+   "index": 62,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_065",
+   "index": 64,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_066",
+   "index": 65,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_067",
+   "index": 66,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_073",
+   "index": 72,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_075",
+   "index": 74,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_079",
+   "index": 78,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_082",
+   "index": 81,
+   "pass": true,
+   "issues": []
+  },
+  {
+   "qa_id": "qa_084",
+   "index": 83,
+   "pass": true,
+   "issues": []
+  }
+ ],
+ "note": "mechanical checks cannot judge semantic quality; read the excerpts below before freezing",
+ "REPORT_EXCERPTS": [
+  {
+   "qa_id": "qa_001",
+   "level": "L1",
+   "query": "Could you generate the trend visualization for the customer metric we talked about earlier? Just the chart for now.",
+   "gold_tool": "visualization.create_chart",
+   "gold_args": {
+    "chartType": "line",
+    "data": [],
+    "options": {
+     "title": "Customer Loyalty"
+    }
+   },
+   "grounding": {
+    "chartType": "explicit",
+    "data": "default",
+    "options.title": "inferred"
+   },
+   "chain_facts": [
+    "User requests a line chart for customer loyalty."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_002",
+   "level": "L4",
+   "query": "Can you put together a trip plan for my upcoming trip? I want it for the same duration as my hotel booking.",
+   "gold_tool": "Get Trip Plan",
+   "gold_args": {
+    "days": 2,
+    "destination": "Johannesburg"
+   },
+   "grounding": {
+    "days": "inferred",
+    "destination": "explicit"
+   },
+   "chain_facts": [
+    "User is planning a trip to Johannesburg.",
+    "User asks to book Hotel Eiffel Seine for two nights starting next Friday."
+   ],
+   "n_source_conversations": 2
+  },
+  {
+   "qa_id": "qa_011",
+   "level": "L1",
+   "query": "I'm in the mood for some new listening material—can you get me music recommendations based on the genre I always go for?",
+   "gold_tool": "get_music_recommendations",
+   "gold_args": {
+    "genre": "jazz"
+   },
+   "grounding": {
+    "genre": "explicit"
+   },
+   "chain_facts": [
+    "User prefers jazz music."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_015",
+   "level": "L1",
+   "query": "Before I choose seats for the ballet next week, can you pull up the seating layout for the venue I mentioned?",
+   "gold_tool": "getTheaterLayout",
+   "gold_args": {
+    "theater_name": "Royal Opera House"
+   },
+   "grounding": {
+    "theater_name": "explicit"
+   },
+   "chain_facts": [
+    "User is planning to see a ballet at the Royal Opera House next week."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_016",
+   "level": "L2",
+   "query": "Hey, can you initiate that dialogue session for the group I mentioned earlier? You remember—they need those conversation starters we talked about. Just go ahead and start it with the right setup for them.",
+   "gold_tool": "communicationEnhancer.initiateDialogue",
+   "gold_args": {
+    "context": "social",
+    "relationshipType": "friend"
+   },
+   "grounding": {
+    "context": "inferred",
+    "relationshipType": "inferred"
+   },
+   "chain_facts": [
+    "User states their comic group needs deep, thought-provoking, and maybe slightly ridiculous conversation starters."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_017",
+   "level": "L1",
+   "query": "Could you run a health risk assessment for the person whose genetic markers we noted earlier?",
+   "gold_tool": "health.risk_assessment",
+   "gold_args": {
+    "genetic_factors": [
+     "MSH2",
+     "P53"
+    ],
+    "lifestyle_factors": {}
+   },
+   "grounding": {
+    "genetic_factors": "explicit",
+    "lifestyle_factors": "default"
+   },
+   "chain_facts": [
+    "Person 3 has genetic markers MSH2 and P53."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_025",
+   "level": "L1",
+   "query": "Hey, can you pull up that mlem image for me again? Use the ID I gave you earlier.",
+   "gold_tool": "Get Mlem Image",
+   "gold_args": {
+    "mlemid": 42
+   },
+   "grounding": {
+    "mlemid": "explicit"
+   },
+   "chain_facts": [
+    "User asks to grab a mlem image with ID 42."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_029",
+   "level": "L1",
+   "query": "Can you get me the Instagram user ID for the username I told you about earlier?",
+   "gold_tool": "Get Instagram User ID by Username",
+   "gold_args": {
+    "username": "matthew_hakimi"
+   },
+   "grounding": {
+    "username": "explicit"
+   },
+   "chain_facts": [
+    "User asks for help fetching the Instagram user ID for the username matthew_hakimi."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_031",
+   "level": "L2",
+   "query": "Can you pull the verified source code for the CryptoKitties contract using the contract address I gave you? I want to inspect how it works.",
+   "gold_tool": "Get Code",
+   "gold_args": {
+    "address": "0x06012c8cf97BEaD5deAe237070F9587f8E7A266d",
+    "chainId": 1
+   },
+   "grounding": {
+    "address": "explicit",
+    "chainId": "inferred"
+   },
+   "chain_facts": [
+    "The CryptoKitties contract address is 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_034",
+   "level": "L2",
+   "query": "Can you pull the country-level stock market data for the place we discussed earlier, and show me the trending stocks based on fundamental analysis?",
+   "gold_tool": "Get Country-wise Stock Market Data",
+   "gold_args": {
+    "country_code": "FR"
+   },
+   "grounding": {
+    "country_code": "inferred"
+   },
+   "chain_facts": [
+    "User requests a list of trending stocks in France based on fundamental analysis."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_038",
+   "level": "L1",
+   "query": "Can you pull up those crypto coins with the biggest sentiment shift again, using the same timeframe we discussed?",
+   "gold_tool": "Get Top Coins By Sentiment Change",
+   "gold_args": {
+    "string_range": "last 24 hours"
+   },
+   "grounding": {
+    "string_range": "explicit"
+   },
+   "chain_facts": [
+    "User requests the top 10 coins with the most significant sentiment change in the last 24 hours."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_043",
+   "level": "L1",
+   "query": "Could you help me verify that other email address I was unsure about before I reach out to them?",
+   "gold_tool": "Verify Email",
+   "gold_args": {
+    "query": "doubtful@query.com"
+   },
+   "grounding": {
+    "query": "explicit"
+   },
+   "chain_facts": [
+    "User asks to verify doubtful@query.com to ensure it is legitimate before engaging in communication."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_044",
+   "level": "L2",
+   "query": "Can you check the current air quality and main pollutant for the city we discussed? I want the full pollutant breakdown.",
+   "gold_tool": "airQualityIndex",
+   "gold_args": {
+    "pollutants": [
+     "CO",
+     "NO2",
+     "SO2",
+     "O3",
+     "PM2.5",
+     "PM10"
+    ],
+    "regionCode": "FR"
+   },
+   "grounding": {
+    "pollutants": "inferred",
+    "regionCode": "inferred"
+   },
+   "chain_facts": [
+    "User requests the current air quality index and the main pollutant for Paris, France."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_051",
+   "level": "L3",
+   "query": "Fetch me the top shower thoughts from the usual timeframe, like we always do.",
+   "gold_tool": "Top Shower Thoughts",
+   "gold_args": {
+    "time_frame": "week"
+   },
+   "grounding": {
+    "time_frame": "explicit"
+   },
+   "chain_facts": [
+    "User requests top shower thoughts from the past week.",
+    "User asks to see the top shower thoughts of the week."
+   ],
+   "n_source_conversations": 2
+  },
+  {
+   "qa_id": "qa_056",
+   "level": "L1",
+   "query": "Can you check the match odds for the opening cricket match ID in that group of upcoming matches I mentioned earlier?",
+   "gold_tool": "MatchOdds",
+   "gold_args": {
+    "id": 101.0
+   },
+   "grounding": {
+    "id": "explicit"
+   },
+   "chain_facts": [
+    "User asks to check the match odds for upcoming cricket matches with IDs 101, 102, and 103."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_059",
+   "level": "L1",
+   "query": "Could you submit the adverse event report for the sleep medication case we discussed earlier? Just use all the details from the note I already gave you.",
+   "gold_tool": "reportAdverseEvent",
+   "gold_args": {
+    "contact_email": "example4@example.com",
+    "event_date": "2022-04-08",
+    "event_description": "Insomnia worsening",
+    "patient_age": 28,
+    "patient_gender": "Male",
+    "product_name": "SleepAid"
+   },
+   "grounding": {
+    "contact_email": "explicit",
+    "event_date": "explicit",
+    "event_description": "explicit",
+    "patient_age": "explicit",
+    "patient_gender": "explicit",
+    "product_name": "explicit"
+   },
+   "chain_facts": [
+    "Adverse event report for SleepAid on 2022-04-08: insomnia worsening; patient age 28, male, email example4@example.com."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_063",
+   "level": "L1",
+   "query": "Hey, can you get the list of users who liked the first of those two recent Instagram posts I asked about? The one I mentioned first, using the post ID from our earlier thread.",
+   "gold_tool": "Get Instagram Post Likers",
+   "gold_args": {
+    "corsEnabled": false,
+    "media_id": "A123"
+   },
+   "grounding": {
+    "media_id": "explicit",
+    "corsEnabled": "default"
+   },
+   "chain_facts": [
+    "User requests the list of users who liked their recent Instagram posts with IDs A123 and B456."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_065",
+   "level": "L2",
+   "query": "Hey, can you check on those pre-token crypto projects we talked about and see if any have something lined up soon?",
+   "gold_tool": "Get Protocols",
+   "gold_args": {
+    "q": "tokenless protocols that may airdrop in the next 10 days"
+   },
+   "grounding": {
+    "q": "inferred"
+   },
+   "chain_facts": [
+    "User requests a list of tokenless protocols that may airdrop within the next 10 days."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_066",
+   "level": "L1",
+   "query": "Can you pull up the background information for that Olympic gymnast I was asking about earlier?",
+   "gold_tool": "Get User Information",
+   "gold_args": {
+    "name": "Simone Biles"
+   },
+   "grounding": {
+    "name": "explicit"
+   },
+   "chain_facts": [
+    "User requests information about Simone Biles."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_067",
+   "level": "L1",
+   "query": "I'm still planning my destination wedding. Could you get me package options and budget ranges for the locations on my shortlist?",
+   "gold_tool": "getDestinationWeddings",
+   "gold_args": {
+    "location": "Hawaii, Maldives, Santorini, and Bali"
+   },
+   "grounding": {
+    "location": "explicit"
+   },
+   "chain_facts": [
+    "User requests information on destination wedding packages and budget ranges for Hawaii, Maldives, Santorini, and Bali."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_073",
+   "level": "L1",
+   "query": "Can you pull up the full stats for the opening rugby match from the list of match IDs I gave you earlier?",
+   "gold_tool": "Rugby Match Statistics",
+   "gold_args": {
+    "id": 101.0
+   },
+   "grounding": {
+    "id": "explicit"
+   },
+   "chain_facts": [
+    "The rugby match IDs are 101, 105, 110, and 113."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_075",
+   "level": "L2",
+   "query": "Using the coordinates I gave you earlier, can you tell me what city I'm currently in?",
+   "gold_tool": "Get User's Current Location",
+   "gold_args": {
+    "accuracy": 1.0,
+    "lat": 40.7487727,
+    "long": -73.9849336
+   },
+   "grounding": {
+    "lat": "explicit",
+    "long": "explicit",
+    "accuracy": "inferred"
+   },
+   "chain_facts": [
+    "User reports their current coordinates as 40.7487727, -73.9849336."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_079",
+   "level": "L2",
+   "query": "Can you run that extraction on the tech news site I always ask about, for the latest snapshot?",
+   "gold_tool": "Frontpage Extraction API",
+   "gold_args": {
+    "all": false,
+    "format": "json",
+    "timeout": 15000,
+    "url": "https://techcrunch.com/"
+   },
+   "grounding": {
+    "all": "default",
+    "format": "default",
+    "timeout": "default",
+    "url": "inferred"
+   },
+   "chain_facts": [
+    "User requests extraction of the main elements from the TechCrunch homepage today."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_082",
+   "level": "L1",
+   "query": "As usual, can you pull up the latest episodes of that comic series I've been following so avidly? You already have the series reference on file from before.",
+   "gold_tool": "Get Comic Episodes",
+   "gold_args": {
+    "language": "en",
+    "pageSize": 20,
+    "startIndex": 0,
+    "titleNo": 93
+   },
+   "grounding": {
+    "language": "default",
+    "pageSize": "default",
+    "startIndex": "default",
+    "titleNo": "explicit"
+   },
+   "chain_facts": [
+    "User requests the latest episodes of a comic series they follow, identified by series number 93."
+   ],
+   "n_source_conversations": 1
+  },
+  {
+   "qa_id": "qa_084",
+   "level": "L2",
+   "query": "Can you pull up all the pages from my recipe collection I saved on my computer?",
+   "gold_tool": "GetPages",
+   "gold_args": {
+    "folder": "Cookbook",
+    "name": "",
+    "storage": "desktop"
+   },
+   "grounding": {
+    "folder": "explicit",
+    "name": "default",
+    "storage": "inferred"
+   },
+   "chain_facts": [
+    "The PDF is stored in the 'Cookbook' folder on the user's desktop."
+   ],
+   "n_source_conversations": 1
+  }
+ ]
+}
