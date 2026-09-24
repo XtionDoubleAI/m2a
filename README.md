@@ -5,9 +5,9 @@ underspecified user request and a tool's parameter schema, it derives
 per-slot retrieval demands from the schema contract, retrieves lossless
 dialogue chunks, renders evidence per parameter, and binds values with an
 explicit division of labour: the model chooses among candidates,
-deterministic code handles types — and nothing else (the minimal
-deterministic surface is proved by a set of negative results, see
-`docs/D3`–`D6` references below).
+deterministic code handles types — and nothing else. This minimal
+deterministic surface is established by a set of negative ablations
+(documented in `EXPERIMENT_SETUP.md`).
 
 Benchmark: Mem2ActBench (ACL 2026), 400 tasks / 825 arguments / 429
 sessions, given-tool protocol. All systems run on one consumer GPU with
@@ -87,5 +87,5 @@ python -m experiments.plots                     # paper figures
 The vLLM OpenAI server entrypoint needs the transformers-5 shim included
 in `experiments/vllm_server_compat.py` (see its docstring).
 
-Work in progress — architecture docs and decision records live in the
-development workspace.
+See `EXPERIMENT_SETUP.md` for full experimental settings, ablations,
+deviations of the thin reimplementations, and the number-audit procedure.

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Overnight experiment chain: D5a/D5b mechanism splits + D6 component ablations.
+# Overnight chain: mechanism-split ablations + component ablations.
 # Runs sequentially on one GPU; each run appends its manifest to runs.jsonl.
 set -u
 cd "$(dirname "$0")/.." || exit 1

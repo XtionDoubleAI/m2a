@@ -54,6 +54,9 @@ def make_embedder(device: str = "cuda:0"):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--bench-dir", default=None,
+                    help="override benchmark data dir (e.g. the full 2029-session pool)")
+    ap.add_argument("--name", default="ltmemory_hybrid5_full")
     ap.add_argument("--llm", choices=["local", "api"], default="local",
                     help="answer-side LLM: local vLLM or hosted OpenAI-compatible API")
     ap.add_argument("--host-model", default="DeepSeek-V4-Flash",
@@ -72,7 +75,7 @@ def main():
     from forge.eval.runner import run_system
     from experiments.baselines.ltmemory import LTMemoryBaseline
 
-    bench = Bench(BENCH_DIR)
+    bench = Bench(args.bench_dir or BENCH_DIR)
     print("bench stats:", json.dumps(bench.stats(), ensure_ascii=False))
 
     embedder = None

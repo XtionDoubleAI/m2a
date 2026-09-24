@@ -4,9 +4,10 @@ Calibration outcome (see experiments/calibrate_metrics.py, 2026-09-17):
   - Paper's F1 corresponds to token-level P/R/F1 over parameter VALUES only
     (parameter names excluded, case-folded): our run reproduces hybrid@5
     F1=30.68 vs paper 30.7 (Table 4).
-  - Paper's "TA" column (Table 3, 87-97 across systems) is arithmetically
+  - The paper's "TA" column (Table 3, 87-97 across systems) is arithmetically
     incompatible with its own F1 (~27-36) unless it measures tool selection
-    only; our TSA matches it (83.75 vs LTMemory 87.25).
+    only; our TSA matches it (83.75 vs LTMemory 87.25), so TSA is reported
+    as the paper-comparable "TA".
   - We therefore report TSA as the paper-comparable "TA" and additionally a
     strict full-match EM (tool + exact parameter set + exact values) which is
     stricter than anything reported in the paper.

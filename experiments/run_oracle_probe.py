@@ -8,7 +8,7 @@ answer side is the shared harness (same Qwen2.5-7B, same prompt, same
 parser, same scorer). No retrieval, no memory layer: this isolates the
 model's copy/derive ability once supply is guaranteed.
 
-Readings (pre-registered in dev_log 2026-09-21):
+Readings (pre-registered before running):
   - total F1 vs paper's 53.8 calibrates our protocol reading of "oracle";
   - exact-copy rate per stratum (long values, grounding type) measures how
     often the model transcribes a supplied value exactly -- the clean half
@@ -53,6 +53,27 @@ def chain_evidence(task) -> str:
     return "\n---\n".join(parts)
 
 
+FILLER = ("Historical dialogue excerpt (contextual background, unrelated to the "
+          "request): the assistant discussed general topics with the user, "
+          "including tool usage conventions, account settings and routine "
+          "questions exchanged over previous sessions. " * 6)
+
+
+def injected_evidence(task, position: str) -> str:
+    """Pure transcription probe (C3 variant, 2c/2d): state each gold value
+    explicitly as one line per parameter, placed among filler context at
+    the requested position. The filler carries no parameter information."""
+    lines = [f"Parameter `{p}` value: {g}"
+             for p, g in task.arguments.items()]
+    block = "\n".join(lines)
+    head, tail = FILLER[: len(FILLER) // 2], FILLER[len(FILLER) // 2:]
+    if position == "first":
+        return block + "\n\n" + head + tail
+    if position == "middle":
+        return head + "\n\n" + block + "\n\n" + tail
+    return head + tail + "\n\n" + block
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--name", default="oracle-supply")
@@ -64,6 +85,10 @@ def main():
     ap.add_argument("--reasoning", choices=["default", "none", "high"], default="default",
                     help="reasoning_effort for hosted thinking models")
     ap.add_argument("--host-max-tokens", type=int, default=None)
+    ap.add_argument("--inject-values", choices=["first", "middle", "last"],
+                    default=None,
+                    help="C3 variant: inject gold values verbatim (one line per "
+                         "parameter) at the given position among neutral filler")
     ap.add_argument("--gpu-util", type=float, default=0.90)
     ap.add_argument("--model", default="Qwen/Qwen2.5-7B-Instruct")
     args = ap.parse_args()
@@ -83,7 +108,8 @@ def main():
     inter_f = open(inter_path, "w", encoding="utf-8")
 
     def system(task, session_texts=None):
-        evidence = chain_evidence(task)
+        evidence = (injected_evidence(task, args.inject_values)
+                    if args.inject_values else chain_evidence(task))
         user = (
             f"Tool schema:\n{json.dumps(task.tool_schema, ensure_ascii=False, indent=1)}\n\n"
             f"Memory evidence:\n{evidence}\n\n"
@@ -106,8 +132,11 @@ def main():
     agg = aggregate(results)
     print(format_aggregate(agg))
     log_run(args.name, {
-        "protocol": "oracle evidence supply (evolution_chain source_text)",
+        "protocol": ("gold-value injection at position " + args.inject_values
+                     if args.inject_values else
+                     "oracle evidence supply (evolution_chain source_text)"),
         "model": args.model, "limit": args.limit,
+        "inject_values": args.inject_values,
         "prompt": "baselines/ltmemory.SYSTEM_PROMPT (shared harness)",
     }, {
         "f1": round(agg.f1 * 100, 2), "bleu1": round(agg.bleu1 * 100, 2),

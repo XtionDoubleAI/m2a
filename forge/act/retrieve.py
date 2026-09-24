@@ -5,7 +5,7 @@ Ranking: RRF fusion of
   path 1: BM25 over card text (always on)
   path 2: dense cosine over card text vs demand question (always on)
   path 3: attribute match -- normalized exact/containment between the demand's
-          attribute_guess and card attributes (D2-B toggle, default off)
+          attribute_guess and card attributes (toggle, default off)
 
 Failure-safe by design: with the toggle off, or when the guess matches nothing,
 paths 1-2 alone rank -- never worse than pure semantic retrieval.

@@ -1,7 +1,7 @@
-"""Offline ablations for D3 binding-contract details (no GPU, no LLM).
+"""Offline ablations for binding-contract details (no GPU, no LLM).
 
 Base configuration: hybrid store WITHOUT whitelist (the final FORGE), whose
-per-parameter model outputs are archived in the run's intermediates. Each D3
+per-parameter model outputs are archived in the run's intermediates. Each
 mechanism is applied on top of that base and rescored:
 
   unique-direct   -- parameter has exactly one type-compatible card candidate:

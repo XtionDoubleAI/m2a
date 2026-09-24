@@ -120,7 +120,7 @@ def test_deterministic_override_newest_wins_on_fabrication():
 
 
 def test_demand_fallback_on_empty_llm_response():
-    """Gap-A fix: empty LLM output must yield deterministic template demands
+    """Empty LLM demand output must yield deterministic template demands
     covering every parameter, not an empty list."""
     from forge.act.intent import generate_demands
     from forge.schema import load_tool_spec

@@ -1,10 +1,10 @@
 """Demand generation: (query, ToolSpec) -> one retrieval demand per parameter.
 
-D2-A (always on): each demand is a natural-language retrieval question.
-D2-B (toggle, default off): each demand also carries an attribute_guess that
-matches the write-path attribute vocabulary (same normalize_attribute).
+Each demand is a natural-language retrieval question, optionally carrying
+an attribute_guess that matches the write-path attribute vocabulary
+(same normalize_attribute; toggle, default off).
 
-Coverage check (D0): after generation, required parameters lacking a demand
+Coverage check: after generation, required parameters lacking a demand
 trigger at most one repair round; the check itself is a deterministic set
 comparison, no extra LLM call unless something is missing.
 """
@@ -65,10 +65,10 @@ def _covered(spec: ToolSpec, demands: list[dict]) -> bool:
 def _template_demands(spec: ToolSpec) -> list[dict]:
     """Deterministic fallback demands, one per parameter, no LLM involved.
 
-    Gap-A fix (D8 section 4.2): the LLM occasionally returns an empty list,
-    which used to be silently passed through, leaving the task with zero
-    retrieval. Temperature-0 retry on identical input returns the same
-    empty list, so the guaranteed non-empty path is a plain template."""
+    When the demand LLM returns an empty list, proceeding with no demands
+    leaves the task with zero retrieval. A temperature-0 retry on identical
+    input returns the same empty list, so the guaranteed non-empty path is
+    a plain deterministic template."""
     return [{
         "param_name": p.name,
         "query": f"What is the value for {p.name}? {p.description or ''}".strip(),
@@ -79,7 +79,7 @@ def _template_demands(spec: ToolSpec) -> list[dict]:
 def generate_demands(llm, query: str, spec: ToolSpec,
                      fallback: bool = True) -> list[dict]:
     """Generate per-parameter retrieval demands; repair once if required
-    parameters are uncovered (D0 protocol). An empty LLM response falls
+    parameters are uncovered. An empty LLM response falls
     back to deterministic template demands when `fallback` is set."""
     schema_text = json.dumps({
         "name": spec.name,

@@ -41,23 +41,24 @@ SKIP_PREFIXES = ("runs", "amem_bank", "chunks", "fact_cards", "mem0_facts")
 # Document-claimed value-token F1 (x100). source: where the number is stated.
 CLAIMED_F1 = [
     ("ltmemory_hybrid5_full", 30.68, "README/teaching-03/EXPERIMENT_SETUP"),
-    ("forge-chunks-only", 36.88, "README/teaching-03/D6"),
-    ("forge-chunks-full", 36.88, "README ablation/D6"),
+    ("forge-chunks-only", 36.88, "README/EXPERIMENT_SETUP"),
+    ("forge-chunks-full", 36.88, "README ablation"),
     ("mem0-full", 39.19, "README/teaching-03"),
     ("amem-full", 41.11, "README/teaching-03"),
-    ("forge-layered", 34.46, "D7"),
+    ("forge-layered", 34.46, "project report"),
     ("m2a-hybrid-store", 27.72, "README ablation/teaching-03"),
     ("forge-chunks-nodemand", 35.18, "README ablation/teaching-03"),
     ("forge-chunks-flat", 37.74, "README ablation/teaching-03"),
-    ("forge-chunks-r1", 37.08, "D6"),
-    ("forge-chunks-r1r2", 36.65, "D6"),
-    ("forge-chunks-r1r2r3", 36.65, "D6 (threshold 0.5)"),
-    ("forge-chunks-r1r2r3-low", 36.65, "D6 (threshold 0.1)"),
+    ("forge-chunks-r1", 37.08, "project report"),
+    ("forge-chunks-r1r2", 36.65, "project report"),
+    ("forge-chunks-r1r2r3", 36.65, "project report"),
+    ("forge-chunks-r1r2r3-low", 36.65, "project report"),
 ]
 
 # Numbers stated in documents whose run has NO own sample archive: they are
 # offline re-binding ablations whose runs.jsonl entry points at the source
-# intermediates (ablate_d3 mechanism). Recorded as sourced, not recomputed.
+# intermediates (the offline re-binding ablation mechanism).
+# Recorded as sourced, not recomputed.
 SOURCED_OFFLINE = [
     ("m2a-hybrid-store-nooverride", 33.88, "results/m2a-hybrid-store.intermediates.jsonl"),
     ("forge-hybrid-base", 33.88, "results/m2a-hybrid-store.intermediates.jsonl"),
@@ -67,25 +68,24 @@ SOURCED_OFFLINE = [
 ]
 
 # Multi-dimensional absolute rates (x100, over all 825 gold arguments).
-# Sources: teaching-04 four-system table / D7 section-1 table / D6 verdicts.
+# Sources: the multi-dimension tables in README and the project report.
 CLAIMED_MULTIDIM = [
     # run, metric, claimed, source
-    ("forge-chunks-full", "miss_rate", 39.9, "D7 table"),
-    ("forge-chunks-full", "corruption_rate", 25.5, "D7 table"),
-    ("forge-chunks-full", "fabrication_rate", 4.6, "D7 table"),
-    ("mem0-full", "miss_rate", 52.0, "D7 table"),
-    ("mem0-full", "corruption_rate", 13.8, "D7 table"),
-    ("mem0-full", "fabrication_rate", 2.6, "D7 table"),
-    ("amem-full", "miss_rate", 44.4, "D7 table"),
-    ("amem-full", "corruption_rate", 18.2, "D7 table"),
-    ("amem-full", "fabrication_rate", 3.6, "D7 table"),
-    ("ltmemory_hybrid5_full", "miss_rate", 25.7, "D7 table (upper bound)"),
-    ("ltmemory_hybrid5_full", "corruption_rate", 27.5, "D7 table (upper bound)"),
-    ("ltmemory_hybrid5_full", "fabrication_rate", 23.3, "D7 table (upper bound)"),
-    ("forge-chunks-full", "traceability_pct", 39.3, "D6 R5 verdict"),
-    ("forge-chunks-flat", "traceability_pct", 36.5, "D6 R5 verdict"),
-    ("forge-chunks-full", "complex_fidelity_pct", 9.76,
-     "teaching-04 (post 2026-09-21 metric fix)"),
+    ("forge-chunks-full", "miss_rate", 39.9, "project report"),
+    ("forge-chunks-full", "corruption_rate", 25.5, "project report"),
+    ("forge-chunks-full", "fabrication_rate", 4.6, "project report"),
+    ("mem0-full", "miss_rate", 52.0, "project report"),
+    ("mem0-full", "corruption_rate", 13.8, "project report"),
+    ("mem0-full", "fabrication_rate", 2.6, "project report"),
+    ("amem-full", "miss_rate", 44.4, "project report"),
+    ("amem-full", "corruption_rate", 18.2, "project report"),
+    ("amem-full", "fabrication_rate", 3.6, "project report"),
+    ("ltmemory_hybrid5_full", "miss_rate", 25.7, "project report (upper bound)"),
+    ("ltmemory_hybrid5_full", "corruption_rate", 27.5, "project report (upper bound)"),
+    ("ltmemory_hybrid5_full", "fabrication_rate", 23.3, "project report (upper bound)"),
+    ("forge-chunks-full", "traceability_pct", 39.3, "project report"),
+    ("forge-chunks-flat", "traceability_pct", 36.5, "project report"),
+    ("forge-chunks-full", "complex_fidelity_pct", 9.76, "project report"),
 ]
 
 # README headline: FORGE over baseline, paired bootstrap 95% CI.

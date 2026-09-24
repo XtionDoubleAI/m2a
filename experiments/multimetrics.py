@@ -91,8 +91,7 @@ def analyse(name: str, per_task_args: dict, evidence_texts: dict,
             out = args.get(p)
             ok = canon(out) == canon(g)
             n_ok += ok
-            # long-value fidelity counts ALL long gold values (a version that
-            # only counted wrong ones was structurally zero -- fixed 2026-09-21)
+            # long-value fidelity counts ALL long gold values, right or wrong
             if len(str(g)) > 30:
                 cx_n += 1
                 cx_ok += ok
@@ -165,7 +164,8 @@ def main():
 
     systems = [
         ("LTMemory baseline", "ltmemory_hybrid5_full"),
-        ("FORGE (final, chunks)", "forge-chunks-full"),
+        ("FORGE (no demand fallback)", "forge-chunks-full"),
+        ("FORGE (with demand fallback)", "forge-fixed-full"),
         ("Mem0", "mem0-full"),
         ("A-Mem (reimpl)", "amem-full"),
     ]

@@ -15,9 +15,9 @@ C2  parameter-level correctness overlap across the four systems: does the
     measured "complementary error structure" exist at the parameter level,
     and what do system-unique wins look like?
 
-D6  rank check: for FORGE miss parameters (gold visible but not rendered),
+rank check: for FORGE miss parameters (gold visible but not rendered),
     where does the gold-bearing chunk rank under a BM25 query per demand?
-    Verifies the D6 claim "most gold values sit outside the coarse top-50"
+    Checks the claim "most gold values sit outside the coarse top-50"
     (BM25 half of the RRF pair only; the dense half would need re-embedding).
 
 Output: results/supply_analysis.json + console tables.
@@ -178,7 +178,7 @@ def overlap_analysis(bench: Bench) -> dict:
     }
 
 
-# ---------------- BM25 rank check (D6 claim) ----------------
+# ---------------- BM25 rank check ----------------
 
 def bm25_index(corpus: list[str]):
     docs = [re.findall(r"\w+", c.lower()) for c in corpus]

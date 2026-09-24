@@ -1,7 +1,7 @@
 """Binder (MVP): LLM binding over slot-paired evidence.
 
 Given-tool protocol: the tool is provided, the model must emit its JSON call.
-Later toggles (D3 territory, off by default here):
+Later binding toggles (off by default here):
   - schema_default_fill: parameters whose schema declares a default and whose
     evidence is absent are filled deterministically, never by the model
   - verbatim_copy: long/complex values are copied character-exact from

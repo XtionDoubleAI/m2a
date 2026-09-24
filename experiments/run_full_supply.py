@@ -4,7 +4,7 @@ Renders the task's ENTIRE visible conversations verbatim into the Memory
 evidence segment; everything else (model, prompt template, parser, scorer)
 is the shared harness. Completes the W x R matrix: full-vs-passive isolates
 the completeness component of the retrieval gap, oracle-vs-full the purity
-component (see D8 section 3.4 for the pre-registered readouts).
+component (readouts pre-registered before running; see the project report).
 
 Truncation rule (pre-registered): tasks whose full evidence exceeds 16,384
 tokens keep the first 16,384 tokens in order; the rest is dropped and the
@@ -45,6 +45,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--name", default="full-supply")
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--bench-dir", default=None,
+                    help="override benchmark data dir (e.g. the full 2029-session pool)")
     ap.add_argument("--llm", choices=["local", "api"], default="local",
                     help="answer-side LLM: local vLLM or hosted OpenAI-compatible API")
     ap.add_argument("--host-model", default="DeepSeek-V4-Flash",
@@ -59,7 +61,7 @@ def main():
     from experiments.run_forge import _snapshot
     from transformers import AutoTokenizer
     tok = AutoTokenizer.from_pretrained(str(_snapshot(args.model)))
-    bench = Bench(BENCH_DIR)
+    bench = Bench(args.bench_dir or BENCH_DIR)
 
     if args.llm == "api":
         from forge.act.llm import make_answer_llm

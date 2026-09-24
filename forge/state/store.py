@@ -3,7 +3,7 @@
 Shared vocabulary (the "type system" of the memory-action interface): both the
 write path (card attributes) and the read path (demand attribute guesses) go
 through `normalize_attribute`, exported here and imported by act/intent.py and
-act/retrieve.py. This is deliberate (D1/D2 constraint): one normalization
+act/retrieve.py. This is deliberate: one normalization
 function for both sides of the interface.
 
 Version chain (C3-light, toggled): cards sharing a normalized attribute keep

@@ -2,12 +2,12 @@
 
 Store modes (ablation rows for the paper):
   chunks  -- lossless dialogue chunks only. The strongest configuration:
-             distillation (facts) is net-negative (D4) and is kept only as an
+             distillation (facts) is net-negative and is kept only as an
              ablation. Default.
   hybrid  -- fact cards + chunks (ablation: card candidates pollute rendering).
   facts   -- fact cards only (the coverage-funnel ablation).
 
-Components (D6, default off; each is an ablation row):
+Components (default off; each is an ablation row):
   R1 --rerank             cross-encoder reranking of the retrieval pool
   R2 --rerank-candidates  rendered evidence ordered by reranker score
   R3 --verbatim-threshold verbatim anchoring: long tokens extracted from the
@@ -152,6 +152,8 @@ def verbatim_anchor(args: dict, anchors_by_param: dict[str, list[str]]) -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--bench-dir", default=None,
+                    help="override benchmark data dir (e.g. the full 2029-session pool)")
     ap.add_argument("--qa-file", default=None,
                     help="optional file of qa_ids (one per line); run only those tasks")
     ap.add_argument("--llm", choices=["local", "api"], default="local",
@@ -173,7 +175,7 @@ def main():
     ap.add_argument("--whitelist", action="store_true")
     ap.add_argument("--no-demands", action="store_true")
     ap.add_argument("--no-demand-fallback", action="store_true",
-                    help="disable the deterministic template fallback for empty demand lists (gap-A fix); default ON")
+                    help="disable the deterministic template fallback for empty demand lists; default ON")
     ap.add_argument("--flat-render", action="store_true")
     ap.add_argument("--cards-cache", default=str(OUT_DIR / "fact_cards_v3.jsonl"))
     ap.add_argument("--chunks-cache", default=str(OUT_DIR / "chunks"))
@@ -199,7 +201,7 @@ def main():
     from forge.state.store import MemoryStore
     from experiments.runlog import IntermediateDumper, log_run
 
-    bench = Bench(BENCH_DIR)
+    bench = Bench(args.bench_dir or BENCH_DIR)
     print("bench:", json.dumps(bench.stats(), ensure_ascii=False))
     if args.qa_file:
         keep = {l.strip() for l in open(args.qa_file, encoding="utf-8") if l.strip()}

@@ -1,4 +1,4 @@
-"""D7: layered hybrid -- note retrieval anchors over lossless chunk supply.
+"""Layered hybrid: note retrieval anchors over lossless chunk supply.
 
 The only variable changed vs forge-chunks-full is the CHUNK SELECTOR: chunks
 enter the evidence pool by dense similarity between the per-parameter demand

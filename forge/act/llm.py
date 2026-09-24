@@ -2,7 +2,7 @@
 
 The same wire format serves both regimes:
   - local vLLM:  base_url=http://127.0.0.1:8000/v1, api_key left as "EMPTY"
-  - hosted closed models (scale experiments, see D8): base_url and api_key
+  - hosted models (scale experiments): base_url and api_key
     read from FORGE_API_BASE / FORGE_API_KEY environment variables when
     the arguments are not given explicitly. Keys are never hard-coded;
     ask the user for credentials when a run needs them.

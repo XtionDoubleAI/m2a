@@ -15,7 +15,7 @@
   "run": "ltmemory_hybrid5_full"
  },
  {
-  "system": "FORGE (final, chunks)",
+  "system": "FORGE (pre-fix)",
   "slot_accuracy": 30.06,
   "traceability_pct": 39.27,
   "fabrication_rate": 4.61,
@@ -28,6 +28,21 @@
   "complex_fidelity_pct": 9.76,
   "schema_validity_pct": 92.0,
   "run": "forge-chunks-full"
+ },
+ {
+  "system": "FORGE (gap-A fixed)",
+  "slot_accuracy": 38.55,
+  "traceability_pct": 51.88,
+  "fabrication_rate": 4.85,
+  "corruption_rate": 29.82,
+  "miss_rate": 26.79,
+  "n_errors": 507,
+  "fabrication_pct_of_errors": 7.89,
+  "corruption_pct_of_errors": 48.52,
+  "miss_pct_of_errors": 43.59,
+  "complex_fidelity_pct": 19.51,
+  "schema_validity_pct": 93.75,
+  "run": "forge-fixed-full"
  },
  {
   "system": "Mem0",

@@ -1,0 +1,82 @@
+=== ltm-v4f-off start 02:26:28 ===
+usage: run_baseline.py [-h] [--limit LIMIT] [--llm {local,api}]
+                       [--host-model HOST_MODEL]
+                       [--reasoning {default,none,high}]
+                       [--host-max-tokens HOST_MAX_TOKENS]
+                       [--retriever {hybrid,bm25,dense,none}] [--k K]
+                       [--chunk-window CHUNK_WINDOW] [--out OUT]
+run_baseline.py: error: unrecognized arguments: --name ltm-v4f-off
+=== forge-v4f-off start 02:26:28 ===
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+bench: {"n_tasks": 400, "n_sessions": 429, "levels": {"L4": 44, "L1": 230, "L2": 111, "L3": 15}, "grounding_types": {"explicit": 368, "inferred": 181, "default": 317}, "tasks_without_session": 16}
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   1%|▏         | 5/391 [00:02<03:17,  1.96it/s]Loading weights: 100%|██████████| 391/391 [00:02<00:00, 152.48it/s]
+chunk index: 3003 chunks
+  50/400  n=50  F1=59.47  BLEU1=67.11  TA(TSA)=98.00  EM=42.00  ArgF1=60.68 (n=49)  SlotAcc=50.67
+  100/400  n=100  F1=58.51  BLEU1=68.12  TA(TSA)=97.00  EM=39.00  ArgF1=60.32 (n=97)  SlotAcc=50.12
+  150/400  n=150  F1=61.56  BLEU1=68.69  TA(TSA)=96.67  EM=45.33  ArgF1=63.69 (n=145)  SlotAcc=54.08
+  200/400  n=200  F1=63.56  BLEU1=70.09  TA(TSA)=97.50  EM=46.50  ArgF1=65.19 (n=195)  SlotAcc=56.22
+  250/400  n=250  F1=63.84  BLEU1=70.52  TA(TSA)=97.60  EM=46.40  ArgF1=65.41 (n=244)  SlotAcc=55.87
+  300/400  n=300  F1=62.94  BLEU1=69.72  TA(TSA)=97.33  EM=45.00  ArgF1=64.44 (n=292)  SlotAcc=55.56
+  350/400  n=350  F1=63.42  BLEU1=70.17  TA(TSA)=97.43  EM=44.86  ArgF1=64.90 (n=341)  SlotAcc=56.44
+  400/400  n=400  F1=61.95  BLEU1=68.42  TA(TSA)=97.75  EM=44.00  ArgF1=63.21 (n=391)  SlotAcc=55.17
+final: n=400  F1=61.95  BLEU1=68.42  TA(TSA)=97.75  EM=44.00  ArgF1=63.21 (n=391)  SlotAcc=55.17
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/forge-v4f-off.jsonl
+=== mem0-v4f-off start 02:45:23 ===
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   1%|          | 3/391 [00:00<00:16, 22.88it/s]Loading weights:   2%|▏         | 6/391 [00:05<07:12,  1.12s/it]Loading weights: 100%|██████████| 391/391 [00:05<00:00, 67.65it/s]
+bench: {"n_tasks": 400, "n_sessions": 429, "levels": {"L4": 44, "L1": 230, "L2": 111, "L3": 15}, "grounding_types": {"explicit": 368, "inferred": 181, "default": 317}, "tasks_without_session": 16}
+facts loaded from cache: 9620
+  50/400  n=50  F1=37.77  BLEU1=42.37  TA(TSA)=94.00  EM=22.00  ArgF1=40.18 (n=47)  SlotAcc=31.05
+  100/400  n=100  F1=39.96  BLEU1=44.46  TA(TSA)=95.00  EM=23.00  ArgF1=42.06 (n=95)  SlotAcc=33.23
+  150/400  n=150  F1=39.81  BLEU1=42.67  TA(TSA)=94.67  EM=25.33  ArgF1=42.05 (n=142)  SlotAcc=34.45
+  200/400  n=200  F1=41.31  BLEU1=43.92  TA(TSA)=95.50  EM=26.00  ArgF1=43.25 (n=191)  SlotAcc=35.79
+  250/400  n=250  F1=41.19  BLEU1=44.63  TA(TSA)=94.40  EM=25.60  ArgF1=43.64 (n=236)  SlotAcc=34.85
+  300/400  n=300  F1=40.26  BLEU1=43.99  TA(TSA)=93.33  EM=24.67  ArgF1=42.77 (n=280)  SlotAcc=34.44
+  350/400  n=350  F1=41.67  BLEU1=45.46  TA(TSA)=93.14  EM=25.71  ArgF1=44.43 (n=326)  SlotAcc=35.77
+  400/400  n=400  F1=41.30  BLEU1=44.90  TA(TSA)=93.50  EM=26.25  ArgF1=43.90 (n=374)  SlotAcc=35.67
+final: n=400  F1=41.30  BLEU1=44.90  TA(TSA)=93.50  EM=26.25  ArgF1=43.90 (n=374)  SlotAcc=35.67
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/mem0-v4f-off.jsonl
+=== amem-v4f-off start 02:54:02 ===
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   1%|          | 3/391 [00:00<00:15, 24.81it/s]Loading weights:   2%|▏         | 6/391 [00:02<03:00,  2.13it/s]Loading weights: 100%|██████████| 391/391 [00:02<00:00, 160.83it/s]
+bench: {"n_tasks": 400, "n_sessions": 429, "levels": {"L4": 44, "L1": 230, "L2": 111, "L3": 15}, "grounding_types": {"explicit": 368, "inferred": 181, "default": 317}, "tasks_without_session": 16}
+bank loaded from cache: 3003 notes
+  50/400  n=50  F1=39.38  BLEU1=43.38  TA(TSA)=90.00  EM=24.00  ArgF1=43.75 (n=45)  SlotAcc=32.62
+  100/400  n=100  F1=39.18  BLEU1=44.18  TA(TSA)=94.00  EM=21.00  ArgF1=41.68 (n=94)  SlotAcc=30.79
+  150/400  n=150  F1=41.08  BLEU1=45.18  TA(TSA)=95.33  EM=25.33  ArgF1=43.09 (n=143)  SlotAcc=34.22
+  200/400  n=200  F1=43.91  BLEU1=47.82  TA(TSA)=96.00  EM=27.50  ArgF1=45.74 (n=192)  SlotAcc=37.19
+  250/400  n=250  F1=44.87  BLEU1=49.32  TA(TSA)=96.00  EM=29.20  ArgF1=46.74 (n=240)  SlotAcc=38.45
+  300/400  n=300  F1=44.52  BLEU1=49.20  TA(TSA)=95.33  EM=28.67  ArgF1=46.46 (n=286)  SlotAcc=38.61
+  350/400  n=350  F1=44.50  BLEU1=48.92  TA(TSA)=95.43  EM=28.00  ArgF1=46.44 (n=334)  SlotAcc=38.91
+  400/400  n=400  F1=43.93  BLEU1=48.24  TA(TSA)=95.75  EM=28.25  ArgF1=45.71 (n=383)  SlotAcc=38.29
+final: n=400  F1=43.93  BLEU1=48.24  TA(TSA)=95.75  EM=28.25  ArgF1=45.71 (n=383)  SlotAcc=38.29
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/amem-v4f-off.jsonl
+=== full-v4f-off start 03:02:23 ===
+  50/400  n=50  F1=60.28  BLEU1=68.01  TA(TSA)=98.00  EM=38.00  ArgF1=61.51 (n=49)  SlotAcc=50.01
+  100/400  n=100  F1=57.81  BLEU1=66.59  TA(TSA)=98.00  EM=36.00  ArgF1=58.99 (n=98)  SlotAcc=49.79
+  150/400  n=150  F1=62.24  BLEU1=68.71  TA(TSA)=98.00  EM=43.33  ArgF1=63.51 (n=147)  SlotAcc=54.94
+  200/400  n=200  F1=64.33  BLEU1=69.65  TA(TSA)=98.50  EM=45.00  ArgF1=65.31 (n=197)  SlotAcc=57.15
+  250/400  n=250  F1=65.10  BLEU1=70.72  TA(TSA)=98.40  EM=46.40  ArgF1=66.16 (n=246)  SlotAcc=57.21
+  300/400  n=300  F1=63.73  BLEU1=69.51  TA(TSA)=97.67  EM=45.00  ArgF1=65.03 (n=293)  SlotAcc=56.41
+  350/400  n=350  F1=64.34  BLEU1=70.07  TA(TSA)=97.71  EM=45.14  ArgF1=65.65 (n=342)  SlotAcc=57.38
+  400/400  n=400  F1=63.33  BLEU1=68.88  TA(TSA)=97.75  EM=45.00  ArgF1=64.62 (n=391)  SlotAcc=56.78
+final: n=400  F1=63.33  BLEU1=68.88  TA(TSA)=97.75  EM=45.00  ArgF1=64.62 (n=391)  SlotAcc=56.78
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/full-v4f-off.jsonl
+n=400  F1=63.33  BLEU1=68.88  TA(TSA)=97.75  EM=45.00  ArgF1=64.62 (n=391)  SlotAcc=56.78
+truncated tasks: 6
+=== oracle-v4f-off start 03:11:07 ===
+  50/400  n=50  F1=64.02  BLEU1=73.47  TA(TSA)=98.00  EM=44.00  ArgF1=65.33 (n=49)  SlotAcc=55.96
+  100/400  n=100  F1=60.22  BLEU1=70.24  TA(TSA)=99.00  EM=34.00  ArgF1=60.83 (n=99)  SlotAcc=48.53
+  150/400  n=150  F1=65.86  BLEU1=73.56  TA(TSA)=99.33  EM=44.00  ArgF1=66.30 (n=149)  SlotAcc=56.21
+  200/400  n=200  F1=69.16  BLEU1=75.97  TA(TSA)=99.50  EM=46.50  ArgF1=69.51 (n=199)  SlotAcc=59.72
+  250/400  n=250  F1=70.12  BLEU1=77.19  TA(TSA)=99.20  EM=48.40  ArgF1=70.69 (n=248)  SlotAcc=60.41
+  300/400  n=300  F1=69.21  BLEU1=76.59  TA(TSA)=98.67  EM=48.00  ArgF1=69.92 (n=296)  SlotAcc=59.88
+  350/400  n=350  F1=70.39  BLEU1=77.39  TA(TSA)=98.57  EM=49.43  ArgF1=71.22 (n=345)  SlotAcc=61.52
+  400/400  n=400  F1=70.06  BLEU1=77.12  TA(TSA)=98.75  EM=49.50  ArgF1=70.78 (n=395)  SlotAcc=61.33
+final: n=400  F1=70.06  BLEU1=77.12  TA(TSA)=98.75  EM=49.50  ArgF1=70.78 (n=395)  SlotAcc=61.33
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/oracle-v4f-off.jsonl
+n=400  F1=70.06  BLEU1=77.12  TA(TSA)=98.75  EM=49.50  ArgF1=70.78 (n=395)  SlotAcc=61.33
+=== ltm-v4f-on start 03:18:34 ===
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+bench stats: {"n_tasks": 400, "n_sessions": 429, "levels": {"L4": 44, "L1": 230, "L2": 111, "L3": 15}, "grounding_types": {"explicit": 368, "inferred": 181, "default": 317}, "tasks_without_session": 16}
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   1%|▏         | 5/391 [00:02<03:22,  1.91it/s]Loading weights: 100%|██████████| 391/391 [00:02<00:00, 149.03it/s]
