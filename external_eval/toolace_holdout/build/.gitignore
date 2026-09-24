@@ -6,3 +6,4 @@ Mem2ACTBench_small/
 build.log
 build_failures.txt
 __pycache__/
+.cache/
