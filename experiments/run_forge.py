@@ -163,6 +163,8 @@ def main():
     ap.add_argument("--collapse-versions", action="store_true")
     ap.add_argument("--whitelist", action="store_true")
     ap.add_argument("--no-demands", action="store_true")
+    ap.add_argument("--no-demand-fallback", action="store_true",
+                    help="disable the deterministic template fallback for empty demand lists (gap-A fix); default ON")
     ap.add_argument("--flat-render", action="store_true")
     ap.add_argument("--cards-cache", default=str(OUT_DIR / "fact_cards_v3.jsonl"))
     ap.add_argument("--chunks-cache", default=str(OUT_DIR / "chunks"))
@@ -231,7 +233,8 @@ def main():
             searcher = ChunkSearcher(visible, all_vecs[keep_idx] if all_vecs is not None else None,
                                      k=args.k_chunks)
 
-        demands = generate_demands(llm, task.query, spec)
+        demands = generate_demands(llm, task.query, spec,
+                                  fallback=not args.no_demand_fallback)
         dvecs = embedder.encode([d["query"] for d in demands]) if demands else []
 
         card_hits, chunk_texts, anchors_by_param = [], [], {}

@@ -28,7 +28,10 @@ class LLMClient:
         self.temperature = temperature
         self.max_tokens = max_tokens
 
-    def chat(self, system: str, user: str) -> str:
+    def chat(self, system: str, user: str, extra_body: dict | None = None) -> str:
+        kwargs = {}
+        if extra_body:
+            kwargs["extra_body"] = extra_body
         resp = self.client.chat.completions.create(
             model=self.model,
             temperature=self.temperature,
@@ -37,7 +40,9 @@ class LLMClient:
                 {"role": "system", "content": system},
                 {"role": "user", "content": user},
             ],
+            **kwargs,
         )
+        self.last_usage = getattr(resp, "usage", None)
         return resp.choices[0].message.content or ""
 
 

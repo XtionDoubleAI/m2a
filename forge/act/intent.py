@@ -62,9 +62,25 @@ def _covered(spec: ToolSpec, demands: list[dict]) -> bool:
     return all(p.name in have for p in spec.required_params())
 
 
-def generate_demands(llm, query: str, spec: ToolSpec) -> list[dict]:
+def _template_demands(spec: ToolSpec) -> list[dict]:
+    """Deterministic fallback demands, one per parameter, no LLM involved.
+
+    Gap-A fix (D8 section 4.2): the LLM occasionally returns an empty list,
+    which used to be silently passed through, leaving the task with zero
+    retrieval. Temperature-0 retry on identical input returns the same
+    empty list, so the guaranteed non-empty path is a plain template."""
+    return [{
+        "param_name": p.name,
+        "query": f"What is the value for {p.name}? {p.description or ''}".strip(),
+        "attribute_guess": "",
+    } for p in spec.params]
+
+
+def generate_demands(llm, query: str, spec: ToolSpec,
+                     fallback: bool = True) -> list[dict]:
     """Generate per-parameter retrieval demands; repair once if required
-    parameters are uncovered (D0 protocol)."""
+    parameters are uncovered (D0 protocol). An empty LLM response falls
+    back to deterministic template demands when `fallback` is set."""
     schema_text = json.dumps({
         "name": spec.name,
         "description": spec.description,
@@ -76,11 +92,15 @@ def generate_demands(llm, query: str, spec: ToolSpec) -> list[dict]:
     }, ensure_ascii=False, indent=1)
     user = f"User request: {query}\n\nTool schema:\n{schema_text}"
     demands = _parse(llm.chat(SYSTEM_PROMPT, user))
+    if not demands and fallback:
+        return _template_demands(spec)
     if demands and not _covered(spec, demands):
         missing = [p.name for p in spec.required_params() if p.name not in {d["param_name"] for d in demands}]
         user += ("\n\nIMPORTANT: your previous list missed these REQUIRED parameters: "
                  f"{missing}. Regenerate the complete list.")
         demands = _parse(llm.chat(SYSTEM_PROMPT, user)) or demands
+    if not demands and fallback:
+        return _template_demands(spec)
     # keep only demands that correspond to real parameters; dedup by param
     valid = {p.name for p in spec.params}
     seen, out = set(), []
@@ -88,4 +108,6 @@ def generate_demands(llm, query: str, spec: ToolSpec) -> list[dict]:
         if d["param_name"] in valid and d["param_name"] not in seen:
             seen.add(d["param_name"])
             out.append(d)
+    if not out and fallback:
+        return _template_demands(spec)
     return out

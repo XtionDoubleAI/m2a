@@ -7,6 +7,7 @@ This keeps baselines and the m2a harness behind one interface.
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 from forge.eval.dataset import Bench, QATask
@@ -22,11 +23,13 @@ def run_system(system, bench: Bench, out_path: str | Path,
     with open(out_path, "w", encoding="utf-8") as f:
         for i, task in enumerate(tasks):
             texts = bench.session_texts(task)
+            t0 = time.perf_counter()
             try:
                 pred_tool, pred_args = system(task, texts)
             except Exception as e:  # noqa: BLE001 - log and continue, one bad sample must not kill a run
                 print(f"[{task.qa_id}] system error: {e}")
                 pred_tool, pred_args = None, {}
+            latency_s = round(time.perf_counter() - t0, 3)
             r = score_sample(task.qa_id, task.tool_name, task.arguments,
                              pred_tool, pred_args)
             results.append(r)
@@ -44,6 +47,7 @@ def run_system(system, bench: Bench, out_path: str | Path,
                 "slot_acc": r.slot_acc,
                 "level": task.complexity.get("level"),
                 "has_session": bool(task.session_ids),
+                "latency_s": latency_s,
             }, ensure_ascii=False) + "\n")
             if (i + 1) % log_every == 0:
                 print(f"  {i + 1}/{len(tasks)}  {format_aggregate(aggregate(results))}")

@@ -117,3 +117,32 @@ def test_deterministic_override_newest_wins_on_fabrication():
     # model fabricated -> newest candidate substituted
     args2 = deterministic_override(spec, [(demand, [old, new])], {"pm": "npm"})
     assert args2["pm"] == "uv"
+
+
+def test_demand_fallback_on_empty_llm_response():
+    """Gap-A fix: empty LLM output must yield deterministic template demands
+    covering every parameter, not an empty list."""
+    from forge.act.intent import generate_demands
+    from forge.schema import load_tool_spec
+
+    class EmptyLLM:
+        def chat(self, system, user):
+            return "no json here"
+
+    spec = load_tool_spec({
+        "name": "T", "description": "d",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "city": {"type": "string", "description": "the city"},
+                "days": {"type": "int", "description": "forecast days"},
+            },
+            "required": ["city", "days"],
+        }})
+    out = generate_demands(EmptyLLM(), "book it", spec, fallback=True)
+    assert [d["param_name"] for d in out] == ["city", "days"]
+    assert "the city" in out[0]["query"] and "city" in out[0]["query"]
+
+    # fallback disabled reproduces the old silent-empty behaviour
+    out_old = generate_demands(EmptyLLM(), "book it", spec, fallback=False)
+    assert out_old == []
