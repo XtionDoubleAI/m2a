@@ -18,7 +18,8 @@ import re
 class LLMClient:
     def __init__(self, base_url: str | None = None,
                  model: str = "Qwen/Qwen2.5-7B-Instruct", temperature: float = 0.0,
-                 max_tokens: int = 512, api_key: str | None = None):
+                 max_tokens: int = 512, api_key: str | None = None,
+                 default_extra_body: dict | None = None):
         from openai import OpenAI
         self.client = OpenAI(
             base_url=base_url or os.environ.get("FORGE_API_BASE",
@@ -27,11 +28,13 @@ class LLMClient:
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.default_extra_body = default_extra_body
 
     def chat(self, system: str, user: str, extra_body: dict | None = None) -> str:
+        extra = extra_body or self.default_extra_body
         kwargs = {}
-        if extra_body:
-            kwargs["extra_body"] = extra_body
+        if extra:
+            kwargs["extra_body"] = extra
         resp = self.client.chat.completions.create(
             model=self.model,
             temperature=self.temperature,
@@ -44,6 +47,24 @@ class LLMClient:
         )
         self.last_usage = getattr(resp, "usage", None)
         return resp.choices[0].message.content or ""
+
+
+def make_answer_llm(kind: str = "local", model: str | None = None,
+                    reasoning: str = "default", max_tokens: int | None = None):
+    """Shared answer-side LLM constructor for every runner.
+
+    kind="local": in-process vLLM engine with the local Qwen snapshot
+    (reasoning ignored). kind="api": OpenAI-compatible hosted endpoint from
+    FORGE_API_BASE/FORGE_API_KEY; reasoning "none"/"high" maps to the
+    reasoning_effort request parameter (verified against the provider:
+    none zeroes reasoning tokens, default/high engage them)."""
+    if kind == "api":
+        extra = {"reasoning_effort": reasoning} if reasoning != "default" else None
+        return LLMClient(model=model or "DeepSeek-V4-Flash",
+                         max_tokens=max_tokens or (4000 if reasoning != "none" else 2000),
+                         default_extra_body=extra)
+    from experiments.run_forge import _snapshot
+    return OfflineLLM(str(_snapshot(model or "Qwen/Qwen2.5-7B-Instruct")))
 
 
 def _patch_transformers_for_vllm() -> None:

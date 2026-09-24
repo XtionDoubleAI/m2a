@@ -57,6 +57,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--name", default="oracle-supply")
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--llm", choices=["local", "api"], default="local",
+                    help="answer-side LLM: local vLLM or hosted OpenAI-compatible API")
+    ap.add_argument("--host-model", default="DeepSeek-V4-Flash",
+                    help="model name on the API side")
+    ap.add_argument("--reasoning", choices=["default", "none", "high"], default="default",
+                    help="reasoning_effort for hosted thinking models")
+    ap.add_argument("--host-max-tokens", type=int, default=None)
     ap.add_argument("--gpu-util", type=float, default=0.90)
     ap.add_argument("--model", default="Qwen/Qwen2.5-7B-Instruct")
     args = ap.parse_args()
@@ -64,8 +71,13 @@ def main():
     from experiments.run_forge import _snapshot
     bench = Bench(BENCH_DIR)
 
-    llm = OfflineLLM(str(_snapshot(args.model)),
-                     gpu_memory_utilization=args.gpu_util)
+    if args.llm == "api":
+        from forge.act.llm import make_answer_llm
+        llm = make_answer_llm("api", args.host_model, args.reasoning,
+                              args.host_max_tokens)
+    else:
+        llm = OfflineLLM(str(_snapshot(args.model)),
+                         gpu_memory_utilization=args.gpu_util)
 
     inter_path = RESULTS / f"{args.name}.intermediates.jsonl"
     inter_f = open(inter_path, "w", encoding="utf-8")

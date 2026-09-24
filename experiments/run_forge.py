@@ -152,6 +152,15 @@ def verbatim_anchor(args: dict, anchors_by_param: dict[str, list[str]]) -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--qa-file", default=None,
+                    help="optional file of qa_ids (one per line); run only those tasks")
+    ap.add_argument("--llm", choices=["local", "api"], default="local",
+                    help="answer-side LLM: local vLLM or hosted OpenAI-compatible API")
+    ap.add_argument("--host-model", default="DeepSeek-V4-Flash",
+                    help="model name on the API side")
+    ap.add_argument("--reasoning", choices=["default", "none", "high"], default="default",
+                    help="reasoning_effort for hosted thinking models")
+    ap.add_argument("--host-max-tokens", type=int, default=None)
     ap.add_argument("--store-mode", choices=["hybrid", "facts", "chunks"], default="chunks")
     ap.add_argument("--k-cards", type=int, default=3)
     ap.add_argument("--k-chunks", type=int, default=3)
@@ -192,10 +201,19 @@ def main():
 
     bench = Bench(BENCH_DIR)
     print("bench:", json.dumps(bench.stats(), ensure_ascii=False))
+    if args.qa_file:
+        keep = {l.strip() for l in open(args.qa_file, encoding="utf-8") if l.strip()}
+        bench.tasks = [t_ for t_ in bench.tasks if t_.qa_id in keep]
+        print(f"qa-file filter: {len(bench.tasks)} tasks kept")
 
     embedder = BGEM3Dense(str(_snapshot("BAAI/bge-m3")), device=args.embed_device)
-    llm = OfflineLLM(str(_snapshot("Qwen/Qwen2.5-7B-Instruct")),
-                     gpu_memory_utilization=args.gpu_util)
+    if args.llm == "api":
+        from forge.act.llm import make_answer_llm
+        llm = make_answer_llm("api", args.host_model, args.reasoning,
+                              args.host_max_tokens)
+    else:
+        llm = OfflineLLM(str(_snapshot("Qwen/Qwen2.5-7B-Instruct")),
+                         gpu_memory_utilization=args.gpu_util)
     reranker = None
     if args.rerank or args.rerank_candidates or args.verbatim_threshold > 0:
         from forge.act.reranker import BGEReranker

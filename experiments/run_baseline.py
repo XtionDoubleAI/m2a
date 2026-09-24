@@ -54,6 +54,13 @@ def make_embedder(device: str = "cuda:0"):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--llm", choices=["local", "api"], default="local",
+                    help="answer-side LLM: local vLLM or hosted OpenAI-compatible API")
+    ap.add_argument("--host-model", default="DeepSeek-V4-Flash",
+                    help="model name on the API side")
+    ap.add_argument("--reasoning", choices=["default", "none", "high"], default="default",
+                    help="reasoning_effort for hosted thinking models")
+    ap.add_argument("--host-max-tokens", type=int, default=None)
     ap.add_argument("--retriever", choices=["hybrid", "bm25", "dense", "none"], default="hybrid")
     ap.add_argument("--k", type=int, default=5)
     ap.add_argument("--chunk-window", type=int, default=6)
@@ -84,7 +91,12 @@ def main():
         gc.collect()
         torch.cuda.empty_cache()
 
-    system.llm = OfflineLLM(str(_latest_snapshot("Qwen/Qwen2.5-7B-Instruct")))
+    if args.llm == "api":
+        from forge.act.llm import make_answer_llm
+        system.llm = make_answer_llm("api", args.host_model, args.reasoning,
+                                     args.host_max_tokens)
+    else:
+        system.llm = OfflineLLM(str(_latest_snapshot("Qwen/Qwen2.5-7B-Instruct")))
     if args.retriever == "none":
         system.retriever.docs = []
         system.retriever._bm25 = None  # noqa: SLF001

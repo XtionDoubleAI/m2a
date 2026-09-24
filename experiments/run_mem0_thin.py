@@ -159,6 +159,13 @@ class FactStore:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--llm", choices=["local", "api"], default="local",
+                    help="answer-side LLM: local vLLM or hosted OpenAI-compatible API")
+    ap.add_argument("--host-model", default="DeepSeek-V4-Flash",
+                    help="model name on the API side")
+    ap.add_argument("--reasoning", choices=["default", "none", "high"], default="default",
+                    help="reasoning_effort for hosted thinking models")
+    ap.add_argument("--host-max-tokens", type=int, default=None)
     ap.add_argument("--name", default="mem0-full")
     args = ap.parse_args()
 
@@ -183,7 +190,12 @@ def main():
                 f.write(json.dumps(fact, ensure_ascii=False) + "\n")
         print(f"facts: {len(store.facts)} (cached to {cache})")
 
-    answer_llm = ServerChat()
+    if args.llm == "api":
+        from forge.act.llm import make_answer_llm
+        answer_llm = make_answer_llm("api", args.host_model, args.reasoning,
+                                     args.host_max_tokens)
+    else:
+        answer_llm = ServerChat()
     out_path = OUT_DIR / f"{args.name}.jsonl"
     inter_fh = open(OUT_DIR / f"{args.name}.intermediates.jsonl", "w", encoding="utf-8")
 
