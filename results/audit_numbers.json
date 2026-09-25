@@ -4,6 +4,14 @@
    "n": 400,
    "f1": 41.11
   },
+  "amem-holdout-v4f": {
+   "n": 89,
+   "f1": 56.41
+  },
+  "amem-holdout": {
+   "n": 89,
+   "f1": 54.39
+  },
   "amem-smoke": {
    "n": 20,
    "f1": 29.82
@@ -64,6 +72,14 @@
    "n": 115,
    "f1": 68.11
   },
+  "forge-holdout-v4f": {
+   "n": 89,
+   "f1": 67.48
+  },
+  "forge-holdout": {
+   "n": 89,
+   "f1": 62.56
+  },
   "forge-layered": {
    "n": 400,
    "f1": 34.46
@@ -83,6 +99,14 @@
   "forge-v4p-on": {
    "n": 400,
    "f1": 60.95
+  },
+  "full-holdout-v4f": {
+   "n": 89,
+   "f1": 72.85
+  },
+  "full-holdout": {
+   "n": 89,
+   "f1": 61.95
   },
   "full-pool": {
    "n": 400,
@@ -108,6 +132,14 @@
    "n": 400,
    "f1": 63.74
   },
+  "ga-full": {
+   "n": 400,
+   "f1": 49.76
+  },
+  "ga-smoke": {
+   "n": 20,
+   "f1": 44.98
+  },
   "inject-first": {
    "n": 400,
    "f1": 93.66
@@ -120,9 +152,37 @@
    "n": 400,
    "f1": 93.6
   },
+  "langmem-full": {
+   "n": 400,
+   "f1": 26.71
+  },
+  "langmem-smoke": {
+   "n": 20,
+   "f1": 0.83
+  },
+  "langmem-smoke2": {
+   "n": 20,
+   "f1": 0.83
+  },
+  "langmem-smoke3": {
+   "n": 20,
+   "f1": 16.97
+  },
+  "langmem_bank": {
+   "n": 0,
+   "f1": 0
+  },
   "layered-smoke": {
    "n": 20,
    "f1": 33.88
+  },
+  "ltm-holdout-v4f": {
+   "n": 89,
+   "f1": 61.98
+  },
+  "ltm-holdout": {
+   "n": 89,
+   "f1": 53.65
   },
   "ltm-pool": {
    "n": 400,
@@ -192,6 +252,14 @@
    "n": 400,
    "f1": 39.19
   },
+  "mem0-holdout-v4f": {
+   "n": 89,
+   "f1": 59.42
+  },
+  "mem0-holdout": {
+   "n": 89,
+   "f1": 58.23
+  },
   "mem0-v4f-off": {
    "n": 400,
    "f1": 41.3
@@ -203,6 +271,30 @@
   "mem0-v4p-on": {
    "n": 400,
    "f1": 42.22
+  },
+  "memtree-full": {
+   "n": 400,
+   "f1": 45.26
+  },
+  "memtree-smoke": {
+   "n": 20,
+   "f1": 13.29
+  },
+  "memtree-smoke2": {
+   "n": 20,
+   "f1": 18.79
+  },
+  "memtree-smoke3": {
+   "n": 20,
+   "f1": 40.73
+  },
+  "oracle-holdout-v4f": {
+   "n": 89,
+   "f1": 79.28
+  },
+  "oracle-holdout": {
+   "n": 89,
+   "f1": 75.93
   },
   "oracle-smoke": {
    "n": 5,
@@ -219,6 +311,14 @@
   "oracle-v4f-on": {
    "n": 400,
    "f1": 69.73
+  },
+  "scm-full": {
+   "n": 400,
+   "f1": 42.67
+  },
+  "scm-smoke": {
+   "n": 20,
+   "f1": 34.56
   },
   "smoke5": {
    "n": 5,
@@ -423,6 +523,102 @@
    "claim": "F1 full-v4p-on [project report (V4-Pro, thinking on)]",
    "claimed": 63.74,
    "recomputed": 63.74,
+   "pass": true
+  },
+  {
+   "claim": "F1 ga-full [project report (generative agents)]",
+   "claimed": 49.76,
+   "recomputed": 49.76,
+   "pass": true
+  },
+  {
+   "claim": "F1 scm-full [project report (self-controlled memory)]",
+   "claimed": 42.67,
+   "recomputed": 42.67,
+   "pass": true
+  },
+  {
+   "claim": "F1 memtree-full [project report (memtree)]",
+   "claimed": 45.26,
+   "recomputed": 45.26,
+   "pass": true
+  },
+  {
+   "claim": "F1 langmem-full [project report (langmem SDK)]",
+   "claimed": 26.71,
+   "recomputed": 26.71,
+   "pass": true
+  },
+  {
+   "claim": "F1 ltm-holdout [held-out evaluation]",
+   "claimed": 53.65,
+   "recomputed": 53.65,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-holdout [held-out evaluation]",
+   "claimed": 62.56,
+   "recomputed": 62.56,
+   "pass": true
+  },
+  {
+   "claim": "F1 mem0-holdout [held-out evaluation]",
+   "claimed": 58.23,
+   "recomputed": 58.23,
+   "pass": true
+  },
+  {
+   "claim": "F1 amem-holdout [held-out evaluation]",
+   "claimed": 54.39,
+   "recomputed": 54.39,
+   "pass": true
+  },
+  {
+   "claim": "F1 full-holdout [held-out evaluation]",
+   "claimed": 61.95,
+   "recomputed": 61.95,
+   "pass": true
+  },
+  {
+   "claim": "F1 oracle-holdout [held-out evaluation]",
+   "claimed": 75.93,
+   "recomputed": 75.93,
+   "pass": true
+  },
+  {
+   "claim": "F1 ltm-holdout-v4f [held-out evaluation (V4-Flash)]",
+   "claimed": 61.98,
+   "recomputed": 61.98,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-holdout-v4f [held-out evaluation (V4-Flash)]",
+   "claimed": 67.48,
+   "recomputed": 67.48,
+   "pass": true
+  },
+  {
+   "claim": "F1 mem0-holdout-v4f [held-out evaluation (V4-Flash)]",
+   "claimed": 59.42,
+   "recomputed": 59.42,
+   "pass": true
+  },
+  {
+   "claim": "F1 amem-holdout-v4f [held-out evaluation (V4-Flash)]",
+   "claimed": 56.41,
+   "recomputed": 56.41,
+   "pass": true
+  },
+  {
+   "claim": "F1 full-holdout-v4f [held-out evaluation (V4-Flash)]",
+   "claimed": 72.85,
+   "recomputed": 72.85,
+   "pass": true
+  },
+  {
+   "claim": "F1 oracle-holdout-v4f [held-out evaluation (V4-Flash)]",
+   "claimed": 79.28,
+   "recomputed": 79.28,
    "pass": true
   },
   {
@@ -697,6 +893,11 @@
   }
  ],
  "unverifiable": [
+  "ga_bank: 'qa_id'",
+  "langmem_bank2: 'qa_id'",
+  "langmem_bank3: 'qa_id'",
+  "langmem_bank_full: 'qa_id'",
+  "scm_bank: 'qa_id'",
   "m2a-hybrid-store-nooverride: registered F1=33.88, no own sample archive",
   "forge-hybrid-base: registered F1=33.88, no own sample archive",
   "forge-hybrid-unique-direct: registered F1=33.88, no own sample archive",
@@ -738,8 +939,8 @@
   "ci_high_pts": 10.82
  },
  "summary": {
-  "assertions": 78,
-  "passed": 78,
+  "assertions": 94,
+  "passed": 94,
   "failed": 0
  }
 }

@@ -89,12 +89,14 @@ def main():
                     default=None,
                     help="C3 variant: inject gold values verbatim (one line per "
                          "parameter) at the given position among neutral filler")
+    ap.add_argument("--bench-dir", default=None,
+                    help="override benchmark data dir")
     ap.add_argument("--gpu-util", type=float, default=0.90)
     ap.add_argument("--model", default="Qwen/Qwen2.5-7B-Instruct")
     args = ap.parse_args()
 
     from experiments.run_forge import _snapshot
-    bench = Bench(BENCH_DIR)
+    bench = Bench(Path(args.bench_dir) if args.bench_dir else BENCH_DIR)
 
     if args.llm == "api":
         from forge.act.llm import make_answer_llm

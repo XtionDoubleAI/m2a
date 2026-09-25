@@ -210,6 +210,8 @@ def main():
                     help="reasoning_effort for hosted thinking models")
     ap.add_argument("--host-max-tokens", type=int, default=None)
     ap.add_argument("--name", default="amem-full")
+    ap.add_argument("--bench-dir", default=None,
+                    help="override benchmark data dir")
     ap.add_argument("--bank-cache", default=str(OUT_DIR / "amem_bank.jsonl"))
     args = ap.parse_args()
 
@@ -217,7 +219,7 @@ def main():
     embedder = BGEM3Dense(bge_dir(), device="cuda:1")
     bank = NoteBank(chat, embedder)
 
-    bench = Bench(BENCH_DIR)
+    bench = Bench(Path(args.bench_dir) if args.bench_dir else BENCH_DIR)
     print("bench:", json.dumps(bench.stats(), ensure_ascii=False))
 
     from pathlib import Path as _P

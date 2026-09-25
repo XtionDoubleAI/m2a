@@ -1,0 +1,7 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   1%|▏         | 5/391 [00:02<03:23,  1.90it/s]Loading weights: 100%|██████████| 391/391 [00:02<00:00, 147.93it/s]
+bench: {"n_tasks": 400, "n_sessions": 429, "levels": {"L4": 44, "L1": 230, "L2": 111, "L3": 15}, "grounding_types": {"explicit": 368, "inferred": 181, "default": 317}, "tasks_without_session": 16}
+tree: 3004 nodes, 9465 merge calls, 3708s wall
+final: n=20  F1=13.29  BLEU1=13.20  TA(TSA)=95.00  EM=5.00  ArgF1=13.99 (n=19)  SlotAcc=7.50
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/memtree-smoke.jsonl
+final: Aggregate(n=20, f1=0.1328909878000787, bleu1=0.13202372562837678, tsa=0.95, em=0.05, arg_f1=0.13988525031587232, arg_n=19, slot_acc=0.075)

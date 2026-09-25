@@ -1,0 +1,20 @@
+{"qa_id": "qa_001", "evidence": "", "pred_args": {"location": "earlier place", "days": 16}, "gold_args": {"location": "New York", "days": 7}}
+{"qa_id": "qa_002", "evidence": "", "pred_args": {"address": "mywalletaddress"}, "gold_args": {"address": "0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE"}}
+{"qa_id": "qa_003", "evidence": "", "pred_args": {"wagon_no": "12345"}, "gold_args": {"wagon_no": "W456"}}
+{"qa_id": "qa_004", "evidence": "", "pred_args": {"id": "PLcDjWx-5mJtZJZJZJZJZJZJZJZJZJZJZ"}, "gold_args": {"id": "PLFgquLnL59akA2PflFpeQG9L01VFg90wS"}}
+{"qa_id": "qa_005", "evidence": "", "pred_args": {"address": "my_wallet_address"}, "gold_args": {"address": "0xABC123DEF456"}}
+{"qa_id": "qa_006", "evidence": "", "pred_args": {"id": 42}, "gold_args": {"id": 7589}}
+{"qa_id": "qa_007", "evidence": "", "pred_args": {"destination": "New York", "departure_date": "05/15/2023", "return_date": "05/18/2023"}, "gold_args": {"departure_date": "04/15/2024", "destination": "Barcelona", "return_date": "04/20/2024", "preferences": []}}
+{"qa_id": "qa_008", "evidence": "", "pred_args": {}, "gold_args": {"text": "Counseling"}}
+{"qa_id": "qa_009", "evidence": "", "pred_args": {"id": 123456789}, "gold_args": {"id": 12345}}
+{"qa_id": "qa_010", "evidence": "", "pred_args": {"location": "Boston, MA"}, "gold_args": {"location": "London"}}
+{"qa_id": "qa_011", "evidence": "", "pred_args": {"search": "back home"}, "gold_args": {"search": "american"}}
+{"qa_id": "qa_012", "evidence": "", "pred_args": {"library": "3D", "component_name": "starterScene"}, "gold_args": {"component_name": "HelloWorld", "library": "Three.js"}}
+{"qa_id": "qa_013", "evidence": "", "pred_args": {"name": "AD Carry Item"}, "gold_args": {"name": "Infinity Edge"}}
+{"qa_id": "qa_014", "evidence": "", "pred_args": {"user_id": "the same ID I used when asking about my old emails"}, "gold_args": {"user_id": "12345"}}
+{"qa_id": "qa_015", "evidence": "", "pred_args": {"code": "void helloWorld() { std::cout << \"Hello, world!\" << std::endl; }"}, "gold_args": {"code": "#include <string>\n#include <regex>\n\nstd::string markdown_to_html(const std::string& md) {\n    std::string html = md;\n    // ---- headers ----\n    html = std::regex_replace(html, std::regex(\"^### (.+)$\", std::regex_constants::multiline), \"<h3>$1</h3>\");\n    html = std::regex_replace(html, std::regex(\"^## (.+)$\",  std::regex_constants::multiline), \"<h2>$1</h2>\");\n    html = std::regex_replace(html, std::regex(\"^# (.+)$\",   std::regex_constants::multiline), \"<h1>$1</h1>\");\n    // ---- inline ----\n    html = std::regex_replace(html, std::regex(R\"(\\*\\*(.+?)\\*\\*)\"), \"<strong>$1</strong>\");\n    html = std::regex_replace(html, std::regex(R\"(\\*(.+?)\\*)\"),   \"<em>$1</em>\");\n    html = std::regex_replace(html, std::regex(R\"(\\`(.+?)\\`)\"),   \"<code>$1</code>\");\n    // ---- paragraphs ----\n    html = std::regex_replace(html, std::regex(\"\\n\\n\"), \"</p>\\n<p>\");\n    if (!html.empty() && html.front() != '<') html = \"<p>\" + html;\n    if (!html.empty() && html.back()  != '>') html += \"</p>\";\n    return html;\n}"}}
+{"qa_id": "qa_016", "evidence": "", "pred_args": {"text": "sci-fi flick"}, "gold_args": {"text": "Cybernetic Rhapsody", "analyzed": false, "morph": false, "page": 1, "source": "global"}}
+{"qa_id": "qa_017", "evidence": "", "pred_args": {"patent_id": " earlier patent ID mentioned in previous discussions"}, "gold_args": {"patent_id": "US345678"}}
+{"qa_id": "qa_018", "evidence": "", "pred_args": {"text": "latest techniques for achieving what we talked about last night"}, "gold_args": {"text": "lucid dream"}}
+{"qa_id": "qa_019", "evidence": "", "pred_args": {"category": "machine learning"}, "gold_args": {"category": "natural language processing"}}
+{"qa_id": "qa_020", "evidence": "", "pred_args": {"text": "incidents involving kids"}, "gold_args": {"text": "child tragedies in september"}}

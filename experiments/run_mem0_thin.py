@@ -167,16 +167,20 @@ def main():
                     help="reasoning_effort for hosted thinking models")
     ap.add_argument("--host-max-tokens", type=int, default=None)
     ap.add_argument("--name", default="mem0-full")
+    ap.add_argument("--bank-cache", default=None,
+                    help="override the fact-bank cache path")
+    ap.add_argument("--bench-dir", default=None,
+                    help="override benchmark data dir")
     args = ap.parse_args()
 
     chat = ServerChat()
     embedder = BGEM3Dense(bge_dir(), device="cuda:1")
 
-    bench = Bench(BENCH_DIR)
+    bench = Bench(Path(args.bench_dir) if args.bench_dir else BENCH_DIR)
     print("bench:", json.dumps(bench.stats(), ensure_ascii=False))
 
     store = FactStore(embedder)
-    cache = OUT_DIR / "mem0_facts.jsonl"
+    cache = Path(args.bank_cache) if args.bank_cache else OUT_DIR / "mem0_facts.jsonl"
     if cache.exists():
         for line in open(cache, encoding="utf-8"):
             d = json.loads(line)
