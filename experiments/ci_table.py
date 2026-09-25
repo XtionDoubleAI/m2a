@@ -25,6 +25,25 @@ VARIANTS = [
     "forge-chunks-nodemand", "forge-chunks-flat", "forge-chunks-r1",
     "forge-chunks-r1r2", "forge-chunks-r1r2r3", "forge-chunks-r1r2r3-low",
 ]
+# headline pairs beyond the ablation chain: (key, baseline, system) with
+# paired mean diff system - baseline
+PAIRS = [
+    ("fixed_vs_ltm", "ltmemory_hybrid5_full", "forge-fixed-full"),
+    ("fixed_vs_mem0", "mem0-full", "forge-fixed-full"),
+    ("fixed_vs_amem", "amem-full", "forge-fixed-full"),
+    ("fixed_vs_fullsupply", "full-supply", "forge-fixed-full"),
+    ("v4f_off_forge_vs_ltm", "ltm-v4f-off", "forge-v4f-off"),
+    ("v4f_off_forge_vs_mem0", "mem0-v4f-off", "forge-v4f-off"),
+    ("v4f_off_forge_vs_amem", "amem-v4f-off", "forge-v4f-off"),
+    ("v4f_off_forge_vs_full", "full-v4f-off", "forge-v4f-off"),
+    ("v4f_on_forge_vs_full", "full-v4f-on", "forge-v4f-on"),
+    ("pool_forge_vs_full", "full-pool", "forge-pool"),
+    ("pool_forge_vs_ltm", "ltm-pool", "forge-pool"),
+    ("inject_first_vs_middle", "inject-middle", "inject-first"),
+    ("inject_last_vs_middle", "inject-middle", "inject-last"),
+    ("v4p_on_forge_vs_amem", "amem-v4p-on", "forge-v4p-on"),
+    ("v4p_on_forge_vs_full", "full-v4p-on", "forge-v4p-on"),
+]
 N_BOOT = 10000
 
 
@@ -63,10 +82,23 @@ def main():
         if not p.exists():
             continue
         table[name] = paired_boot(ref, value_f1(p))
+    pairs = {}
+    for key, base, system in PAIRS:
+        pb = RESULTS / f"{base}.jsonl"
+        ps = RESULTS / f"{system}.jsonl"
+        if not (pb.exists() and ps.exists()):
+            continue
+        pairs[key] = {**paired_boot(value_f1(pb), value_f1(ps)),
+                      "baseline": base, "system": system}
+    table["pairs"] = pairs
     (RESULTS / "ci_table.json").write_text(
         json.dumps(table, ensure_ascii=False, indent=1), encoding="utf-8")
     for name, row in table.items():
-        print(name, json.dumps(row))
+        if name == "pairs":
+            for key, r in row.items():
+                print("pair", key, json.dumps(r))
+        else:
+            print(name, json.dumps(row))
 
 
 if __name__ == "__main__":

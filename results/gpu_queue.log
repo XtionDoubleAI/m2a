@@ -121,3 +121,93 @@ INFO 09-25 03:20:27 gpu_executor.py:117] Maximum concurrency for 16384 tokens pe
 INFO 09-25 03:20:28 model_runner.py:1400] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
 INFO 09-25 03:20:28 model_runner.py:1404] If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
 INFO 09-25 03:20:40 model_runner.py:1518] Graph capturing finished in 13 secs, took 0.20 GiB
+chunk index: 13515 chunks
+  50/400  n=50  F1=54.73  BLEU1=58.37  TA(TSA)=94.00  EM=34.00  ArgF1=56.45 (n=47)  SlotAcc=51.17
+  100/400  n=100  F1=55.77  BLEU1=59.31  TA(TSA)=95.00  EM=36.00  ArgF1=56.78 (n=95)  SlotAcc=50.98
+  150/400  n=150  F1=49.92  BLEU1=53.07  TA(TSA)=96.00  EM=30.67  ArgF1=50.72 (n=144)  SlotAcc=46.03
+  200/400  n=200  F1=49.24  BLEU1=52.24  TA(TSA)=94.00  EM=28.50  ArgF1=49.92 (n=188)  SlotAcc=43.60
+  250/400  n=250  F1=51.38  BLEU1=54.37  TA(TSA)=93.60  EM=30.80  ArgF1=51.99 (n=234)  SlotAcc=46.13
+  300/400  n=300  F1=54.25  BLEU1=57.13  TA(TSA)=94.67  EM=33.67  ArgF1=54.91 (n=284)  SlotAcc=48.85
+  350/400  n=350  F1=54.86  BLEU1=57.43  TA(TSA)=94.57  EM=34.57  ArgF1=55.37 (n=331)  SlotAcc=49.50
+  400/400  n=400  F1=57.05  BLEU1=59.50  TA(TSA)=95.00  EM=36.75  ArgF1=57.49 (n=380)  SlotAcc=51.52
+final: n=400  F1=57.05  BLEU1=59.50  TA(TSA)=95.00  EM=36.75  ArgF1=57.49 (n=380)  SlotAcc=51.52
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/forge-pool.jsonl
+[rank0]:[W925 03:39:35.467776477 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())
+=== ltm-pool start 03:39:35 ===
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+bench stats: {"n_tasks": 400, "n_sessions": 2029, "levels": {"L2": 101, "L1": 237, "L4": 45, "L3": 17}, "grounding_types": {"default": 279, "inferred": 158, "explicit": 385}, "tasks_without_session": 19}
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights:   1%|          | 3/391 [00:00<00:14, 27.70it/s]Loading weights:   2%|▏         | 6/391 [00:02<03:17,  1.95it/s]Loading weights: 100%|██████████| 391/391 [00:02<00:00, 147.53it/s]
+INFO 09-25 03:40:14 config.py:350] This model supports multiple tasks: {'embedding', 'generate'}. Defaulting to 'generate'.
+INFO 09-25 03:40:14 llm_engine.py:249] Initializing an LLM engine (v0.6.4.post1) with config: model='/mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master', speculative_config=None, tokenizer='/mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=16384, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=/mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master, num_scheduler_steps=1, chunked_prefill_enabled=False multi_step_stream_outputs=True, enable_prefix_caching=False, use_async_output_proc=True, use_cached_outputs=False, chat_template_text_format=string, mm_processor_kwargs=None, pooler_config=None)
+WARNING 09-25 03:40:14 utils.py:720] Using 'pin_memory=False' as WSL is detected. This may slow down the performance.
+INFO 09-25 03:40:14 selector.py:135] Using Flash Attention backend.
+INFO 09-25 03:40:14 model_runner.py:1072] Starting to load model /mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master...
+Loading safetensors checkpoint shards:   0% Completed | 0/4 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  25% Completed | 1/4 [00:16<00:50, 16.73s/it]
+Loading safetensors checkpoint shards:  50% Completed | 2/4 [00:30<00:30, 15.00s/it]
+Loading safetensors checkpoint shards:  75% Completed | 3/4 [00:49<00:16, 16.66s/it]
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [01:02<00:00, 15.28s/it]
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [01:02<00:00, 15.58s/it]
+
+INFO 09-25 03:41:17 model_runner.py:1077] Loading model weights took 14.2487 GB
+INFO 09-25 03:41:18 worker.py:232] Memory profiling results: total_gpu_memory=23.99GiB initial_memory_usage=15.92GiB peak_torch_memory=16.43GiB memory_usage_post_profile=15.93GiB non_torch_memory=1.67GiB kv_cache_size=3.97GiB gpu_memory_utilization=0.92
+INFO 09-25 03:41:18 gpu_executor.py:113] # GPU blocks: 4642, # CPU blocks: 4681
+INFO 09-25 03:41:18 gpu_executor.py:117] Maximum concurrency for 16384 tokens per request: 4.53x
+INFO 09-25 03:41:19 model_runner.py:1400] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+INFO 09-25 03:41:19 model_runner.py:1404] If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 09-25 03:41:33 model_runner.py:1518] Graph capturing finished in 14 secs, took 0.17 GiB
+  50/400  n=50  F1=44.02  BLEU1=43.78  TA(TSA)=78.00  EM=20.00  ArgF1=45.75 (n=39)  SlotAcc=39.24
+  100/400  n=100  F1=40.89  BLEU1=41.47  TA(TSA)=85.00  EM=20.00  ArgF1=42.03 (n=85)  SlotAcc=33.94
+  150/400  n=150  F1=34.62  BLEU1=35.57  TA(TSA)=85.33  EM=14.00  ArgF1=35.75 (n=128)  SlotAcc=29.48
+  200/400  n=200  F1=31.72  BLEU1=32.80  TA(TSA)=82.50  EM=12.00  ArgF1=33.03 (n=165)  SlotAcc=26.27
+  250/400  n=250  F1=31.63  BLEU1=32.64  TA(TSA)=82.40  EM=12.40  ArgF1=32.14 (n=206)  SlotAcc=26.20
+  300/400  n=300  F1=31.84  BLEU1=32.66  TA(TSA)=83.00  EM=13.00  ArgF1=32.58 (n=249)  SlotAcc=27.22
+  350/400  n=350  F1=32.45  BLEU1=33.26  TA(TSA)=82.86  EM=14.29  ArgF1=33.14 (n=290)  SlotAcc=27.91
+  400/400  n=400  F1=33.02  BLEU1=33.53  TA(TSA)=83.50  EM=15.25  ArgF1=33.61 (n=334)  SlotAcc=28.28
+final: n=400  F1=33.02  BLEU1=33.53  TA(TSA)=83.50  EM=15.25  ArgF1=33.61 (n=334)  SlotAcc=28.28
+per-sample log: results/ltm-pool.jsonl
+[rank0]:[W925 03:47:33.770642068 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())
+=== full-pool start 03:47:34 ===
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+INFO 09-25 03:47:43 config.py:350] This model supports multiple tasks: {'embedding', 'generate'}. Defaulting to 'generate'.
+INFO 09-25 03:47:43 llm_engine.py:249] Initializing an LLM engine (v0.6.4.post1) with config: model='/mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master', speculative_config=None, tokenizer='/mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=16384, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto, quantization_param_path=None, device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='outlines'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=/mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master, num_scheduler_steps=1, chunked_prefill_enabled=False multi_step_stream_outputs=True, enable_prefix_caching=False, use_async_output_proc=True, use_cached_outputs=False, chat_template_text_format=string, mm_processor_kwargs=None, pooler_config=None)
+WARNING 09-25 03:47:43 utils.py:720] Using 'pin_memory=False' as WSL is detected. This may slow down the performance.
+INFO 09-25 03:47:43 selector.py:135] Using Flash Attention backend.
+INFO 09-25 03:47:44 model_runner.py:1072] Starting to load model /mnt/e/hx/_models/models/Qwen--Qwen2.5-7B-Instruct/snapshots/master...
+Loading safetensors checkpoint shards:   0% Completed | 0/4 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  25% Completed | 1/4 [00:12<00:38, 12.98s/it]
+Loading safetensors checkpoint shards:  50% Completed | 2/4 [00:28<00:28, 14.39s/it]
+Loading safetensors checkpoint shards:  75% Completed | 3/4 [00:40<00:13, 13.30s/it]
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:55<00:00, 13.87s/it]
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:55<00:00, 13.78s/it]
+
+INFO 09-25 03:48:39 model_runner.py:1077] Loading model weights took 14.2487 GB
+INFO 09-25 03:48:41 worker.py:232] Memory profiling results: total_gpu_memory=23.99GiB initial_memory_usage=15.90GiB peak_torch_memory=16.43GiB memory_usage_post_profile=15.91GiB non_torch_memory=1.66GiB kv_cache_size=3.51GiB gpu_memory_utilization=0.90
+INFO 09-25 03:48:41 gpu_executor.py:113] # GPU blocks: 4102, # CPU blocks: 4681
+INFO 09-25 03:48:41 gpu_executor.py:117] Maximum concurrency for 16384 tokens per request: 4.01x
+INFO 09-25 03:48:41 model_runner.py:1400] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI.
+INFO 09-25 03:48:41 model_runner.py:1404] If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 09-25 03:48:54 model_runner.py:1518] Graph capturing finished in 13 secs, took 0.22 GiB
+WARNING 09-25 03:48:59 scheduler.py:894] Input prompt (16666 tokens) is too long and exceeds limit of 16384
+  50/400  n=50  F1=53.36  BLEU1=54.52  TA(TSA)=74.00  EM=28.00  ArgF1=57.41 (n=37)  SlotAcc=45.89
+WARNING 09-25 03:50:15 scheduler.py:894] Input prompt (16644 tokens) is too long and exceeds limit of 16384
+WARNING 09-25 03:50:42 scheduler.py:894] Input prompt (16633 tokens) is too long and exceeds limit of 16384
+  100/400  n=100  F1=52.84  BLEU1=53.91  TA(TSA)=76.00  EM=29.00  ArgF1=57.55 (n=76)  SlotAcc=45.88
+WARNING 09-25 03:50:45 scheduler.py:894] Input prompt (16668 tokens) is too long and exceeds limit of 16384
+WARNING 09-25 03:50:52 scheduler.py:894] Input prompt (17055 tokens) is too long and exceeds limit of 16384
+WARNING 09-25 03:50:54 scheduler.py:894] Input prompt (16652 tokens) is too long and exceeds limit of 16384
+WARNING 09-25 03:51:18 scheduler.py:894] Input prompt (17047 tokens) is too long and exceeds limit of 16384
+  150/400  n=150  F1=43.93  BLEU1=45.16  TA(TSA)=74.00  EM=21.33  ArgF1=48.51 (n=111)  SlotAcc=37.09
+WARNING 09-25 03:52:20 scheduler.py:894] Input prompt (16475 tokens) is too long and exceeds limit of 16384
+  200/400  n=200  F1=43.14  BLEU1=44.39  TA(TSA)=73.50  EM=19.50  ArgF1=47.02 (n=147)  SlotAcc=34.58
+  250/400  n=250  F1=45.12  BLEU1=46.50  TA(TSA)=74.40  EM=20.80  ArgF1=48.38 (n=186)  SlotAcc=36.81
+WARNING 09-25 03:55:17 scheduler.py:894] Input prompt (17036 tokens) is too long and exceeds limit of 16384
+  300/400  n=300  F1=48.06  BLEU1=49.59  TA(TSA)=77.00  EM=23.00  ArgF1=51.38 (n=231)  SlotAcc=40.05
+  350/400  n=350  F1=48.39  BLEU1=50.01  TA(TSA)=76.29  EM=23.71  ArgF1=51.97 (n=267)  SlotAcc=40.14
+  400/400  n=400  F1=51.21  BLEU1=52.47  TA(TSA)=76.00  EM=26.75  ArgF1=54.90 (n=304)  SlotAcc=42.83
+final: n=400  F1=51.21  BLEU1=52.47  TA(TSA)=76.00  EM=26.75  ArgF1=54.90 (n=304)  SlotAcc=42.83
+per-sample log: /mnt/e/hx/_DoctorXtion/intern_shxt/m2a/results/full-pool.jsonl
+n=400  F1=51.21  BLEU1=52.47  TA(TSA)=76.00  EM=26.75  ArgF1=54.90 (n=304)  SlotAcc=42.83
+truncated tasks: 7
+[rank0]:[W925 03:58:24.118505981 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())
+ALL DONE 03:58:25

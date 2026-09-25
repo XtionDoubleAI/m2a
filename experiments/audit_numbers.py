@@ -46,6 +46,29 @@ CLAIMED_F1 = [
     ("mem0-full", 39.19, "README/teaching-03"),
     ("amem-full", 41.11, "README/teaching-03"),
     ("forge-layered", 34.46, "project report"),
+    ("oracle-supply", 67.31, "README"),
+    ("forge-fixed-subset", 68.11, "project report (115-task subset)"),
+    ("forge-fixed-full", 54.07, "README/project report (with demand fallback)"),
+    ("full-supply", 49.58, "README/project report"),
+    ("forge-pool", 57.05, "project report (2029-session pool)"),
+    ("ltm-pool", 33.02, "project report (2029-session pool)"),
+    ("full-pool", 51.21, "project report (2029-session pool)"),
+    ("inject-first", 93.66, "project report (gold injection)"),
+    ("inject-middle", 93.60, "project report (gold injection)"),
+    ("inject-last", 94.55, "project report (gold injection)"),
+    ("ltm-v4f-off", 34.60, "project report (V4-Flash, thinking off)"),
+    ("forge-v4f-off", 61.95, "project report (V4-Flash, thinking off)"),
+    ("mem0-v4f-off", 41.30, "project report (V4-Flash, thinking off)"),
+    ("amem-v4f-off", 43.93, "project report (V4-Flash, thinking off)"),
+    ("full-v4f-off", 63.33, "project report (V4-Flash, thinking off)"),
+    ("oracle-v4f-off", 70.06, "project report (V4-Flash, thinking off)"),
+    ("ltm-v4f-on", 33.86, "project report (V4-Flash, thinking on)"),
+    ("forge-v4f-on", 60.78, "project report (V4-Flash, thinking on)"),
+    ("mem0-v4f-on", 42.09, "project report (V4-Flash, thinking on)"),
+    ("amem-v4f-on", 45.14, "project report (V4-Flash, thinking on)"),
+    ("full-v4f-on", 63.00, "project report (V4-Flash, thinking on)"),
+    ("oracle-v4f-on", 69.73, "project report (V4-Flash, thinking on)"),
+    ("ltm-v4p-on", 35.99, "project report (V4-Pro, thinking on)"),
     ("m2a-hybrid-store", 27.72, "README ablation/teaching-03"),
     ("forge-chunks-nodemand", 35.18, "README ablation/teaching-03"),
     ("forge-chunks-flat", 37.74, "README ablation/teaching-03"),
@@ -86,6 +109,22 @@ CLAIMED_MULTIDIM = [
     ("forge-chunks-full", "traceability_pct", 39.3, "project report"),
     ("forge-chunks-flat", "traceability_pct", 36.5, "project report"),
     ("forge-chunks-full", "complex_fidelity_pct", 9.76, "project report"),
+    ("forge-fixed-full", "miss_rate", 26.79, "project report"),
+    ("forge-fixed-full", "corruption_rate", 29.82, "project report"),
+    ("forge-fixed-full", "fabrication_rate", 4.85, "project report"),
+    ("forge-fixed-full", "traceability_pct", 51.88, "project report"),
+    ("forge-fixed-full", "complex_fidelity_pct", 19.51, "project report"),
+]
+
+# Headline paired CIs beyond the README ablation pair. Each is verified by an
+# independent paired bootstrap here (not by trusting ci_table.json).
+CLAIMED_CI_PAIRS = [
+    # key, baseline, system, mean_diff, ci_low, ci_high
+    ("fixed_vs_amem", "amem-full", "forge-fixed-full", 12.96, 8.66, 17.34),
+    ("fixed_vs_fullsupply", "full-supply", "forge-fixed-full", 4.49, 1.15, 7.91),
+    ("v4f_off_forge_vs_amem", "amem-v4f-off", "forge-v4f-off", 18.02, 13.80, 22.31),
+    ("v4f_off_forge_vs_full", "full-v4f-off", "forge-v4f-off", -1.38, -3.43, 0.62),
+    ("pool_forge_vs_full", "full-pool", "forge-pool", 5.84, 2.44, 9.21),
 ]
 
 # README headline: FORGE over baseline, paired bootstrap 95% CI.
@@ -218,6 +257,19 @@ def main():
             # bootstrap percentiles jitter by a hundredth between runs
             check(f"headline CI {k} [README]", ci.get(k), CLAIMED_CI[k],
                   tol=0.05)
+
+    for key, base, system, md, lo, hi in CLAIMED_CI_PAIRS:
+        fb = RESULTS / f"{base}.jsonl"
+        fs = RESULTS / f"{system}.jsonl"
+        if not (fb.exists() and fs.exists()):
+            report["unverifiable"].append(f"{key}: missing archive")
+            continue
+        ci = paired_boot(value_f1(fb), value_f1(fs))
+        check(f"CI pair {key} mean [ci_table]", ci.get("mean_diff_pts"), md)
+        check(f"CI pair {key} low [ci_table]", ci.get("ci_low_pts"), lo,
+              tol=0.05)
+        check(f"CI pair {key} high [ci_table]", ci.get("ci_high_pts"), hi,
+              tol=0.05)
 
     # runs registered but with no sample archive (cannot be independently
     # recomputed) -- reported as facts, not failures

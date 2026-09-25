@@ -8,6 +8,18 @@
    "n": 20,
    "f1": 29.82
   },
+  "amem-v4f-off": {
+   "n": 400,
+   "f1": 43.93
+  },
+  "amem-v4f-on": {
+   "n": 400,
+   "f1": 45.14
+  },
+  "api-smoke": {
+   "n": 3,
+   "f1": 66.67
+  },
   "forge-chunks-flat": {
    "n": 400,
    "f1": 37.74
@@ -40,17 +52,93 @@
    "n": 400,
    "f1": 36.65
   },
+  "forge-fixed-full": {
+   "n": 400,
+   "f1": 54.07
+  },
+  "forge-fixed-subset": {
+   "n": 115,
+   "f1": 68.11
+  },
   "forge-layered": {
    "n": 400,
    "f1": 34.46
+  },
+  "forge-pool": {
+   "n": 400,
+   "f1": 57.05
+  },
+  "forge-v4f-off": {
+   "n": 400,
+   "f1": 61.95
+  },
+  "forge-v4f-on": {
+   "n": 400,
+   "f1": 60.78
+  },
+  "forge-v4p-on": {
+   "n": 45,
+   "f1": 60.14
+  },
+  "full-pool": {
+   "n": 400,
+   "f1": 51.21
+  },
+  "full-smoke": {
+   "n": 5,
+   "f1": 73.33
+  },
+  "full-supply": {
+   "n": 400,
+   "f1": 49.58
+  },
+  "full-v4f-off": {
+   "n": 400,
+   "f1": 63.33
+  },
+  "full-v4f-on": {
+   "n": 400,
+   "f1": 63.0
+  },
+  "inject-first": {
+   "n": 400,
+   "f1": 93.66
+  },
+  "inject-last": {
+   "n": 400,
+   "f1": 94.55
+  },
+  "inject-middle": {
+   "n": 400,
+   "f1": 93.6
   },
   "layered-smoke": {
    "n": 20,
    "f1": 33.88
   },
+  "ltm-pool": {
+   "n": 400,
+   "f1": 33.02
+  },
+  "ltm-v4f-off": {
+   "n": 400,
+   "f1": 34.6
+  },
+  "ltm-v4f-on": {
+   "n": 400,
+   "f1": 33.86
+  },
+  "ltm-v4p-on": {
+   "n": 400,
+   "f1": 35.99
+  },
   "ltmemory_hybrid5_full": {
    "n": 400,
    "f1": 30.68
+  },
+  "ltmemory_small": {
+   "n": 86,
+   "f1": 30.9
   },
   "m2a-hybrid-smoke": {
    "n": 5,
@@ -96,6 +184,30 @@
    "n": 400,
    "f1": 39.19
   },
+  "mem0-v4f-off": {
+   "n": 400,
+   "f1": 41.3
+  },
+  "mem0-v4f-on": {
+   "n": 400,
+   "f1": 42.09
+  },
+  "oracle-smoke": {
+   "n": 5,
+   "f1": 80.0
+  },
+  "oracle-supply": {
+   "n": 400,
+   "f1": 67.31
+  },
+  "oracle-v4f-off": {
+   "n": 400,
+   "f1": 70.06
+  },
+  "oracle-v4f-on": {
+   "n": 400,
+   "f1": 69.73
+  },
   "smoke5": {
    "n": 5,
    "f1": 33.33
@@ -110,13 +222,13 @@
    "pass": true
   },
   {
-   "claim": "F1 forge-chunks-only [README/teaching-03/D6]",
+   "claim": "F1 forge-chunks-only [README/EXPERIMENT_SETUP]",
    "claimed": 36.88,
    "recomputed": 36.88,
    "pass": true
   },
   {
-   "claim": "F1 forge-chunks-full [README ablation/D6]",
+   "claim": "F1 forge-chunks-full [README ablation]",
    "claimed": 36.88,
    "recomputed": 36.88,
    "pass": true
@@ -134,9 +246,147 @@
    "pass": true
   },
   {
-   "claim": "F1 forge-layered [D7]",
+   "claim": "F1 forge-layered [project report]",
    "claimed": 34.46,
    "recomputed": 34.46,
+   "pass": true
+  },
+  {
+   "claim": "F1 oracle-supply [README]",
+   "claimed": 67.31,
+   "recomputed": 67.31,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-fixed-subset [project report (115-task subset)]",
+   "claimed": 68.11,
+   "recomputed": 68.11,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-fixed-full [README/project report (with demand fallback)]",
+   "claimed": 54.07,
+   "recomputed": 54.07,
+   "pass": true
+  },
+  {
+   "claim": "F1 full-supply [README/project report]",
+   "claimed": 49.58,
+   "recomputed": 49.58,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-pool [project report (2029-session pool)]",
+   "claimed": 57.05,
+   "recomputed": 57.05,
+   "pass": true
+  },
+  {
+   "claim": "F1 ltm-pool [project report (2029-session pool)]",
+   "claimed": 33.02,
+   "recomputed": 33.02,
+   "pass": true
+  },
+  {
+   "claim": "F1 full-pool [project report (2029-session pool)]",
+   "claimed": 51.21,
+   "recomputed": 51.21,
+   "pass": true
+  },
+  {
+   "claim": "F1 inject-first [project report (gold injection)]",
+   "claimed": 93.66,
+   "recomputed": 93.66,
+   "pass": true
+  },
+  {
+   "claim": "F1 inject-middle [project report (gold injection)]",
+   "claimed": 93.6,
+   "recomputed": 93.6,
+   "pass": true
+  },
+  {
+   "claim": "F1 inject-last [project report (gold injection)]",
+   "claimed": 94.55,
+   "recomputed": 94.55,
+   "pass": true
+  },
+  {
+   "claim": "F1 ltm-v4f-off [project report (V4-Flash, thinking off)]",
+   "claimed": 34.6,
+   "recomputed": 34.6,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-v4f-off [project report (V4-Flash, thinking off)]",
+   "claimed": 61.95,
+   "recomputed": 61.95,
+   "pass": true
+  },
+  {
+   "claim": "F1 mem0-v4f-off [project report (V4-Flash, thinking off)]",
+   "claimed": 41.3,
+   "recomputed": 41.3,
+   "pass": true
+  },
+  {
+   "claim": "F1 amem-v4f-off [project report (V4-Flash, thinking off)]",
+   "claimed": 43.93,
+   "recomputed": 43.93,
+   "pass": true
+  },
+  {
+   "claim": "F1 full-v4f-off [project report (V4-Flash, thinking off)]",
+   "claimed": 63.33,
+   "recomputed": 63.33,
+   "pass": true
+  },
+  {
+   "claim": "F1 oracle-v4f-off [project report (V4-Flash, thinking off)]",
+   "claimed": 70.06,
+   "recomputed": 70.06,
+   "pass": true
+  },
+  {
+   "claim": "F1 ltm-v4f-on [project report (V4-Flash, thinking on)]",
+   "claimed": 33.86,
+   "recomputed": 33.86,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-v4f-on [project report (V4-Flash, thinking on)]",
+   "claimed": 60.78,
+   "recomputed": 60.78,
+   "pass": true
+  },
+  {
+   "claim": "F1 mem0-v4f-on [project report (V4-Flash, thinking on)]",
+   "claimed": 42.09,
+   "recomputed": 42.09,
+   "pass": true
+  },
+  {
+   "claim": "F1 amem-v4f-on [project report (V4-Flash, thinking on)]",
+   "claimed": 45.14,
+   "recomputed": 45.14,
+   "pass": true
+  },
+  {
+   "claim": "F1 full-v4f-on [project report (V4-Flash, thinking on)]",
+   "claimed": 63.0,
+   "recomputed": 63.0,
+   "pass": true
+  },
+  {
+   "claim": "F1 oracle-v4f-on [project report (V4-Flash, thinking on)]",
+   "claimed": 69.73,
+   "recomputed": 69.73,
+   "pass": true
+  },
+  {
+   "claim": "F1 ltm-v4p-on [project report (V4-Pro, thinking on)]",
+   "claimed": 35.99,
+   "recomputed": 35.99,
    "pass": true
   },
   {
@@ -158,117 +408,147 @@
    "pass": true
   },
   {
-   "claim": "F1 forge-chunks-r1 [D6]",
+   "claim": "F1 forge-chunks-r1 [project report]",
    "claimed": 37.08,
    "recomputed": 37.08,
    "pass": true
   },
   {
-   "claim": "F1 forge-chunks-r1r2 [D6]",
+   "claim": "F1 forge-chunks-r1r2 [project report]",
    "claimed": 36.65,
    "recomputed": 36.65,
    "pass": true
   },
   {
-   "claim": "F1 forge-chunks-r1r2r3 [D6 (threshold 0.5)]",
+   "claim": "F1 forge-chunks-r1r2r3 [project report]",
    "claimed": 36.65,
    "recomputed": 36.65,
    "pass": true
   },
   {
-   "claim": "F1 forge-chunks-r1r2r3-low [D6 (threshold 0.1)]",
+   "claim": "F1 forge-chunks-r1r2r3-low [project report]",
    "claimed": 36.65,
    "recomputed": 36.65,
    "pass": true
   },
   {
-   "claim": "miss_rate forge-chunks-full [D7 table]",
+   "claim": "miss_rate forge-chunks-full [project report]",
    "claimed": 39.9,
    "recomputed": 39.88,
    "pass": true
   },
   {
-   "claim": "corruption_rate forge-chunks-full [D7 table]",
+   "claim": "corruption_rate forge-chunks-full [project report]",
    "claimed": 25.5,
    "recomputed": 25.45,
    "pass": true
   },
   {
-   "claim": "fabrication_rate forge-chunks-full [D7 table]",
+   "claim": "fabrication_rate forge-chunks-full [project report]",
    "claimed": 4.6,
    "recomputed": 4.61,
    "pass": true
   },
   {
-   "claim": "miss_rate mem0-full [D7 table]",
+   "claim": "miss_rate mem0-full [project report]",
    "claimed": 52.0,
    "recomputed": 52.0,
    "pass": true
   },
   {
-   "claim": "corruption_rate mem0-full [D7 table]",
+   "claim": "corruption_rate mem0-full [project report]",
    "claimed": 13.8,
    "recomputed": 13.82,
    "pass": true
   },
   {
-   "claim": "fabrication_rate mem0-full [D7 table]",
+   "claim": "fabrication_rate mem0-full [project report]",
    "claimed": 2.6,
    "recomputed": 2.55,
    "pass": true
   },
   {
-   "claim": "miss_rate amem-full [D7 table]",
+   "claim": "miss_rate amem-full [project report]",
    "claimed": 44.4,
    "recomputed": 44.36,
    "pass": true
   },
   {
-   "claim": "corruption_rate amem-full [D7 table]",
+   "claim": "corruption_rate amem-full [project report]",
    "claimed": 18.2,
    "recomputed": 18.18,
    "pass": true
   },
   {
-   "claim": "fabrication_rate amem-full [D7 table]",
+   "claim": "fabrication_rate amem-full [project report]",
    "claimed": 3.6,
    "recomputed": 3.64,
    "pass": true
   },
   {
-   "claim": "miss_rate ltmemory_hybrid5_full [D7 table (upper bound)]",
+   "claim": "miss_rate ltmemory_hybrid5_full [project report (upper bound)]",
    "claimed": 25.7,
    "recomputed": 25.7,
    "pass": true
   },
   {
-   "claim": "corruption_rate ltmemory_hybrid5_full [D7 table (upper bound)]",
+   "claim": "corruption_rate ltmemory_hybrid5_full [project report (upper bound)]",
    "claimed": 27.5,
    "recomputed": 27.52,
    "pass": true
   },
   {
-   "claim": "fabrication_rate ltmemory_hybrid5_full [D7 table (upper bound)]",
+   "claim": "fabrication_rate ltmemory_hybrid5_full [project report (upper bound)]",
    "claimed": 23.3,
    "recomputed": 23.27,
    "pass": true
   },
   {
-   "claim": "traceability_pct forge-chunks-full [D6 R5 verdict]",
+   "claim": "traceability_pct forge-chunks-full [project report]",
    "claimed": 39.3,
    "recomputed": 39.27,
    "pass": true
   },
   {
-   "claim": "traceability_pct forge-chunks-flat [D6 R5 verdict]",
+   "claim": "traceability_pct forge-chunks-flat [project report]",
    "claimed": 36.5,
    "recomputed": 36.48,
    "pass": true
   },
   {
-   "claim": "complex_fidelity_pct forge-chunks-full [teaching-04 (post 2026-09-21 metric fix)]",
+   "claim": "complex_fidelity_pct forge-chunks-full [project report]",
    "claimed": 9.76,
    "recomputed": 9.76,
+   "pass": true
+  },
+  {
+   "claim": "miss_rate forge-fixed-full [project report]",
+   "claimed": 26.79,
+   "recomputed": 26.79,
+   "pass": true
+  },
+  {
+   "claim": "corruption_rate forge-fixed-full [project report]",
+   "claimed": 29.82,
+   "recomputed": 29.82,
+   "pass": true
+  },
+  {
+   "claim": "fabrication_rate forge-fixed-full [project report]",
+   "claimed": 4.85,
+   "recomputed": 4.85,
+   "pass": true
+  },
+  {
+   "claim": "traceability_pct forge-fixed-full [project report]",
+   "claimed": 51.88,
+   "recomputed": 51.88,
+   "pass": true
+  },
+  {
+   "claim": "complex_fidelity_pct forge-fixed-full [project report]",
+   "claimed": 19.51,
+   "recomputed": 19.51,
    "pass": true
   },
   {
@@ -287,6 +567,96 @@
    "claim": "headline CI ci_high_pts [README]",
    "claimed": 10.82,
    "recomputed": 10.82,
+   "pass": true
+  },
+  {
+   "claim": "CI pair fixed_vs_amem mean [ci_table]",
+   "claimed": 12.96,
+   "recomputed": 12.96,
+   "pass": true
+  },
+  {
+   "claim": "CI pair fixed_vs_amem low [ci_table]",
+   "claimed": 8.66,
+   "recomputed": 8.66,
+   "pass": true
+  },
+  {
+   "claim": "CI pair fixed_vs_amem high [ci_table]",
+   "claimed": 17.34,
+   "recomputed": 17.34,
+   "pass": true
+  },
+  {
+   "claim": "CI pair fixed_vs_fullsupply mean [ci_table]",
+   "claimed": 4.49,
+   "recomputed": 4.49,
+   "pass": true
+  },
+  {
+   "claim": "CI pair fixed_vs_fullsupply low [ci_table]",
+   "claimed": 1.15,
+   "recomputed": 1.15,
+   "pass": true
+  },
+  {
+   "claim": "CI pair fixed_vs_fullsupply high [ci_table]",
+   "claimed": 7.91,
+   "recomputed": 7.91,
+   "pass": true
+  },
+  {
+   "claim": "CI pair v4f_off_forge_vs_amem mean [ci_table]",
+   "claimed": 18.02,
+   "recomputed": 18.02,
+   "pass": true
+  },
+  {
+   "claim": "CI pair v4f_off_forge_vs_amem low [ci_table]",
+   "claimed": 13.8,
+   "recomputed": 13.8,
+   "pass": true
+  },
+  {
+   "claim": "CI pair v4f_off_forge_vs_amem high [ci_table]",
+   "claimed": 22.31,
+   "recomputed": 22.31,
+   "pass": true
+  },
+  {
+   "claim": "CI pair v4f_off_forge_vs_full mean [ci_table]",
+   "claimed": -1.38,
+   "recomputed": -1.38,
+   "pass": true
+  },
+  {
+   "claim": "CI pair v4f_off_forge_vs_full low [ci_table]",
+   "claimed": -3.43,
+   "recomputed": -3.43,
+   "pass": true
+  },
+  {
+   "claim": "CI pair v4f_off_forge_vs_full high [ci_table]",
+   "claimed": 0.62,
+   "recomputed": 0.62,
+   "pass": true
+  },
+  {
+   "claim": "CI pair pool_forge_vs_full mean [ci_table]",
+   "claimed": 5.84,
+   "recomputed": 5.84,
+   "pass": true
+  },
+  {
+   "claim": "CI pair pool_forge_vs_full low [ci_table]",
+   "claimed": 2.44,
+   "recomputed": 2.44,
+   "pass": true
+  },
+  {
+   "claim": "CI pair pool_forge_vs_full high [ci_table]",
+   "claimed": 9.21,
+   "recomputed": 9.21,
    "pass": true
   }
  ],
@@ -332,8 +702,8 @@
   "ci_high_pts": 10.82
  },
  "summary": {
-  "assertions": 31,
-  "passed": 31,
+  "assertions": 74,
+  "passed": 74,
   "failed": 0
  }
 }

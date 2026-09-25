@@ -41,18 +41,123 @@
   "ci_high_pts": 1.64,
   "p_positive": 0.4112
  },
- "mem0-full": {
-  "n": 400,
-  "mean_diff_pts": 2.32,
-  "ci_low_pts": -2.89,
-  "ci_high_pts": 7.51,
-  "p_positive": 0.818
- },
- "amem-full": {
-  "n": 400,
-  "mean_diff_pts": 4.23,
-  "ci_low_pts": -0.5,
-  "ci_high_pts": 8.9,
-  "p_positive": 0.9619
+ "pairs": {
+  "fixed_vs_ltm": {
+   "n": 400,
+   "mean_diff_pts": 23.39,
+   "ci_low_pts": 19.06,
+   "ci_high_pts": 27.86,
+   "p_positive": 1.0,
+   "baseline": "ltmemory_hybrid5_full",
+   "system": "forge-fixed-full"
+  },
+  "fixed_vs_mem0": {
+   "n": 400,
+   "mean_diff_pts": 14.88,
+   "ci_low_pts": 10.4,
+   "ci_high_pts": 19.4,
+   "p_positive": 1.0,
+   "baseline": "mem0-full",
+   "system": "forge-fixed-full"
+  },
+  "fixed_vs_amem": {
+   "n": 400,
+   "mean_diff_pts": 12.96,
+   "ci_low_pts": 8.66,
+   "ci_high_pts": 17.34,
+   "p_positive": 1.0,
+   "baseline": "amem-full",
+   "system": "forge-fixed-full"
+  },
+  "fixed_vs_fullsupply": {
+   "n": 400,
+   "mean_diff_pts": 4.49,
+   "ci_low_pts": 1.15,
+   "ci_high_pts": 7.91,
+   "p_positive": 0.9959,
+   "baseline": "full-supply",
+   "system": "forge-fixed-full"
+  },
+  "v4f_off_forge_vs_ltm": {
+   "n": 400,
+   "mean_diff_pts": 27.35,
+   "ci_low_pts": 22.75,
+   "ci_high_pts": 31.93,
+   "p_positive": 1.0,
+   "baseline": "ltm-v4f-off",
+   "system": "forge-v4f-off"
+  },
+  "v4f_off_forge_vs_mem0": {
+   "n": 400,
+   "mean_diff_pts": 20.65,
+   "ci_low_pts": 16.26,
+   "ci_high_pts": 25.13,
+   "p_positive": 1.0,
+   "baseline": "mem0-v4f-off",
+   "system": "forge-v4f-off"
+  },
+  "v4f_off_forge_vs_amem": {
+   "n": 400,
+   "mean_diff_pts": 18.02,
+   "ci_low_pts": 13.8,
+   "ci_high_pts": 22.31,
+   "p_positive": 1.0,
+   "baseline": "amem-v4f-off",
+   "system": "forge-v4f-off"
+  },
+  "v4f_off_forge_vs_full": {
+   "n": 400,
+   "mean_diff_pts": -1.38,
+   "ci_low_pts": -3.43,
+   "ci_high_pts": 0.62,
+   "p_positive": 0.0878,
+   "baseline": "full-v4f-off",
+   "system": "forge-v4f-off"
+  },
+  "v4f_on_forge_vs_full": {
+   "n": 400,
+   "mean_diff_pts": -2.23,
+   "ci_low_pts": -5.14,
+   "ci_high_pts": 0.74,
+   "p_positive": 0.0689,
+   "baseline": "full-v4f-on",
+   "system": "forge-v4f-on"
+  },
+  "pool_forge_vs_full": {
+   "n": 400,
+   "mean_diff_pts": 5.84,
+   "ci_low_pts": 2.44,
+   "ci_high_pts": 9.21,
+   "p_positive": 0.9995,
+   "baseline": "full-pool",
+   "system": "forge-pool"
+  },
+  "pool_forge_vs_ltm": {
+   "n": 400,
+   "mean_diff_pts": 24.02,
+   "ci_low_pts": 19.42,
+   "ci_high_pts": 28.55,
+   "p_positive": 1.0,
+   "baseline": "ltm-pool",
+   "system": "forge-pool"
+  },
+  "inject_first_vs_middle": {
+   "n": 400,
+   "mean_diff_pts": 0.06,
+   "ci_low_pts": -1.51,
+   "ci_high_pts": 1.61,
+   "p_positive": 0.5292,
+   "baseline": "inject-middle",
+   "system": "inject-first"
+  },
+  "inject_last_vs_middle": {
+   "n": 400,
+   "mean_diff_pts": 0.94,
+   "ci_low_pts": -0.18,
+   "ci_high_pts": 2.24,
+   "p_positive": 0.9467,
+   "baseline": "inject-middle",
+   "system": "inject-last"
+  }
  }
 }
