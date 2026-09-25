@@ -1,6 +1,6 @@
 """Multi-dimensional evaluation beyond F1 (offline, from experiment archives).
 
-Six questions F1 cannot answer (see Pdev/teaching/04):
+Six questions F1 cannot answer:
   traceability   -- output value literally present in its retrieved evidence
   fabrication    -- wrong value present in NO visible evidence/enum/default
   corruption     -- gold present in evidence AND output in evidence, but differ
