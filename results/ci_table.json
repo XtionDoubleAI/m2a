@@ -158,6 +158,24 @@
    "p_positive": 0.9467,
    "baseline": "inject-middle",
    "system": "inject-last"
+  },
+  "v4p_on_forge_vs_amem": {
+   "n": 400,
+   "mean_diff_pts": 15.65,
+   "ci_low_pts": 11.25,
+   "ci_high_pts": 20.09,
+   "p_positive": 1.0,
+   "baseline": "amem-v4p-on",
+   "system": "forge-v4p-on"
+  },
+  "v4p_on_forge_vs_full": {
+   "n": 400,
+   "mean_diff_pts": -2.79,
+   "ci_low_pts": -5.47,
+   "ci_high_pts": -0.2,
+   "p_positive": 0.0167,
+   "baseline": "full-v4p-on",
+   "system": "forge-v4p-on"
   }
  }
 }

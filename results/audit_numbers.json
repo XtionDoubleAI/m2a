@@ -16,6 +16,10 @@
    "n": 400,
    "f1": 45.14
   },
+  "amem-v4p-on": {
+   "n": 400,
+   "f1": 45.3
+  },
   "api-smoke": {
    "n": 3,
    "f1": 66.67
@@ -77,8 +81,8 @@
    "f1": 60.78
   },
   "forge-v4p-on": {
-   "n": 45,
-   "f1": 60.14
+   "n": 400,
+   "f1": 60.95
   },
   "full-pool": {
    "n": 400,
@@ -99,6 +103,10 @@
   "full-v4f-on": {
    "n": 400,
    "f1": 63.0
+  },
+  "full-v4p-on": {
+   "n": 400,
+   "f1": 63.74
   },
   "inject-first": {
    "n": 400,
@@ -191,6 +199,10 @@
   "mem0-v4f-on": {
    "n": 400,
    "f1": 42.09
+  },
+  "mem0-v4p-on": {
+   "n": 400,
+   "f1": 42.22
   },
   "oracle-smoke": {
    "n": 5,
@@ -387,6 +399,30 @@
    "claim": "F1 ltm-v4p-on [project report (V4-Pro, thinking on)]",
    "claimed": 35.99,
    "recomputed": 35.99,
+   "pass": true
+  },
+  {
+   "claim": "F1 forge-v4p-on [project report (V4-Pro, thinking on)]",
+   "claimed": 60.95,
+   "recomputed": 60.95,
+   "pass": true
+  },
+  {
+   "claim": "F1 mem0-v4p-on [project report (V4-Pro, thinking on)]",
+   "claimed": 42.22,
+   "recomputed": 42.22,
+   "pass": true
+  },
+  {
+   "claim": "F1 amem-v4p-on [project report (V4-Pro, thinking on)]",
+   "claimed": 45.3,
+   "recomputed": 45.3,
+   "pass": true
+  },
+  {
+   "claim": "F1 full-v4p-on [project report (V4-Pro, thinking on)]",
+   "claimed": 63.74,
+   "recomputed": 63.74,
    "pass": true
   },
   {
@@ -702,8 +738,8 @@
   "ci_high_pts": 10.82
  },
  "summary": {
-  "assertions": 74,
-  "passed": 74,
+  "assertions": 78,
+  "passed": 78,
   "failed": 0
  }
 }
