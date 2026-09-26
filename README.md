@@ -1,4 +1,4 @@
-# FORGE — Fact-Oriented Retrieval and Grounding Engine
+# FORGE — Filling Operands via Retrieval of Grounded Evidence
 
 FORGE binds long-term memory into grounded tool-call arguments. Given an
 underspecified user request and a tool's parameter schema, it derives
