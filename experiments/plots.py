@@ -256,9 +256,66 @@ def fig_multidim():
     _save(fig, "multidim.pdf")
 
 
+def fig_boundary():
+    """The full-supply boundary: FORGE-minus-full-supply margin (signed,
+    paired bootstrap 95% whiskers) across answer model and memory-pool
+    settings. Negative bars (full supply wins) appear only on small pools
+    with frontier models; pool growth reverses the sign."""
+    import random
+
+    def per_task_f1(path: Path) -> dict:
+        from forge.eval.metrics import score_sample
+        out = {}
+        for line in open(path, encoding="utf-8"):
+            d = json.loads(line)
+            out[d["qa_id"]] = score_sample(
+                d["qa_id"], d["gold_tool"], d["gold_args"],
+                d["pred_tool"], d["pred_args"]).f1
+        return out
+
+    def margin(base: str, sys_: str):
+        a, b = per_task_f1(RESULTS / f"{base}.jsonl"), per_task_f1(RESULTS / f"{sys_}.jsonl")
+        ids = [k for k in a if k in b]
+        diffs = [b[k] - a[k] for k in ids]      # full supply -> FORGE
+        rng = random.Random(0)
+        boots = sorted(sum(diffs[rng.randrange(len(diffs))] for _ in diffs)
+                       / len(diffs) for _ in range(10000))
+        return (100 * sum(diffs) / len(diffs),
+                100 * boots[250], 100 * boots[9750])
+
+    rows = [  # label, full-supply run, FORGE run
+        ("7B\n429 sess.", "full-supply", "forge-fixed-full"),
+        ("V4-Flash\n429 sess.", "full-v4f-off", "forge-v4f-off"),
+        ("V4-Pro\n429 sess.", "full-v4p-on", "forge-v4p-on"),
+        ("7B\n2,029 sess.", "full-pool", "forge-pool"),
+        ("V4-Flash\n41 sess.\n(held-out)", "full-holdout-v4f", "forge-holdout-v4f"),
+    ]
+    fig, ax = plt.subplots(figsize=(3.35, 2.2))
+    xs = range(len(rows))
+    for x, (label, base, sys_) in zip(xs, rows):
+        m, lo, hi = margin(base, sys_)
+        col = C_FORGE if m >= 0 else C_MEM0     # blue: retrieval wins; orange: stuffing wins
+        ax.plot([lo, hi], [x, x], color="#444444", lw=1.0, solid_capstyle="butt",
+                zorder=2)
+        ax.scatter([m], [x], s=26, color=col, edgecolor="white", linewidth=0.6,
+                   zorder=3)
+        ha = "left" if m >= 0 else "right"
+        ax.text(hi + 0.3 if m >= 0 else lo - 0.3, x, f"{m:+.1f}",
+                va="center", ha=ha, fontsize=7, color="#333333")
+    ax.axvline(0, color="#666666", lw=0.7)
+    ax.set_yticks(list(xs), [r[0] for r in rows], fontsize=7)
+    ax.set_xlabel("FORGE $-$ full supply (F1 points)\nwhiskers: 95% paired bootstrap")
+    ax.set_xlim(-9, 10)
+    ax.xaxis.grid(True, linewidth=0.4, color="#DDDDDD")
+    ax.set_axisbelow(True)
+    ax.spines[["top", "right"]].set_visible(False)
+    _save(fig, "boundary.pdf")
+
+
 if __name__ == "__main__":
     fig_store()
     fig_components()
     fig_funnel()
     fig_levels()
     fig_multidim()
+    fig_boundary()
