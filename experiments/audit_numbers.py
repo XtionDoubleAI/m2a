@@ -31,8 +31,12 @@ from experiments.multimetrics import analyse, load_archive  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS = ROOT / "results"
-BENCH_DIR = Path(r"E:\hx\_DoctorXtion\intern_shxt\Pdev\refs\repos"
-                 r"\Mem2ActBench\toolmembench_small")
+IS_WSL = sys.platform == "linux"
+BENCH_DIR = Path(
+    "/mnt/e/hx/_DoctorXtion/intern_shxt/Pdev/refs/repos/Mem2ActBench/toolmembench_small"
+    if IS_WSL else
+    r"E:\hx\_DoctorXtion\intern_shxt\Pdev\refs\repos\Mem2ActBench\toolmembench_small"
+)
 
 # Result archives only; stores, fact banks, intermediates and the registry
 # are excluded (intermediates carry per-task dumps, not scored samples).
@@ -147,6 +151,9 @@ CLAIMED_CI_PAIRS = [
     ("v4f_off_forge_vs_amem", "amem-v4f-off", "forge-v4f-off", 18.02, 13.80, 22.31),
     ("v4f_off_forge_vs_full", "full-v4f-off", "forge-v4f-off", -1.38, -3.43, 0.62),
     ("pool_forge_vs_full", "full-pool", "forge-pool", 5.84, 2.44, 9.21),
+    ("v4p_on_forge_vs_full", "full-v4p-on", "forge-v4p-on", -2.79, -5.47, -0.20),
+    ("holdout_v4f_forge_vs_full", "full-holdout-v4f", "forge-holdout-v4f",
+     -5.37, -10.39, -0.51),
 ]
 
 # README headline: FORGE over baseline, paired bootstrap 95% CI.
