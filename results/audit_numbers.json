@@ -312,6 +312,14 @@
    "n": 400,
    "f1": 69.73
   },
+  "prompt-variant-a": {
+   "n": 400,
+   "f1": 54.07
+  },
+  "prompt-variant-b": {
+   "n": 400,
+   "f1": 54.07
+  },
   "scm-full": {
    "n": 400,
    "f1": 42.67
@@ -619,6 +627,18 @@
    "claim": "F1 oracle-holdout-v4f [held-out evaluation (V4-Flash)]",
    "claimed": 79.28,
    "recomputed": 79.28,
+   "pass": true
+  },
+  {
+   "claim": "F1 prompt-variant-a [prompt-sensitivity check]",
+   "claimed": 54.07,
+   "recomputed": 54.07,
+   "pass": true
+  },
+  {
+   "claim": "F1 prompt-variant-b [prompt-sensitivity check]",
+   "claimed": 54.07,
+   "recomputed": 54.07,
    "pass": true
   },
   {
@@ -939,8 +959,8 @@
   "ci_high_pts": 10.82
  },
  "summary": {
-  "assertions": 94,
-  "passed": 94,
+  "assertions": 96,
+  "passed": 96,
   "failed": 0
  }
 }

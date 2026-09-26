@@ -89,6 +89,8 @@ CLAIMED_F1 = [
     ("amem-holdout-v4f", 56.41, "held-out evaluation (V4-Flash)"),
     ("full-holdout-v4f", 72.85, "held-out evaluation (V4-Flash)"),
     ("oracle-holdout-v4f", 79.28, "held-out evaluation (V4-Flash)"),
+    ("prompt-variant-a", 54.07, "prompt-sensitivity check"),
+    ("prompt-variant-b", 54.07, "prompt-sensitivity check"),
     ("m2a-hybrid-store", 27.72, "README ablation/teaching-03"),
     ("forge-chunks-nodemand", 35.18, "README ablation/teaching-03"),
     ("forge-chunks-flat", 37.74, "README ablation/teaching-03"),
